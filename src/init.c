@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/15 19:55:14 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/16 20:28:10 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	init_fract(t_win *win)
 		win->param->offset_x = -0.5;
 		win->param->offset_y = 0;
 		win->param->offset_step = 0.1;
-		win->param->color_step = (0xffffff / win->param->iter);
+		win->param->color_step = 0xfffffff / win->param->iter * PI; // / 1114112;
 		win->param->color = DEF_COLOR;
 	}
 
@@ -82,6 +82,25 @@ t_flags	*init_flags(void)
 	return (new_flags);
 }
 
+t_img	*img_init(t_win *win, int bits_per_pixel, int width, int height)
+{
+	t_img	*new_img;
+
+	new_img = NULL;
+	if ((new_img = (t_img *)malloc(sizeof(t_img))))
+	{
+		new_img->bits_per_pixel = bits_per_pixel;
+		new_img->size_line = width;
+		new_img->endian = 0;
+		new_img->img_ptr = mlx_new_image(win->mlx_ptr, width, height);
+		new_img->data = mlx_get_data_addr(new_img->img_ptr,
+										&new_img->size_line,
+										&new_img->bits_per_pixel,
+										&new_img->endian);
+	}
+	return (new_img);
+}
+
 t_win	*init_win(void)
 {
 	t_win	*new_win;
@@ -92,10 +111,12 @@ t_win	*init_win(void)
 		|| !(new_win->flags = init_flags())
 		|| !(new_win->mlx_ptr = mlx_init())
 		|| !(new_win->win_ptr = mlx_new_window(new_win->mlx_ptr,
-											   WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
-		|| !(new_win->img_ptr = mlx_new_image(new_win->mlx_ptr,
-											  WIN_WIDTH,
-											  WIN_HEIGHT)))
+											WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
+		|| !(new_win->img = mlx_new_image(new_win->mlx_ptr,
+										WIN_WIDTH,
+										WIN_HEIGHT))
+		|| !(new_win->img = img_init(new_win, 0, WIN_WIDTH, WIN_HEIGHT))
+			)
 		free_win(new_win);
 	return (new_win);
 }

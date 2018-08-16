@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/14 19:50:49 by jdoeanic         ###   ########.fr       */
+/*   Updated: 2018/08/16 18:11:37 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,22 @@ typedef struct	s_flags
 	int		error_code;
 }				t_flags;
 
+typedef struct	s_img
+{
+	void	*img_ptr;
+	char	*data;
+	int		bits_per_pixel;
+	int		size_line;
+	int		endian;
+}				t_img;
+
 typedef struct	s_win
 {
 	t_param	*param;
 	t_flags	*flags;
 	void	*mlx_ptr;
 	void	*win_ptr;
-	void	*img_ptr;
+	t_img	*img;
 }				t_win;
 
 enum			e_keys
@@ -134,11 +143,13 @@ int		mandelbrot_cuboid(t_win *win, int x, int y);
 void	fr_zoom(t_win *win, float zm_offset, int x, int y);
 void	iterate_change(t_win *win, int iter_offset);
 void	redraw_fract(t_win *win);
+int		gen_color(t_win *win, int i);
 void	specific_param1(t_win *win, double spec1_offset);
 void	specific_param2(t_win *win, double spec2_offset);
 void	barnsley_curve(t_win *win, double curve_offset);
 void	draw_fractal(t_win *win);
 void	draw_barnsley(t_win *win);
+
 double pow_of(double num, int exp);
 void			map_offset(t_win *win, double offset_x, double offset_y);
 void			fractal_switch(t_win *win);

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/15 19:55:14 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/16 20:43:58 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,15 @@ void	draw_fractal(t_win *win)
 			//use color model conversion to get rainbow palette, make brightness black if maxIterations reached
 			//color = HSVtoRGB(ColorHSV(i % 256, 255, 255 * (i < maxIterations)));
 
-			win->param->color = win->param->color_step * (i);//+ 1114112;
+			gen_color(win, i);
 			//win->param->color =(i *(x+y) / win->param->iter) * (newRe * newIm);
+			//*(int *)(win->img->data + (x + y * WIN_WIDTH) * win->img->bits_per_pixel / 8) = win->param->color;
+			//win->img->data[i * win->img->bits_per_pixel] =
 			mlx_pixel_put(win->mlx_ptr, win->win_ptr, x, y, win->param->color);
 			//mlx_pixel_put(win->mlx_ptr, win->win_ptr, x, y, win->param->color);
 		}
 	}
+	//mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img->img_ptr, 0, 0);
 }
 
 

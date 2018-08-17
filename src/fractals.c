@@ -6,37 +6,37 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/15 19:16:57 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/17 17:22:04 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int		get_fractal_point(t_win *win, int x, int y)
+int		get_fractal_point(t_win *win, t_coords *indexs)
 {
 	if (win->param->fr_id == FR_MANDELBROT)
 	{
 		if (win->flags->man_4)
-			return (mandelbrot_cuboid(win, x, y));
+			return (mandelbrot_cuboid(win, indexs));
 		else
-			return (mandelbrot(win, x, y));
+			return (mandelbrot(win, indexs));
 	}
 	return 0;
 }
 
-int		mandelbrot(t_win *win, int x, int y)
+int		mandelbrot(t_win *win, t_coords *indexs)
 {
 	int		i;
 	t_cnb	c;
 	double	pr;
 	double	pi;
 
-	pr    = 1.5 * (x - win->param->centr_x)
-					/ win->param->zoom_x
-					+ win->param->offset_x;
-	pi    =       (y - win->param->centr_y)
-					/ win->param->zoom_y
-					+ win->param->offset_y;
+	pr    = win->img->ratio * (indexs->x - win->param->centr_x)
+							/ win->param->zoom_x
+							+ win->param->offset_x;
+	pi    =       (indexs->y - win->param->centr_y)
+							/ win->param->zoom_y
+							+ win->param->offset_y;
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;
@@ -54,17 +54,19 @@ int		mandelbrot(t_win *win, int x, int y)
 	return (i);
 }
 
-int		mandelbrot_cuboid(t_win *win, int x, int y)
+int		mandelbrot_cuboid(t_win *win, t_coords *indexs)
 {
 	int		i;
 	t_cnb	c;
 	double	pr;
 	double	pi;
 
-	pr    = 1.5 * (x - win->param->centr_x)	/ win->param->zoom_x
-														+ win->param->offset_x;
-	pi    =       (y - win->param->centr_y) / win->param->zoom_y
-														+ win->param->offset_y;
+	pr    = 1.5 * (indexs->x - win->param->centr_x)
+								/ win->param->zoom_x
+								+ win->param->offset_x;
+	pi    =       (indexs->y - win->param->centr_y)
+				  				/ win->param->zoom_y
+								+ win->param->offset_y;
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;

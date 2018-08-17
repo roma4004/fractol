@@ -6,15 +6,15 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/16 18:11:37 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/17 20:49:44 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
 # define DEF_OFFSET_Y 0
 # define DEF_OFFSET_X 0
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
@@ -44,23 +44,23 @@ typedef struct		s_complex_number
 
 }					t_cnb;
 
-typedef struct		s_index
+typedef struct		s_coordinate_iterator
 {
 	int				x;
 	int				y;
-}					t_index;
+}					t_coords;
 
 typedef struct	s_param
 {
 	int		fr_id;
+	int		iter;
+	int		color;
+	int		color_step;
 	float	zoom;
 	float	zoom_x;
 	float	zoom_y;
-	int		iter;
 	float	spec1;
 	float	spec2;
-	float	color;
-	float	color_step;
 	float	offset_step;
 
 	float	offset_y;
@@ -82,13 +82,27 @@ typedef struct	s_flags
 	int		error_code;
 }				t_flags;
 
+typedef struct	s_color
+{
+	int	a;
+	int	r;
+	int	g;
+	int	b;
+	int	a_offset;
+	int	r_offset;
+	int	g_offset;
+	int	b_offset;
+}				t_col;
+
 typedef struct	s_img
 {
 	void	*img_ptr;
-	char	*data;
+	int		*data;
 	int		bits_per_pixel;
 	int		size_line;
 	int		endian;
+	t_col	col;
+	float	ratio;
 }				t_img;
 
 typedef struct	s_win
@@ -99,6 +113,14 @@ typedef struct	s_win
 	void	*win_ptr;
 	t_img	*img;
 }				t_win;
+
+enum			e_offset
+{
+	ALPHA_OFF = 24;
+	RED_OFF = 16;
+	GREEN_OFF = 8;
+	BLUE_OFF = 0;
+};
 
 enum			e_keys
 {
@@ -137,13 +159,15 @@ enum			e_fr_type
 
 void	init_fract(t_win *win);
 void	redraw_fract(t_win *win);
-int		get_fractal_point(t_win *win, int x, int y);
-int		mandelbrot(t_win *win, int x, int y);
-int		mandelbrot_cuboid(t_win *win, int x, int y);
+int		get_fractal_point(t_win *win, t_coords *indexs);
+int		mandelbrot(t_win *win, t_coords *indexs);
+int		mandelbrot_cuboid(t_win *win, t_coords *indexs);
 void	fr_zoom(t_win *win, float zm_offset, int x, int y);
 void	iterate_change(t_win *win, int iter_offset);
 void	redraw_fract(t_win *win);
-int		gen_color(t_win *win, int i);
+t_col	*gen_color(t_win *win, int i);
+int		get_color(t_col *col);
+int inc_color(int color, int offset);
 void	specific_param1(t_win *win, double spec1_offset);
 void	specific_param2(t_win *win, double spec2_offset);
 void	barnsley_curve(t_win *win, double curve_offset);
@@ -158,6 +182,7 @@ void			fractal_switch(t_win *win);
 t_win			*init_win(void);
 t_param			*init_param(void);
 t_flags			*init_flags(void);
+t_img			*init_img(t_win *win, int width, int height);
 
 int				deal_keyboard(int key, t_win *win);
 int				deal_mouse(int key, int x, int y, t_win *win);

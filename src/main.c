@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/16 20:43:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/17 22:13:52 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,32 +30,55 @@ static void show_errors(t_win *win)
 		ft_putstr_fd("\n", 2);
 }
 
+
+void	modif_color()
+{
+
+}
+
 void	draw_fractal(t_win *win)
 {
-	int i;
-	int y;
-	int x;
-	y = -1;
+	t_coords indexs;
 //	t_cnb   c;
+	int		px_addr;
+	//int		color;
+	int		i;
 
-	while(y++ < WIN_HEIGHT)
+	indexs.y = -1;
+	while(++indexs.y < WIN_HEIGHT)
 	{
-		x = 0;
-		while (x++ < WIN_WIDTH)
+		indexs.x = -1;
+		while (++indexs.x < WIN_WIDTH)
 		{
-			i = get_fractal_point(win, x, y);
 			//use color model conversion to get rainbow palette, make brightness black if maxIterations reached
 			//color = HSVtoRGB(ColorHSV(i % 256, 255, 255 * (i < maxIterations)));
 
-			gen_color(win, i);
+			i = get_fractal_point(win, &indexs);
+			//gen_color(win, i);
 			//win->param->color =(i *(x+y) / win->param->iter) * (newRe * newIm);
-			//*(int *)(win->img->data + (x + y * WIN_WIDTH) * win->img->bits_per_pixel / 8) = win->param->color;
-			//win->img->data[i * win->img->bits_per_pixel] =
-			mlx_pixel_put(win->mlx_ptr, win->win_ptr, x, y, win->param->color);
-			//mlx_pixel_put(win->mlx_ptr, win->win_ptr, x, y, win->param->color);
+			px_addr = indexs.y * WIN_WIDTH + indexs.x;
+//			int RGB = (alpha << 24);
+//			RGB = RGB | (red << 16);
+//			RGB = RGB | (green << 8);
+//			RGB = RGB | (blue);
+
+//			color = ( (win->img->col.a) << 24)
+//					| ((win->img->col.r) << 16)
+//					| ((win->img->col.g) << 8)
+//					| ( win->img->col.b);
+
+			///win->img->data[px_addr] = get_color(gen_color(win, i));
+			win->img->data[px_addr] = get_color(gen_color(win, i));
+
+//			win->img->data[px_addr    ] = (int)win->img->col.r;
+//			win->img->data[px_addr + 1] = (int)win->img->col.g;
+//			win->img->data[px_addr + 2] = (int)win->img->col.b;
+
+			//mlx_pixel_put(win->mlx_ptr, win->win_ptr, indexs.x, indexs.y, win->param->color);
+			//mlx_pixel_put(win->mlx_ptr, win->win_ptr, indexs.x, indexs.y, win->param->color);
 		}
 	}
-	//mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img->img_ptr, 0, 0);
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img->img_ptr, 0, 0);
 }
 
 

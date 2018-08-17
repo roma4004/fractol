@@ -26,10 +26,10 @@ void	redraw_fract(t_win *win)
 void	draw_barnsley(t_win *win)
 {
 	win->param->fr_id = FR_BARNSLEY;
-	float   rng;
-	long    n;
-	t_index i;
-	t_cnb   c;
+	float		rng;
+	long		n;
+	t_coords	i;
+	t_cnb		c;
 
 	c = (t_cnb){.newR = 0, .newI = 0};
 	//float prob[4] = {0.01, 0.06, 0.08, 0.85};

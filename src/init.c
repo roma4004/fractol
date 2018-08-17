@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/16 20:28:10 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/17 21:05:55 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	init_fract(t_win *win)
 		win->param->offset_x = -0.5;
 		win->param->offset_y = 0;
 		win->param->offset_step = 0.1;
-		win->param->color_step = 0xfffffff / win->param->iter * PI; // / 1114112;
+		win->param->color_step = 0xffffff / win->param->iter * PI; // / 1114112;
 		win->param->color = DEF_COLOR;
 	}
 
@@ -82,21 +82,30 @@ t_flags	*init_flags(void)
 	return (new_flags);
 }
 
-t_img	*img_init(t_win *win, int bits_per_pixel, int width, int height)
+t_img	*init_img(t_win *win, int width, int height)
 {
 	t_img	*new_img;
 
 	new_img = NULL;
 	if ((new_img = (t_img *)malloc(sizeof(t_img))))
 	{
-		new_img->bits_per_pixel = bits_per_pixel;
-		new_img->size_line = width;
+		new_img->col.a = 0;
+		new_img->col.r = 0;
+		new_img->col.g = 0;
+		new_img->col.b = 0;
+		new_img->col.a_offset = 0;
+		new_img->col.r_offset = 1;
+		new_img->col.g_offset = 1;
+		new_img->col.b_offset = 1;
+		new_img->ratio = (float)WIN_WIDTH / (float)WIN_HEIGHT;
+		new_img->bits_per_pixel = 0;
+		new_img->size_line = 0;
 		new_img->endian = 0;
 		new_img->img_ptr = mlx_new_image(win->mlx_ptr, width, height);
-		new_img->data = mlx_get_data_addr(new_img->img_ptr,
-										&new_img->size_line,
-										&new_img->bits_per_pixel,
-										&new_img->endian);
+		new_img->data = (int *)mlx_get_data_addr(new_img->img_ptr,
+												&new_img->size_line,
+												&new_img->bits_per_pixel,
+												&new_img->endian);
 	}
 	return (new_img);
 }
@@ -115,7 +124,7 @@ t_win	*init_win(void)
 		|| !(new_win->img = mlx_new_image(new_win->mlx_ptr,
 										WIN_WIDTH,
 										WIN_HEIGHT))
-		|| !(new_win->img = img_init(new_win, 0, WIN_WIDTH, WIN_HEIGHT))
+		|| !(new_win->img = init_img(new_win, WIN_WIDTH, WIN_HEIGHT))
 			)
 		free_win(new_win);
 	return (new_win);

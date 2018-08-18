@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/17 21:05:55 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/18 16:45:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	init_fract(t_win *win)
 		win->param->spec2 = DEF_BARNSLEY_CURVE_Y;
 		win->param->color = DEF_COLOR;
 		win->param->offset_step = 10;
+		win->param->iter_step = 100;
 	}
 	else if (win->param->fr_id == FR_MANDELBROT)
 	{
@@ -32,6 +33,7 @@ void	init_fract(t_win *win)
 		win->param->zoom = 1;
 		win->param->offset_x = -0.5;
 		win->param->offset_y = 0;
+		win->param->iter_step = 100;
 		win->param->offset_step = 0.1;
 		win->param->color_step = 0xffffff / win->param->iter * PI; // / 1114112;
 		win->param->color = DEF_COLOR;

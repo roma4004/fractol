@@ -6,45 +6,32 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/17 22:16:22 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/18 20:41:08 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	change_color(t_win *win)
+void	change_color(t_win *win, int offset, int chanel)
 {
-	t_coords indexs;
-	//	t_cnb   c;
-	int		px_addr;
-	//int		color;
-	int		i;
+	int		y;
+	int		x;
+	int		px;
+	t_img	*img;
 
-	indexs.y = -1;
-	while(++indexs.y < WIN_HEIGHT)
+	img = win->img;
+	y = -1;
+	while(++y < WIN_HEIGHT)
 	{
-		indexs.x = -1;
-		while (++indexs.x < WIN_WIDTH)
+		x = -1;
+		while (++x < WIN_WIDTH)
 		{
-			//use color model conversion to get rainbow palette, make brightness black if maxIterations reached
-			//color = HSVtoRGB(ColorHSV(i % 256, 255, 255 * (i < maxIterations)));
-
-			//i = get_fractal_point(win, &indexs);
-			//gen_color(win, i);
-			//win->param->color =(i *(x+y) / win->param->iter) * (newRe * newIm);
-			px_addr = indexs.y * WIN_WIDTH + indexs.x;
-			//			int RGB = (alpha << 24);
-			//			RGB = RGB | (red << 16);
-			//			RGB = RGB | (green << 8);
-			//			RGB = RGB | (blue);
-
-			//			color = ( (win->img->col.a) << 24)
-			//					| ((win->img->col.r) << 16)
-			//					| ((win->img->col.g) << 8)
-			//					| ( win->img->col.b);
-
-			///win->img->data[px_addr] = get_color(gen_color(win, i));
-			win->img->data[px_addr] = inc_color(win->img->data[px_addr], RED_OFF);
+			px = y * WIN_WIDTH + x;
+			img->data[px] = change_hue(img->data[px], offset, chanel);
+		}
+	}
+	mlx_clear_window(win->mlx_ptr, win->win_ptr);
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
 }
 
 int		exit_x(t_win *win)
@@ -54,10 +41,10 @@ int		exit_x(t_win *win)
 	exit(0);
 }
 
-void	set_color(int *color_part, int offset)
+static void	set_color(int *chanel, int offset)
 {
-	if (*color_part + offset > 0 || *color_part < 256)
-		*color_part += offset;
+	if (*chanel + offset > 0 || *chanel < 256)
+		*chanel += offset;
 }
 
 void	color_offset(t_win *win, int offset, char type)
@@ -68,11 +55,31 @@ void	color_offset(t_win *win, int offset, char type)
 	if (type == 'b' || type == 'B') set_color(&win->img->col.b, offset);
 }
 
-void	map_offset(t_win *win, double offset_x, double offset_y)
+int		map_offset(t_win *win, int key)
 {
-	win->param->offset_x += offset_x;
-	win->param->offset_y += offset_y;
-	redraw_fract(win);
+	int		need_redraw;
+	double	offset_x;
+	double	offset_y;
+
+	need_redraw = 0;
+	offset_x = 0;
+	offset_y = 0;
+	if (key == ARROW_LEFT && (need_redraw = 1))
+		offset_x = win->param->offset_step;
+	else if (key == ARROW_UP && (need_redraw = 1))
+		offset_y = win->param->offset_step;
+	else if (key == ARROW_DOWN && (need_redraw = 1))
+		offset_y = -win->param->offset_step;
+	else if (key == ARROW_RIGHT && (need_redraw = 1))
+		offset_x = -win->param->offset_step;
+	if (need_redraw)
+	{
+		win->param->offset_x += offset_x;
+		win->param->offset_y += offset_y;
+		redraw_fract(win);
+		return (0);
+	}
+	return (1);
 }
 
 void	specific_param2(t_win *win, double spec2_offset)
@@ -96,31 +103,54 @@ void	barnsley_curve(t_win *win, double spec2_offset)
 	printf("barnsley_curve %f\n", win->param->spec2);
 }
 
-void	iterate_change(t_win *win, int iter_offset)
+int		iterate_change(t_win *win, int key)
 {
+	int iter_offset;
+	int need_redraw;
+
+	iter_offset = 0;
+	need_redraw = 0;
+	if ((key == NUM_MINUS || key == NINE) && (need_redraw = 1))
+		iter_offset = -win->param->iter_step;
+	else if ((key == NUM_PLUS || key == ZERO) && (need_redraw = 1))
+		iter_offset = win->param->iter_step;
 	if (win->param->iter + iter_offset >= 0)
 		win->param->iter += iter_offset;
-	redraw_fract(win);
+	if ((need_redraw) && (win->param->iter + iter_offset >= 0))
+	{
+		win->param->iter += iter_offset;
+		redraw_fract(win);
+		return (0);
+	}
+	return (1);
 	printf("iter ch %d\n", win->param->iter);
 }
 
-void	fr_zoom(t_win *win, float offset, int x, int y)
+int		zoom(t_win *win, int key, float x, float y)
 {
-	if (win->param->zoom + offset > 0)
+	double	zoom_factor;
+	int		need_redraw;
+
+	need_redraw = 0;
+	zoom_factor = 0;
+	if (key == MINUS && (need_redraw = 1))
+		zoom_factor = -0.5;
+	else if (key == PLUS && (need_redraw = 1))
+		zoom_factor = 0.5;
+	if (need_redraw && win->param->zoom + zoom_factor > 0)
 	{
-		win->param->zoom += offset;
+		win->param->zoom += zoom_factor;
 		win->param->zoom_x = win->param->zoom * win->param->centr_x;
 		win->param->zoom_y = win->param->zoom * win->param->centr_y;
+		win->param->offset_x += (x - WIN_WIDTH / 2) / (win->param->zoom * WIN_WIDTH);
+		win->param->offset_y += (y - WIN_HEIGHT / 2) / (win->param->zoom * WIN_HEIGHT);
+		printf("%f\n",win->param->zoom);
+		redraw_fract(win);
+		//or
+		//win->param->offset_x += (x - WIN_WIDTH / 2) / ((WIN_WIDTH / 2) * win->param->zoom);
+		//win->param->offset_y += (y - WIN_HEIGHT / 2) / ((WIN_HEIGHT / 2) * win->param->zoom);
 	}
-	printf("%f\n",win->param->zoom);
-	//x++;
-	//y++;
-	win->param->offset_x += (x - WIN_WIDTH / 2) / (win->param->zoom * WIN_WIDTH);
-	win->param->offset_y += (y - WIN_HEIGHT / 2) / (win->param->zoom * WIN_HEIGHT);
-	//or
-	//win->param->offset_x += (x - WIN_WIDTH / 2) / ((WIN_WIDTH / 2) * win->param->zoom);
-	//win->param->offset_y += (y - WIN_HEIGHT / 2) / ((WIN_HEIGHT / 2) * win->param->zoom);
-	redraw_fract(win);
+	return (1);
 }
 
 void	fractal_switch(t_win *win)
@@ -133,25 +163,33 @@ void	fractal_switch(t_win *win)
 	redraw_fract(win);
 }
 
-void	toggles(t_win *win, int key)
+int		toggles(t_win *win, int key)
 {
-	if (key == 1)
+	int need_redraw;
+
+	need_redraw = 0;
+	if (key == NUM_1 || key == ONE)
 		toggle_param(&win->flags->man_1);
-	if (key == 2)
+	else if ((key == NUM_2 || key == TWO) && (need_redraw = 1))
 		toggle_param(&win->flags->man_2);
-	if (key == 3)
+	else if ((key == NUM_3 || key == THREE) && (need_redraw = 1))
 		toggle_param(&win->flags->man_3);
-	if (key == 4)
+	else if ((key == NUM_4 || key == FOUR) && (need_redraw = 1))
 		toggle_param(&win->flags->man_4);
-	if (key == 5)
+	else if ((key == NUM_5 || key == FIVE) && (need_redraw = 1))
 		toggle_param(&win->flags->man_5);
-	if (key == 6)
+	else if ((key == NUM_6 || key == SIX) && (need_redraw = 1))
 		toggle_param(&win->flags->man_6);
-	if (key == 7)
+	else if ((key == NUM_7 || key == SEVEN) && (need_redraw = 1))
 		toggle_param(&win->flags->man_7);
-	if (key == 8)
+	else if ((key == NUM_8 || key == EIGHT) && (need_redraw = 1))
 		toggle_param(&win->flags->interface_on);
-	redraw_fract(win);
+	if (need_redraw)
+	{
+		redraw_fract(win);
+		return (0);
+	}
+	return (1);
 }
 
 void		reset(t_win *win)
@@ -177,7 +215,6 @@ void		reset(t_win *win)
 	{
 		win->param->spec1 = DEF_BARNSLEY_CURVE_X;
 		win->param->spec2 = DEF_BARNSLEY_CURVE_Y;
-
 	}
 	win->param->offset_x = DEF_OFFSET_X;
 	win->param->offset_y = DEF_OFFSET_Y;

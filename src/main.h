@@ -6,15 +6,15 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/17 20:49:44 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/18 20:39:28 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
 # define DEF_OFFSET_Y 0
 # define DEF_OFFSET_X 0
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
@@ -56,6 +56,7 @@ typedef struct	s_param
 	int		iter;
 	int		color;
 	int		color_step;
+	double	iter_step;
 	float	zoom;
 	float	zoom_x;
 	float	zoom_y;
@@ -84,14 +85,14 @@ typedef struct	s_flags
 
 typedef struct	s_color
 {
-	int	a;
-	int	r;
-	int	g;
-	int	b;
-	int	a_offset;
-	int	r_offset;
-	int	g_offset;
-	int	b_offset;
+	int		a;
+	int		r;
+	int		g;
+	int		b;
+	int		a_offset;
+	int		r_offset;
+	int		g_offset;
+	int		b_offset;
 }				t_col;
 
 typedef struct	s_img
@@ -116,10 +117,10 @@ typedef struct	s_win
 
 enum			e_offset
 {
-	ALPHA_OFF = 24;
-	RED_OFF = 16;
-	GREEN_OFF = 8;
-	BLUE_OFF = 0;
+	ALPHA_OFF = 24,
+	RED_OFF = 16,
+	GREEN_OFF = 8,
+	BLUE_OFF = 0
 };
 
 enum			e_keys
@@ -134,13 +135,16 @@ enum			e_keys
 	NUM_8 = 91, EIGHT = 28,
 	NUM_MINUS = 78, NINE = 25,
 	NUM_PLUS = 69, ZERO = 29,
-	Q = 12, W = 13, E = 14,
-	A = 0, S = 1, D = 2,
-	R = 15, ENTER = 36, ESC = 53,
+	Q = 12, W = 13, E = 14, R = 15,
+	A = 0,  S = 1,  D = 2,  F= 3,
+	Z = 6,  X = 7,  C = 8,  V = 9,
+	 ENTER = 36, ESC = 53,
 	ARROW_UP = 126, ARROW_DOWN = 125,
 	ARROW_LEFT = 123, ARROW_RIGHT = 124,
 	MOUSE_SCROLL_UP = 4, MINUS = 27,
 	MOUSE_SCROLL_DOWN = 5, PLUS = 24,
+	HOME = 115, END = 119, PAGE_UP = 116, PAGE_DOWN = 121,
+
 };
 
 enum			e_errors
@@ -162,37 +166,40 @@ void	redraw_fract(t_win *win);
 int		get_fractal_point(t_win *win, t_coords *indexs);
 int		mandelbrot(t_win *win, t_coords *indexs);
 int		mandelbrot_cuboid(t_win *win, t_coords *indexs);
-void	fr_zoom(t_win *win, float zm_offset, int x, int y);
-void	iterate_change(t_win *win, int iter_offset);
+
 void	redraw_fract(t_win *win);
 t_col	*gen_color(t_win *win, int i);
 int		get_color(t_col *col);
-int inc_color(int color, int offset);
+void	px_to_img(t_img *img, int x, int y, int color);
+int		change_hue(int color, int offfset, int mask_offset);
+void	change_color(t_win *win, int inc_OR_decrease, int color_chanel);
+
 void	specific_param1(t_win *win, double spec1_offset);
 void	specific_param2(t_win *win, double spec2_offset);
 void	barnsley_curve(t_win *win, double curve_offset);
 void	draw_fractal(t_win *win);
 void	draw_barnsley(t_win *win);
 
-double pow_of(double num, int exp);
-void			map_offset(t_win *win, double offset_x, double offset_y);
-void			fractal_switch(t_win *win);
+double		pow_of(double num, int exp);
 
+t_win		*init_win(void);
+t_param		*init_param(void);
+t_flags		*init_flags(void);
+t_img		*init_img(t_win *win, int width, int height);
 
-t_win			*init_win(void);
-t_param			*init_param(void);
-t_flags			*init_flags(void);
-t_img			*init_img(t_win *win, int width, int height);
+int			deal_keyboard(int key, t_win *win);
+int			deal_mouse(int key, int x, int y, t_win *win);
+int			exit_x(t_win *par);
 
-int				deal_keyboard(int key, t_win *win);
-int				deal_mouse(int key, int x, int y, t_win *win);
-int				exit_x(t_win *par);
+int			zoom(t_win *win, int key, float x, float y);
+int			iterate_change(t_win *win, int iter_offset);
+void		fractal_switch(t_win *win);
+int			map_offset(t_win *win, int key);
+void		show_interface(t_win *win);
+int			toggles(t_win *win, int key);
+int			toggle_param(int *param);
 
-void			show_interface(t_win *win);
-void			toggles(t_win *win, int key);
-int				toggle_param(int *param);
-
-void			reset(t_win *win);
-int				free_win(t_win *win);
+void		reset(t_win *win);
+int			free_win(t_win *win);
 
 #endif

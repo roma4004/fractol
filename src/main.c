@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/17 22:13:52 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/18 16:14:08 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ static void show_errors(t_win *win)
 void	modif_color()
 {
 
+}
+
+void	px_to_img(t_img *img, int x, int y, int color)
+{
+	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+		img->data[y * WIN_WIDTH + x] = color;
 }
 
 void	draw_fractal(t_win *win)
@@ -68,7 +74,8 @@ void	draw_fractal(t_win *win)
 //					| ( win->img->col.b);
 
 			///win->img->data[px_addr] = get_color(gen_color(win, i));
-			win->img->data[px_addr] = get_color(gen_color(win, i));
+			px_to_img(win->img, indexs.x, indexs.y, get_color(gen_color(win, i)));
+
 
 //			win->img->data[px_addr    ] = (int)win->img->col.r;
 //			win->img->data[px_addr + 1] = (int)win->img->col.g;

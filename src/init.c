@@ -6,61 +6,38 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/18 16:45:20 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/19 16:51:04 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	init_fract(t_win *win)
+void	init_fract(t_param *param, int id)
 {
-	win->param->centr_x = WIN_WIDTH / 2;
-	win->param->centr_y = WIN_HEIGHT / 2;
-	win->param->zoom_x = win->param->zoom * win->param->centr_x;
-	win->param->zoom_y = win->param->zoom * win->param->centr_y;
-	if (win->param->fr_id == FR_BARNSLEY)
-	{
-		win->param->spec1 = DEF_BARNSLEY_CURVE_X;
-		win->param->spec2 = DEF_BARNSLEY_CURVE_Y;
-		win->param->color = DEF_COLOR;
-		win->param->offset_step = 10;
-		win->param->iter_step = 100;
-	}
-	else if (win->param->fr_id == FR_MANDELBROT)
-	{
-		win->param->spec1 = 0;
-		win->param->spec2 = 2;
-		win->param->zoom = 1;
-		win->param->offset_x = -0.5;
-		win->param->offset_y = 0;
-		win->param->iter_step = 100;
-		win->param->offset_step = 0.1;
-		win->param->color_step = 0xffffff / win->param->iter * PI; // / 1114112;
-		win->param->color = DEF_COLOR;
-	}
-
+	param->fr_id = id;
+	param->iter = (param->fr_id == FR_BARNSLEY) ? 42000 : 100;
+	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 0.5;
+	//param->color = DEF_COLOR;
+	param->centr_x = WIN_WIDTH / 2;
+	param->centr_y = WIN_HEIGHT / 2;
+	param->zoom_x = param->zoom * param->centr_x;
+	param->zoom_y = param->zoom * param->centr_y;
+	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
+	param->spec_step = (param->fr_id == FR_BARNSLEY) ? 0.01 : 1;
+	param->offset_step = (param->fr_id == FR_BARNSLEY) ? 10 : 0.1;
+	param->iter_step = (param->fr_id == FR_BARNSLEY) ? 1000 : 100;
+	param->spec1 = (param->fr_id == FR_BARNSLEY) ? 0.04 : 0;
+	param->spec2 = (param->fr_id == FR_BARNSLEY) ? 0.85 : 2;
+	param->offset_x = (param->fr_id == FR_BARNSLEY) ? -0.5 : 0;
+	param->offset_y = 0;
 }
 
 t_param	*init_param(void)
 {
 	t_param *new_param;
 
-	new_param = NULL;
 	if ((new_param = (t_param *)malloc(sizeof(t_param))))
-	{
-		new_param->fr_id = FR_BARNSLEY;
-		new_param->zoom = 0.5;
-		new_param->iter = 100;
-		new_param->spec1 = DEF_BARNSLEY_CURVE_X;
-		new_param->spec2 = DEF_BARNSLEY_CURVE_Y;
-		new_param->color = DEF_COLOR;
-		new_param->color_step = 1;
-		new_param->offset_step = 100;
-		new_param->offset_x = DEF_OFFSET_X;
-		new_param->offset_y = DEF_OFFSET_Y;
-		new_param->centr_x = 0.0;
-		new_param->centr_y = 0.0;
-	}
+		init_fract(new_param, FR_BARNSLEY);
 	return (new_param);
 }
 
@@ -68,7 +45,6 @@ t_flags	*init_flags(void)
 {
 	t_flags	*new_flags;
 
-	new_flags = NULL;
 	if ((new_flags = (t_flags *)malloc(sizeof(t_flags))))
 	{
 		new_flags->man_1 = 0;
@@ -88,17 +64,12 @@ t_img	*init_img(t_win *win, int width, int height)
 {
 	t_img	*new_img;
 
-	new_img = NULL;
 	if ((new_img = (t_img *)malloc(sizeof(t_img))))
 	{
 		new_img->col.a = 0;
 		new_img->col.r = 0;
 		new_img->col.g = 0;
 		new_img->col.b = 0;
-		new_img->col.a_offset = 0;
-		new_img->col.r_offset = 1;
-		new_img->col.g_offset = 1;
-		new_img->col.b_offset = 1;
 		new_img->ratio = (float)WIN_WIDTH / (float)WIN_HEIGHT;
 		new_img->bits_per_pixel = 0;
 		new_img->size_line = 0;
@@ -116,18 +87,13 @@ t_win	*init_win(void)
 {
 	t_win	*new_win;
 
-	new_win = NULL;
 	if (!(new_win = (t_win *)malloc(sizeof(t_win)))
 		|| !(new_win->param = init_param())
 		|| !(new_win->flags = init_flags())
 		|| !(new_win->mlx_ptr = mlx_init())
-		|| !(new_win->win_ptr = mlx_new_window(new_win->mlx_ptr,
-											WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
-		|| !(new_win->img = mlx_new_image(new_win->mlx_ptr,
-										WIN_WIDTH,
-										WIN_HEIGHT))
-		|| !(new_win->img = init_img(new_win, WIN_WIDTH, WIN_HEIGHT))
-			)
+		|| !(new_win->win_ptr =
+			 mlx_new_window(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
+		|| !(new_win->img = init_img(new_win, WIN_WIDTH, WIN_HEIGHT)))
 		free_win(new_win);
 	return (new_win);
 }

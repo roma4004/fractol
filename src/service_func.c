@@ -6,15 +6,17 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/03 13:58:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/19 16:28:50 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-double pow_of(double num, int exp)
+double	pow_of(double num, int exp)
 {
-	double result = 1.0;
+	double result;
+
+	result = 1.0;
 	while (exp > 0)
 	{
 		if (exp % 2 == 1)
@@ -22,11 +24,25 @@ double pow_of(double num, int exp)
 		exp >>= 1;
 		num *= num;
 	}
-	return result;
+	return (result);
 }
 
 int		toggle_param(int *param)
 {
-	*param = ((*param == 0) ? 1 : 0);
+	*param = (*param == 0) ? 1 : 0;
 	return (1);
 }
+
+void	px_to_img(t_img *img, int x, int y, int color)
+{
+	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+		img->data[y * WIN_WIDTH + x] = color;
+}
+
+void	redraw_img(t_win *win)
+{
+	mlx_clear_window(win->mlx_ptr, win->win_ptr);
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr,
+							win->img->img_ptr, 0, 0);
+}
+

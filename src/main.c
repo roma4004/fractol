@@ -6,105 +6,50 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/18 16:14:08 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/19 16:18:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static void show_errors(t_win *win)
-{
-	if (win->flags->error_code == 404)
-		ft_putstr_fd("MAP_INVALID", 2);
-	if (win->flags->error_code == 405)
-		ft_putstr_fd("WIDTH_ERR", 2);
-	if (win->flags->error_code == 406)
-		ft_putstr_fd("FILE_ERR", 2);
-	if (win->flags->error_code == 407)
-		ft_putstr_fd("COLOR_ERR", 2);
-	if (win->flags->error_code && errno)
-		ft_putstr_fd(" - ", 2);
-	if (errno)
-		ft_putstr_fd(strerror(errno), 2);
-	if (win->flags->error_code || errno)
-		ft_putstr_fd("\n", 2);
-}
-
-
-void	modif_color()
-{
-
-}
-
-void	px_to_img(t_img *img, int x, int y, int color)
-{
-	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
-		img->data[y * WIN_WIDTH + x] = color;
-}
-
 void	draw_fractal(t_win *win)
 {
-	t_coords indexs;
-//	t_cnb   c;
-	int		px_addr;
-	//int		color;
 	int		i;
+	int 	x;
+	int 	y;
+	t_img	*img;
 
-	indexs.y = -1;
-	while(++indexs.y < WIN_HEIGHT)
+	img = win->img;
+	y = -1;
+	while(++y < WIN_HEIGHT)
 	{
-		indexs.x = -1;
-		while (++indexs.x < WIN_WIDTH)
+		x = -1;
+		while (++x < WIN_WIDTH)
 		{
-			//use color model conversion to get rainbow palette, make brightness black if maxIterations reached
-			//color = HSVtoRGB(ColorHSV(i % 256, 255, 255 * (i < maxIterations)));
-
-			i = get_fractal_point(win, &indexs);
-			//gen_color(win, i);
-			//win->param->color =(i *(x+y) / win->param->iter) * (newRe * newIm);
-			px_addr = indexs.y * WIN_WIDTH + indexs.x;
-//			int RGB = (alpha << 24);
-//			RGB = RGB | (red << 16);
-//			RGB = RGB | (green << 8);
-//			RGB = RGB | (blue);
-
-//			color = ( (win->img->col.a) << 24)
-//					| ((win->img->col.r) << 16)
-//					| ((win->img->col.g) << 8)
-//					| ( win->img->col.b);
-
-			///win->img->data[px_addr] = get_color(gen_color(win, i));
-			px_to_img(win->img, indexs.x, indexs.y, get_color(gen_color(win, i)));
-
-
-//			win->img->data[px_addr    ] = (int)win->img->col.r;
-//			win->img->data[px_addr + 1] = (int)win->img->col.g;
-//			win->img->data[px_addr + 2] = (int)win->img->col.b;
-
-			//mlx_pixel_put(win->mlx_ptr, win->win_ptr, indexs.x, indexs.y, win->param->color);
-			//mlx_pixel_put(win->mlx_ptr, win->win_ptr, indexs.x, indexs.y, win->param->color);
+			i = get_fractal_point(win, x, y);
+			px_to_img(img, x, y, get_color(gen_color(win, i)));
 		}
 	}
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img->img_ptr, 0, 0);
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
 }
-
 
 void	change_fract(t_win *win, int fr_new_type)
 {
 	win->param->fr_id = fr_new_type;
-	init_fract(win);
+	init_fract(win->param, win->param->fr_id);
 	redraw_fract(win);
 }
 
 int main(void)//int argc, char **argv)
 {
 	t_win *win;
+
 	win = init_win();
 	//if (argc > 1 && (win = init_win()))
 	//{
 	//	if (parse_map(argv[1], win))
 	//	{
-			change_fract(win, FR_MANDELBROT);
+			change_fract(win, FR_BARNSLEY);
 			redraw_fract(win);
 			mlx_hook(win->win_ptr, 17, 1L << 17, exit_x, win);
 			mlx_hook(win->win_ptr, 2, 5, deal_keyboard, win);
@@ -112,7 +57,6 @@ int main(void)//int argc, char **argv)
 			mlx_loop(win->mlx_ptr);
 	//	}
 	//}
-
 	/*t_win	*win;
 
 	if (argc == 2 && (win = init_win()))

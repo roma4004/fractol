@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/18 20:39:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/19 18:50:14 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,16 @@
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
-# define DEF_OFFSET_Y 0
-# define DEF_OFFSET_X 0
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
 # define PI 3.14159265359
 
-# define DEF_BARNSLEY_CURVE_X 0.04
-# define DEF_BARNSLEY_CURVE_Y 0.85
-
 # include <stdio.h>
+# include <stdlib.h>
+# include <errno.h>
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
-# include <string.h>
-# include <errno.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include <stdio.h>
+//# include <string.h>
 
 typedef struct		s_complex_number
 {
@@ -54,20 +45,18 @@ typedef struct	s_param
 {
 	int		fr_id;
 	int		iter;
-	int		color;
-	int		color_step;
-	double	iter_step;
 	float	zoom;
 	float	zoom_x;
 	float	zoom_y;
-	float	spec1;
-	float	spec2;
-	float	offset_step;
-
-	float	offset_y;
-	float	offset_x;
 	float	centr_x;
 	float	centr_y;
+	double	iter_step;
+	double	spec_step;
+	double	spec1;
+	double	spec2;
+	double	offset_step;
+	double	offset_y;
+	double	offset_x;
 }				t_param;
 
 typedef struct	s_flags
@@ -89,10 +78,6 @@ typedef struct	s_color
 	int		r;
 	int		g;
 	int		b;
-	int		a_offset;
-	int		r_offset;
-	int		g_offset;
-	int		b_offset;
 }				t_col;
 
 typedef struct	s_img
@@ -117,10 +102,10 @@ typedef struct	s_win
 
 enum			e_offset
 {
-	ALPHA_OFF = 24,
-	RED_OFF = 16,
-	GREEN_OFF = 8,
-	BLUE_OFF = 0
+	ALPHA = 24,
+	RED = 16,
+	GREEN = 8,
+	BLUE = 0
 };
 
 enum			e_keys
@@ -158,34 +143,34 @@ enum			e_errors
 enum			e_fr_type
 {
 	FR_BARNSLEY = 0,
+	BARNSLEY_PART_BODY = 1,
+	BARNSLEY_PART_LEFT = 2,
+	BARNSLEY_PART_RIGHT = 3,
+	BARNSLEY_PART_CURVE = 4,
 	FR_MANDELBROT = 1,
 };
 
-void	init_fract(t_win *win);
-void	redraw_fract(t_win *win);
-int		get_fractal_point(t_win *win, t_coords *indexs);
-int		mandelbrot(t_win *win, t_coords *indexs);
-int		mandelbrot_cuboid(t_win *win, t_coords *indexs);
 
-void	redraw_fract(t_win *win);
-t_col	*gen_color(t_win *win, int i);
-int		get_color(t_col *col);
-void	px_to_img(t_img *img, int x, int y, int color);
-int		change_hue(int color, int offfset, int mask_offset);
-void	change_color(t_win *win, int inc_OR_decrease, int color_chanel);
+void		redraw_fract(t_win *win);
+int			get_fractal_point(t_win *win, int x, int y);
+int			mandelbrot(t_win *win, int x, int y);
+int			mandelbrot_cuboid(t_win *win, int x, int y);
 
-void	specific_param1(t_win *win, double spec1_offset);
-void	specific_param2(t_win *win, double spec2_offset);
-void	barnsley_curve(t_win *win, double curve_offset);
-void	draw_fractal(t_win *win);
-void	draw_barnsley(t_win *win);
+t_col		*gen_color(t_win *win, int i);
+int			get_color(t_col *col);
+int			change_hue(int color, int offset, int mask_offset);
+void		change_color(t_win *win, int key);
 
-double		pow_of(double num, int exp);
+int			specific_param(t_win *win, int key);
+void		draw_fractal(t_win *win);
+void		draw_barnsley(t_win *win);
 
+void		init_fract(t_param *param, int id);
 t_win		*init_win(void);
 t_param		*init_param(void);
 t_flags		*init_flags(void);
 t_img		*init_img(t_win *win, int width, int height);
+t_win		*clear_img(t_win *win);
 
 int			deal_keyboard(int key, t_win *win);
 int			deal_mouse(int key, int x, int y, t_win *win);
@@ -196,8 +181,13 @@ int			iterate_change(t_win *win, int iter_offset);
 void		fractal_switch(t_win *win);
 int			map_offset(t_win *win, int key);
 void		show_interface(t_win *win);
+void		show_errors(t_win *win);
+
+double		pow_of(double num, int exp);
 int			toggles(t_win *win, int key);
 int			toggle_param(int *param);
+void		px_to_img(t_img *img, int x, int y, int color);
+void		redraw_img(t_win *win);
 
 void		reset(t_win *win);
 int			free_win(t_win *win);

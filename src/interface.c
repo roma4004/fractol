@@ -31,3 +31,21 @@ void	show_interface(t_win *win)
 	mlx_string_put(win->mlx_ptr, win->win_ptr, 20, 110, DEF_COLOR,
 		"next style      : enter (hold to animate)");
 }
+
+void	show_errors(t_win *win)
+{
+	if (win->flags->error_code == 404)
+		ft_putstr_fd("MAP_INVALID", 2);
+	if (win->flags->error_code == 405)
+		ft_putstr_fd("WIDTH_ERR", 2);
+	if (win->flags->error_code == 406)
+		ft_putstr_fd("FILE_ERR", 2);
+	if (win->flags->error_code == 407)
+		ft_putstr_fd("COLOR_ERR", 2);
+	if (win->flags->error_code && errno)
+		ft_putstr_fd(" - ", 2);
+	if (errno)
+		ft_putstr_fd(strerror(errno), 2);
+	if (win->flags->error_code || errno)
+		ft_putstr_fd("\n", 2);
+}

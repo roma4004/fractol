@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:23:50 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/03 13:58:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/19 18:47:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,23 @@ int		free_win(t_win *win)
 		return (1);
 	}
 	return (0);
+}
+
+t_win	*clear_img(t_win *win)
+{
+	int		y;
+	int		x;
+
+	y = -1;
+	while (++y < WIN_HEIGHT && (x = -1))
+		while (++x < WIN_WIDTH)
+			win->img->data[y * WIN_WIDTH + x] = 0;
+	return (win);
+}
+
+int		exit_x(t_win *win)
+{
+	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
+	free_win(win);
+	exit(0);
 }

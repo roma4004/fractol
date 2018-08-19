@@ -6,164 +6,154 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/18 20:41:08 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/19 17:13:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	change_color(t_win *win, int offset, int chanel)
+void		change_color(t_win *win, int key)
 {
 	int		y;
 	int		x;
-	int		px;
-	t_img	*img;
+	int		offset;
+	int		chanel;
 
-	img = win->img;
-	y = -1;
-	while(++y < WIN_HEIGHT)
+	offset = 0;
+	if ((key == A || (key == Z)) && (chanel = ALPHA))
+		offset = (key == A) ? 1 : -1;
+	else if ((key == S || (key == X)) && (chanel = RED))
+		offset = (key == S) ? 1 : -1;
+	else if ((key == D || (key == C)) && (chanel = GREEN))
+		offset = (key == D) ? 1 : -1;
+	else if ((key == F || (key == V)) && !(chanel = BLUE))
+		offset = (key == F) ? 1 : -1;
+	if (offset && (y = -1))
 	{
-		x = -1;
-		while (++x < WIN_WIDTH)
-		{
-			px = y * WIN_WIDTH + x;
-			img->data[px] = change_hue(img->data[px], offset, chanel);
-		}
+		while (++y < WIN_HEIGHT && (x = -1))
+			while (++x < WIN_WIDTH)
+				win->img->data[y * WIN_WIDTH + x] =
+				change_hue(win->img->data[y * WIN_WIDTH + x], offset, chanel);
+		redraw_img(win);
 	}
-	mlx_clear_window(win->mlx_ptr, win->win_ptr);
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
 }
 
-int		exit_x(t_win *win)
-{
-	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
-	free_win(win);
-	exit(0);
-}
-
-static void	set_color(int *chanel, int offset)
-{
-	if (*chanel + offset > 0 || *chanel < 256)
-		*chanel += offset;
-}
-
-void	color_offset(t_win *win, int offset, char type)
-{
-	if (type == 'a' || type == 'A') set_color(&win->img->col.a, offset);
-	if (type == 'r' || type == 'R') set_color(&win->img->col.r, offset);
-	if (type == 'g' || type == 'G') set_color(&win->img->col.g, offset);
-	if (type == 'b' || type == 'B') set_color(&win->img->col.b, offset);
-}
-
-int		map_offset(t_win *win, int key)
+int			map_offset(t_win *win, int key)
 {
 	int		need_redraw;
 	double	offset_x;
 	double	offset_y;
+	t_param *param;
 
+	param = win->param;
 	need_redraw = 0;
 	offset_x = 0;
 	offset_y = 0;
 	if (key == ARROW_LEFT && (need_redraw = 1))
-		offset_x = win->param->offset_step;
+		offset_x = param->offset_step;
 	else if (key == ARROW_UP && (need_redraw = 1))
-		offset_y = win->param->offset_step;
+		offset_y = param->offset_step;
 	else if (key == ARROW_DOWN && (need_redraw = 1))
-		offset_y = -win->param->offset_step;
+		offset_y = -param->offset_step;
 	else if (key == ARROW_RIGHT && (need_redraw = 1))
-		offset_x = -win->param->offset_step;
+		offset_x = -param->offset_step;
 	if (need_redraw)
 	{
-		win->param->offset_x += offset_x;
-		win->param->offset_y += offset_y;
+		param->offset_x += offset_x;
+		param->offset_y += offset_y;
 		redraw_fract(win);
 		return (0);
 	}
 	return (1);
 }
 
-void	specific_param2(t_win *win, double spec2_offset)
+int			specific_param(t_win *win, int key)
 {
-	win->param->spec2 += spec2_offset;
-	redraw_fract(win);
-	printf("specific_param2 %f\n", win->param->spec2);
+	int		need_redraw;
+	t_param *param;
+
+	param = win->param;
+	need_redraw = 0;
+	if ((key == PAGE_UP || key == PAGE_DOWN) && (need_redraw = 1))
+		param->spec2 += (key == PAGE_UP) ? param->spec_step : -param->spec_step;
+	else if ((key == HOME || key == END) && (need_redraw = 1))
+		param->spec1 += (key == HOME) ? -param->spec_step : param->spec_step;
+	if (need_redraw)
+	{
+		redraw_fract(win);
+		return (0);
+	}
+	return (1);
 }
 
-void	specific_param1(t_win *win, double spec1_offset)
+int			iterate_change(t_win *win, int key)
 {
-	win->param->spec1 += spec1_offset;
-	redraw_fract(win);
-	printf("specific_param1 %f\n", win->param->spec1);
-}
+	int		iter_offset;
+	int		need_redraw;
+	t_param *param;
 
-void	barnsley_curve(t_win *win, double spec2_offset)
-{
-		win->param->spec2 += spec2_offset;
-	redraw_fract(win);
-	printf("barnsley_curve %f\n", win->param->spec2);
-}
-
-int		iterate_change(t_win *win, int key)
-{
-	int iter_offset;
-	int need_redraw;
-
+	param = win->param;
 	iter_offset = 0;
 	need_redraw = 0;
 	if ((key == NUM_MINUS || key == NINE) && (need_redraw = 1))
-		iter_offset = -win->param->iter_step;
+		iter_offset = -param->iter_step;
 	else if ((key == NUM_PLUS || key == ZERO) && (need_redraw = 1))
-		iter_offset = win->param->iter_step;
-	if (win->param->iter + iter_offset >= 0)
-		win->param->iter += iter_offset;
-	if ((need_redraw) && (win->param->iter + iter_offset >= 0))
+		iter_offset = param->iter_step;
+	if (param->iter + iter_offset >= 0)
+		param->iter += iter_offset;
+	if ((need_redraw) && (param->iter + iter_offset >= 0))
 	{
-		win->param->iter += iter_offset;
-		redraw_fract(win);
+		param->iter += iter_offset;
+		redraw_fract(win);printf("iter ch %d\n", param->iter);
 		return (0);
 	}
 	return (1);
-	printf("iter ch %d\n", win->param->iter);
+
 }
 
-int		zoom(t_win *win, int key, float x, float y)
+int			zoom(t_win *win, int key, float x, float y)
 {
 	double	zoom_factor;
 	int		need_redraw;
+	t_param *param;
 
+	param = win->param;
 	need_redraw = 0;
 	zoom_factor = 0;
 	if (key == MINUS && (need_redraw = 1))
 		zoom_factor = -0.5;
 	else if (key == PLUS && (need_redraw = 1))
 		zoom_factor = 0.5;
-	if (need_redraw && win->param->zoom + zoom_factor > 0)
+	if (need_redraw && param->zoom + zoom_factor > 0)
 	{
-		win->param->zoom += zoom_factor;
-		win->param->zoom_x = win->param->zoom * win->param->centr_x;
-		win->param->zoom_y = win->param->zoom * win->param->centr_y;
-		win->param->offset_x += (x - WIN_WIDTH / 2) / (win->param->zoom * WIN_WIDTH);
-		win->param->offset_y += (y - WIN_HEIGHT / 2) / (win->param->zoom * WIN_HEIGHT);
-		printf("%f\n",win->param->zoom);
+		param->zoom += zoom_factor;
+		param->zoom_x = param->zoom * param->centr_x;
+		param->zoom_y = param->zoom * param->centr_y;
+		param->offset_x += (x - WIN_WIDTH / 2) / (param->zoom * WIN_WIDTH);
+		param->offset_y += (y - WIN_HEIGHT / 2) / (param->zoom * WIN_HEIGHT);
+		printf("%f\n", param->zoom);
 		redraw_fract(win);
 		//or
-		//win->param->offset_x += (x - WIN_WIDTH / 2) / ((WIN_WIDTH / 2) * win->param->zoom);
-		//win->param->offset_y += (y - WIN_HEIGHT / 2) / ((WIN_HEIGHT / 2) * win->param->zoom);
+		// win->param->offset_x += (x - WIN_WIDTH / 2)
+		// 							/ ((WIN_WIDTH / 2) * win->param->zoom);
+		//win->param->offset_y += (y - WIN_HEIGHT / 2)
+		// 							/ ((WIN_HEIGHT / 2) * win->param->zoom);
 	}
 	return (1);
 }
 
-void	fractal_switch(t_win *win)
+void		fractal_switch(t_win *win)
 {
 	mlx_clear_window(win->mlx_ptr, win->win_ptr);
 	//if (win->flags->interface_on)
 	//	show_interface(win);
-	if (++win->param->fr_id == 3)
+	if (++win->param->fr_id == 2)
 		win->param->fr_id = 0;
+	init_fract(win->param, win->param->fr_id);
 	redraw_fract(win);
 }
 
-int		toggles(t_win *win, int key)
+int			toggles(t_win *win, int key)
 {
 	int need_redraw;
 
@@ -194,29 +184,8 @@ int		toggles(t_win *win, int key)
 
 void		reset(t_win *win)
 {
-	//size_t	y;
-	//size_t	x;
-
 	if (!win)
 		return ;
-	/*y = -1;
-	while (++y < win->param->rows)
-	{
-		x = -1;
-		while (++x < win->param->cols)
-		{
-			win->map[y][x].x = x;
-			win->map[y][x].y = y;
-			win->map[y][x].z = win->map[y][x].z_orig;
-		}
-	}*/
-
-	if (win->param->fr_id == FR_BARNSLEY)
-	{
-		win->param->spec1 = DEF_BARNSLEY_CURVE_X;
-		win->param->spec2 = DEF_BARNSLEY_CURVE_Y;
-	}
-	win->param->offset_x = DEF_OFFSET_X;
-	win->param->offset_y = DEF_OFFSET_Y;
+	init_fract(win->param, win->param->fr_id);
 	redraw_fract(win);
 }

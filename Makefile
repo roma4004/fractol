@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/08/05 14:17:52 by dromanic         ###   ########.fr        #
+#    Updated: 2018/08/19 19:57:23 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,11 +24,9 @@ SRC_N =	main.c \
 		color.c \
 		parser.c \
 		ram_man.c \
-		effects.c \
 		fractals.c \
 		interface.c \
-		service_func.c \
-		get_next_line.c
+		service_func.c
 
 SRC = $(addprefix src/, $(SRC_N))
 

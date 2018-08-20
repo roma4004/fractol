@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/19 18:50:14 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/20 15:38:19 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 # define MAIN_H
 
 # define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_HEIGHT 1024
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
+# define CPU_CORES 8
 # define PI 3.14159265359
 
 # include <stdio.h>
 # include <stdlib.h>
 # include <errno.h>
+# include <pthread.h>
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
 //# include <string.h>
@@ -98,6 +100,7 @@ typedef struct	s_win
 	void	*mlx_ptr;
 	void	*win_ptr;
 	t_img	*img;
+	pthread_t child_ptr[CPU_CORES];
 }				t_win;
 
 enum			e_offset

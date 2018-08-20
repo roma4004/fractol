@@ -43,24 +43,24 @@ int			map_offset(t_win *win, int key)
 	int		need_redraw;
 	double	offset_x;
 	double	offset_y;
-	t_param *param;
+	t_param *par;
 
-	param = win->param;
+	par = win->param;
 	need_redraw = 0;
 	offset_x = 0;
 	offset_y = 0;
 	if (key == ARROW_LEFT && (need_redraw = 1))
-		offset_x = param->offset_step;
+		offset_x = par->offset_step;
 	else if (key == ARROW_UP && (need_redraw = 1))
-		offset_y = param->offset_step;
+		offset_y = par->offset_step;
 	else if (key == ARROW_DOWN && (need_redraw = 1))
-		offset_y = -param->offset_step;
+		offset_y = -par->offset_step;
 	else if (key == ARROW_RIGHT && (need_redraw = 1))
-		offset_x = -param->offset_step;
+		offset_x = -par->offset_step;
 	if (need_redraw)
 	{
-		param->offset_x += offset_x;
-		param->offset_y += offset_y;
+		par->offset_x += offset_x;
+		par->offset_y += offset_y;
 		redraw_fract(win);
 		return (0);
 	}

@@ -12,7 +12,7 @@
 
 NAME = fractol
 
-CC = gcc -Wall -Wextra -Werror
+CC = gcc -Wall -Wextra -Werror -pthread
 
 LIBKEY = -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
 
@@ -40,7 +40,7 @@ all: $(NAME)
 	$(CC) -c $< -o $@
 
 $(NAME): liball $(OBJ)
-	$(CC) $(LIBKEY) $(OBJ) $(LIBS) -o $(NAME) 
+	$(CC) $(LIBKEY) $(OBJ) $(LIBS) -o $(NAME)
 
 clean: libclean
 	rm -f $(OBJ)

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/19 16:18:30 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/20 18:50:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ int main(void)//int argc, char **argv)
 {
 	t_win *win;
 
+
+	//pthread_create();
 	win = init_win();
 	//if (argc > 1 && (win = init_win()))
 	//{
 	//	if (parse_map(argv[1], win))
 	//	{
-			change_fract(win, FR_BARNSLEY);
+			change_fract(win, FR_MANDELBROT);
 			redraw_fract(win);
 			mlx_hook(win->win_ptr, 17, 1L << 17, exit_x, win);
 			mlx_hook(win->win_ptr, 2, 5, deal_keyboard, win);

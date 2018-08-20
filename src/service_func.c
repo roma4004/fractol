@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/19 16:28:50 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/20 13:37:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ double	pow_of(double num, int exp)
 }
 
 int		toggle_param(int *param)
-{
+{//maybe need remove this func to ternary if
 	*param = (*param == 0) ? 1 : 0;
 	return (1);
 }

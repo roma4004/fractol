@@ -35,7 +35,7 @@ int		mandelbrot(t_win *win, int x, int y)
 
 	par = win->param;
 	pr = 1.5 * (x - par->centr_x) / par->zoom_x + par->offset_x;
-	pi =                   (y - par->centr_y) / par->zoom_y + par->offset_y;
+	pi =       (y - par->centr_y) / par->zoom_y + par->offset_y;
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;

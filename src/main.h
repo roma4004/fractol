@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/20 15:38:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/21 20:52:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,15 @@
 # define WIN_HEIGHT 1024
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
-# define CPU_CORES 8
+//# define CPU_CORES 8
 # define PI 3.14159265359
 
 # include <stdio.h>
 # include <stdlib.h>
 # include <errno.h>
 # include <pthread.h>
+# include <sys/param.h>
+# include <sys/sysctl.h>
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
 //# include <string.h>
@@ -47,6 +49,7 @@ typedef struct	s_param
 {
 	int		fr_id;
 	int		iter;
+	int		cpu_cores;
 	float	zoom;
 	float	zoom_x;
 	float	zoom_y;
@@ -93,14 +96,21 @@ typedef struct	s_img
 	float	ratio;
 }				t_img;
 
+typedef struct	s_pthread_data
+{
+	struct	s_win	*win;
+	int				id;
+}				t_pth_dt;
+
 typedef struct	s_win
 {
-	t_param	*param;
-	t_flags	*flags;
-	void	*mlx_ptr;
-	void	*win_ptr;
-	t_img	*img;
-	pthread_t child_ptr[CPU_CORES];
+	t_param		*param;
+	t_flags		*flags;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	t_img		*img;
+	pthread_t	*pthreads_id;
+
 }				t_win;
 
 enum			e_offset
@@ -131,8 +141,7 @@ enum			e_keys
 	ARROW_LEFT = 123, ARROW_RIGHT = 124,
 	MOUSE_SCROLL_UP = 4, MINUS = 27,
 	MOUSE_SCROLL_DOWN = 5, PLUS = 24,
-	HOME = 115, END = 119, PAGE_UP = 116, PAGE_DOWN = 121,
-
+	HOME = 115, END = 119, PAGE_UP = 116, PAGE_DOWN = 121
 };
 
 enum			e_errors
@@ -170,9 +179,9 @@ void		draw_barnsley(t_win *win);
 
 void		init_fract(t_param *param, int id);
 t_win		*init_win(void);
-t_param		*init_param(void);
-t_flags		*init_flags(void);
-t_img		*init_img(t_win *win, int width, int height);
+t_img		*init_img(void *mlx_ptr, int width, int height);
+t_pth_dt	*init_pthread_dt(t_win *win, int id);
+pthread_t	*init_pthreads(t_win *win);
 t_win		*clear_img(t_win *win);
 
 int			deal_keyboard(int key, t_win *win);
@@ -191,6 +200,7 @@ int			toggles(t_win *win, int key);
 int			toggle_param(int *param);
 void		px_to_img(t_img *img, int x, int y, int color);
 void		redraw_img(t_win *win);
+int			get_processors_num(void);
 
 void		reset(t_win *win);
 int			free_win(t_win *win);

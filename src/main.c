@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/20 18:50:20 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/21 21:12:50 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,29 @@ void	draw_fractal(t_win *win)
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
 }
 
+void	draw_fractal_threads(t_win *win, int id)
+{
+	int		i;
+	int		inc;
+	int 	x;
+	int 	y;
+	t_img	*img;
+
+	inc = win->param->cpu_cores;
+	img = win->img;
+	y = -1;
+	while(++y < WIN_HEIGHT)
+	{
+		x = -1;
+		while ((x += inc) < WIN_WIDTH)
+		{
+			i = get_fractal_point(win, x - id, y);
+			px_to_img(img, x - id, y, get_color(gen_color(win, i)));
+		}
+	}
+	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
+}
+
 void	change_fract(t_win *win, int fr_new_type)
 {
 	win->param->fr_id = fr_new_type;
@@ -40,13 +63,38 @@ void	change_fract(t_win *win, int fr_new_type)
 	redraw_fract(win);
 }
 
+void	*threadFunc(void* thread_data){
+
+	int			id;
+	t_win		*win;
+	t_pth_dt	*thread_dt;
+
+	thread_dt = (t_pth_dt *)thread_data;
+
+	win = thread_dt->win;
+	id = thread_dt->id;
+	//завершаем поток
+	pthread_exit(0);
+}
+
 int main(void)//int argc, char **argv)
 {
-	t_win *win;
+//y * WIN_WIDTH + x + (thr_num - thr_id)
+	t_win		*win;
+	t_pth_dt	*thread_data;
+	int			i;
 
+
+
+	i = 0;
+	printf("cores: %d", get_processors_num());
+	win = init_win();
+	win->pthreads_id = init_pthreads(win);
 
 	//pthread_create();
-	win = init_win();
+//	pthread_create(&thread, NULL, threadFunc, thread_data);
+	thread_data = init_pthread_dt(win, i);
+	pthread_create(&win->pthreads_id[i], NULL, threadFunc, thread_data);
 	//if (argc > 1 && (win = init_win()))
 	//{
 	//	if (parse_map(argv[1], win))

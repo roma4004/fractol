@@ -20,6 +20,7 @@ SRC_N =	main.c \
 		draw.c \
 		keys.c \
 		init.c \
+		init2.c \
 		hooks.c \
 		color.c \
 		parser.c \

@@ -138,8 +138,9 @@ int			zoom(t_win *win, int key, float x, float y)
 		// 							/ ((WIN_WIDTH / 2) * win->param->zoom);
 		//win->param->offset_y += (y - WIN_HEIGHT / 2)
 		// 							/ ((WIN_HEIGHT / 2) * win->param->zoom);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 void		fractal_switch(t_win *win)

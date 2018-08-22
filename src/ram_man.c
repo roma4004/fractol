@@ -19,6 +19,7 @@ int		free_win(t_win *win)
 		if (win->param)
 			ft_memdel((void *)&win->param);
 		ft_memdel((void *)&win->flags);
+		//ft_memdel((void *)&win->img); need to free img func for inner pointers
 		ft_memdel((void *)&win);
 		return (1);
 	}

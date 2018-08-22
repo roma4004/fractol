@@ -31,7 +31,7 @@ int			deal_keyboard(int key, t_win *win)
 {
 	if (!win)
 		return (1);
-	if (zoom(win, key, win->param->centr_x, win->param->centr_y))
+	if (!(zoom(win, key, win->param->centr_x, win->param->centr_y)))
 		if (map_offset(win, key))
 			if (iterate_change(win, key))
 				if (toggles(win, key))

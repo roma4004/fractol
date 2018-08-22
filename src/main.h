@@ -155,11 +155,11 @@ enum			e_errors
 enum			e_fr_type
 {
 	FR_BARNSLEY = 0,
+	FR_MANDELBROT = 1,
 	BARNSLEY_PART_BODY = 1,
 	BARNSLEY_PART_LEFT = 2,
 	BARNSLEY_PART_RIGHT = 3,
 	BARNSLEY_PART_CURVE = 4,
-	FR_MANDELBROT = 1,
 };
 
 

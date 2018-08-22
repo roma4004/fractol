@@ -73,7 +73,7 @@ t_win			*init_win(void)
 		|| !(new_win->win_ptr =
 			 mlx_new_window(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
 		|| !(new_win->img = init_img(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT))
-		|| !(new_win->thread_id = init_thread_id(new_win)))
+		|| !(new_win->pthreads_id = init_thread_id(new_win)))
 		free_win(new_win);
 	return (new_win);
 }

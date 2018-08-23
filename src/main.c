@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/22 21:25:34 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/23 15:24:52 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,23 @@
 
 void	draw_fractal(t_win *win)
 {
-	int		i;
-	int 	x;
-	int 	y;
+//	int		i;
+//	int 	x;
+//	int 	y;
 	t_img	*img;
 
 	img = win->img;
-	y = -1;
-	while(++y < WIN_HEIGHT)
-	{
-		x = -1;
-		while (++x < WIN_WIDTH)
-		{
-			i = get_fractal_point(win, x, y);
-			px_to_img(img, x, y, get_color(gen_color(win, i)));
-		}
-	}
+//	y = -1;
+//	while(++y < WIN_HEIGHT)
+//	{
+//		x = -1;
+//		while (++x < WIN_WIDTH)
+//		{
+//			i = get_fractal_point(win, x, y);
+//			px_to_img(img, x, y, get_color(gen_color(win, i)));
+//		}
+//	}
+	paralel_put_to_img(win);
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
 }
 
@@ -43,15 +44,18 @@ void	*draw_threads(void *thread_data)
 
 	thread_dt = (t_pth_dt *)thread_data;
 	win = thread_dt->win;
-	y = -1;
-	while(++y < WIN_HEIGHT)
+	y = 0;
+	while(y < WIN_HEIGHT)
 	{
 		x = -1;
-		while ((x += win->param->cpu_cores) < WIN_WIDTH)
+		while (++x < WIN_WIDTH)
 		{
-			i = get_fractal_point(win, x - thread_dt->id, y);
-			px_to_img(win->img, x - thread_dt->id, y, get_color(gen_color(win, i)));
+			i = get_fractal_point(win, x, y + thread_dt->id);
+			int col =  (0xFFFFFFFF / win->param->iter) * i;
+			px_to_img(win->img, x, y + thread_dt->id, col);
+//			px_to_img(win->img, x, y + thread_dt->id, get_color(gen_color(win, i)));
 		}
+		y += win->param->cpu_cores;
 	}
 	return (NULL);
 }
@@ -80,7 +84,6 @@ void	paralel_put_to_img(t_win *win)
 	i = -1;
 	while (++i < id_max)
 		pthread_join(win->pthreads_id[i], NULL);
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, win->img->img_ptr, 0, 0);
 	//завершаем поток
 	//pthread_exit(0);
 }

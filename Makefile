@@ -6,13 +6,13 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/08/19 19:57:23 by dromanic         ###   ########.fr        #
+#    Updated: 2018/08/23 13:53:25 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fractol
 
-CC = gcc -Wall -Wextra -Werror -pthread
+CC = gcc -Ipthreads -Wall -Wextra -Werror
 
 LIBKEY = -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
 

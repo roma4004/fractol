@@ -6,26 +6,48 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/21 20:52:15 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/23 17:46:28 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 1024
+# define WIN_WIDTH 1224
+# define WIN_HEIGHT 1224
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
 //# define CPU_CORES 8
+# define ALMOST_HYPER_THREADING 1
 # define PI 3.14159265359
 
 # include <stdio.h>
 # include <stdlib.h>
 # include <errno.h>
 # include <pthread.h>
+
+/* on macOS detecting number of processors on machine:
+ * <sys/param.h>, <sys/sysctl.h> needed for int		func get_processors_num();
+ */
 # include <sys/param.h>
 # include <sys/sysctl.h>
+
+/* on linux detecting number of processors on machine:
+ * #include <sys/sysinfo.h>
+ * and using:
+ * 	{
+ * 		return (sysconf(_SC_NPROCESSORS_ONLN));
+ * 	}
+ */
+
+/* on win32 detecting number of processors on machine:
+ * 	{
+ * 		SYSTEM_INFO		sysinfo;
+ * 		GetSystemInfo(&sysinfo);
+ * 		return (sysinfo.dwNumberOfProcessors);
+ * 	}
+ */
+
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
 //# include <string.h>
@@ -201,6 +223,8 @@ int			toggle_param(int *param);
 void		px_to_img(t_img *img, int x, int y, int color);
 void		redraw_img(t_win *win);
 int			get_processors_num(void);
+
+void		paralel_put_to_img(t_win *win);
 
 void		reset(t_win *win);
 int			free_win(t_win *win);

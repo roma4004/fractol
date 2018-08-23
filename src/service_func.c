@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/20 13:37:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/23 17:46:28 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,22 @@ void	redraw_img(t_win *win)
 							win->img->img_ptr, 0, 0);
 }
 
-
 int		get_processors_num(void)
 {
-	int		nm[2];
-	size_t	count;
-	size_t	len;
+	int				nm[2];
+	size_t			count;
+	size_t			len;
 
 	len = 4;
 	nm[0] = CTL_HW;
 	nm[1] = HW_AVAILCPU;
 	sysctl(nm, 2, &count, &len, NULL, 0);
-	if(count < 1)
+	if (count < 1)
 	{
 		nm[1] = HW_NCPU;
 		sysctl(nm, 2, &count, &len, NULL, 0);
-		if(count < 1)
+		if (count < 1)
 			count = 1;
 	}
-	return (count);
+	return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
 }

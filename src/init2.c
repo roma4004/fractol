@@ -20,6 +20,7 @@ void		init_fract(t_param *param, int id)
 	//param->color = DEF_COLOR;
 	param->centr_x = WIN_WIDTH / 2;
 	param->centr_y = WIN_HEIGHT / 2;
+	param->color_step = 0xFFFFFFFF / param->iter;
 	param->zoom_x = param->zoom * param->centr_x;
 	param->zoom_y = param->zoom * param->centr_y;
 	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;

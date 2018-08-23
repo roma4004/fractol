@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 15:35:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/23 21:01:16 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void		change_color(t_win *win, int key)
 	int		chanel;
 
 	offset = 0;
+	if (key == G && toggle_param(&win->flags->color_type))
+		return ;
 	if ((key == A || (key == Z)) && (chanel = ALPHA))
 		offset = (key == A) ? 1 : -1;
 	else if ((key == S || (key == X)) && (chanel = RED))
@@ -104,7 +106,8 @@ int			iterate_change(t_win *win, int key)
 	if ((need_redraw) && (param->iter + iter_offset >= 0))
 	{
 		param->iter += iter_offset;
-		redraw_fract(win);printf("iter ch %d\n", param->iter);
+		param->color_step = 0xFFFFFFFF / param->iter;
+		redraw_fract(win); printf("iter ch %d\n", param->iter);
 		return (0);
 	}
 	return (1);

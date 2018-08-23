@@ -37,7 +37,7 @@ int			deal_keyboard(int key, t_win *win)
 				if (toggles(win, key))
 					if (specific_param(win, key))
 						deal_keyboard2(key, win);
-	//printf("key %d ", key);
+	printf("key %d ", key);
 	return (0);
 }
 

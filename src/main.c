@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 15:24:52 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/23 20:56:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,15 @@ void	*draw_threads(void *thread_data)
 
 	thread_dt = (t_pth_dt *)thread_data;
 	win = thread_dt->win;
-	y = 0;
+	y = (WIN_HEIGHT / 2 * -1) / win->param->zoom_y;;
 	while(y < WIN_HEIGHT)
 	{
-		x = -1;
-		while (++x < WIN_WIDTH)
+		x = (WIN_WIDTH / 2 * -1) / win->param->zoom_x;
+		while (x < WIN_WIDTH)
 		{
 			i = get_fractal_point(win, x, y + thread_dt->id);
-			int col =  (0xFFFFFFFF / win->param->iter) * i;
-			px_to_img(win->img, x, y + thread_dt->id, col);
-//			px_to_img(win->img, x, y + thread_dt->id, get_color(gen_color(win, i)));
+			px_to_img(win->img, x, y + thread_dt->id, get_color(win, i));
+			x++;
 		}
 		y += win->param->cpu_cores;
 	}

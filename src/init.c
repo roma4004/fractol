@@ -38,6 +38,7 @@ static t_flags		*init_flags(void)
 		new_flags->man_5 = 0;
 		new_flags->man_6 = 0;
 		new_flags->man_7 = 0;
+		new_flags->color_type = 0;
 		new_flags->interface_on = 0;
 		new_flags->error_code = 0;
 	}

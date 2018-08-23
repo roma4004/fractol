@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 17:46:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/23 21:01:09 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct	s_param
 	float	centr_y;
 	double	iter_step;
 	double	spec_step;
+	double	color_step;
 	double	spec1;
 	double	spec2;
 	double	offset_step;
@@ -95,6 +96,7 @@ typedef struct	s_flags
 	int		man_5;
 	int		man_6;
 	int		man_7;
+	int		color_type;
 	int		interface_on;
 	int		error_code;
 }				t_flags;
@@ -156,7 +158,7 @@ enum			e_keys
 	NUM_MINUS = 78, NINE = 25,
 	NUM_PLUS = 69, ZERO = 29,
 	Q = 12, W = 13, E = 14, R = 15,
-	A = 0,  S = 1,  D = 2,  F= 3,
+	A = 0,  S = 1,  D = 2,  F= 3, G = 5,
 	Z = 6,  X = 7,  C = 8,  V = 9,
 	 ENTER = 36, ESC = 53,
 	ARROW_UP = 126, ARROW_DOWN = 125,
@@ -191,7 +193,7 @@ int			mandelbrot(t_win *win, int x, int y);
 int			mandelbrot_cuboid(t_win *win, int x, int y);
 
 t_col		*gen_color(t_win *win, int i);
-int			get_color(t_col *col);
+int			get_color(t_win *win, int i);
 int			change_hue(int color, int offset, int mask_offset);
 void		change_color(t_win *win, int key);
 

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 17:46:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/29 18:02:59 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,7 @@ int		get_processors_num(void)
 		if (count < 1)
 			count = 1;
 	}
-	return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
+	return (count);
+	//return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
+//	return (WIN_WIDTH);
 }

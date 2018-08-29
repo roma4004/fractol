@@ -6,19 +6,20 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 21:01:09 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/29 18:03:11 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1224
-# define WIN_HEIGHT 1224
+# define WIN_WIDTH 1400
+# define WIN_HEIGHT 1400
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
 //# define CPU_CORES 8
-# define ALMOST_HYPER_THREADING 1
+# define ALMOST_HYPER_THREADING 0
+
 # define PI 3.14159265359
 
 # include <stdio.h>
@@ -188,8 +189,8 @@ enum			e_fr_type
 
 
 void		redraw_fract(t_win *win);
-int			get_fractal_point(t_win *win, int x, int y);
-int			mandelbrot(t_win *win, int x, int y);
+int			get_fractal_col(t_win *win, int x, int y);
+int			mandelbrot_col(t_win *win, int x, int y);
 int			mandelbrot_cuboid(t_win *win, int x, int y);
 
 t_col		*gen_color(t_win *win, int i);

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 20:56:20 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/28 18:16:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	draw_fractal(t_win *win)
 
 void	*draw_threads(void *thread_data)
 {
-	int		i;
+	int		col;
 	int		x;
 	int		y;
 	t_win	*win;
@@ -44,14 +44,14 @@ void	*draw_threads(void *thread_data)
 
 	thread_dt = (t_pth_dt *)thread_data;
 	win = thread_dt->win;
-	y = (WIN_HEIGHT / 2 * -1) / win->param->zoom_y;;
+	y = (win->param->centr_y * -1) / win->param->zoom_y;
 	while(y < WIN_HEIGHT)
 	{
-		x = (WIN_WIDTH / 2 * -1) / win->param->zoom_x;
+		x = (win->param->centr_x * -1) / win->param->zoom_x;
 		while (x < WIN_WIDTH)
 		{
-			i = get_fractal_point(win, x, y + thread_dt->id);
-			px_to_img(win->img, x, y + thread_dt->id, get_color(win, i));
+			col = get_fractal_col(win, y + thread_dt->id, x);
+			px_to_img(win->img, y + thread_dt->id, x, col);
 			x++;
 		}
 		y += win->param->cpu_cores;
@@ -87,7 +87,7 @@ void	paralel_put_to_img(t_win *win)
 	//pthread_exit(0);
 }
 
-int main(void)//int argc, char **argv)
+int		main(void)//int argc, char **argv)
 {
 	//y * WIN_WIDTH + x + (thr_num - thr_id)
 	t_win *win;

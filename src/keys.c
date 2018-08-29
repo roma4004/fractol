@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/19 15:50:14 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/26 16:45:19 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,16 @@ static int	deal_keyboard2(int key, t_win *win)
 
 int			deal_keyboard(int key, t_win *win)
 {
+	//printf("key %d ", key);
 	if (!win)
 		return (1);
-	if (!(zoom(win, key, win->param->centr_x, win->param->centr_y)))
-		if (map_offset(win, key))
-			if (iterate_change(win, key))
-				if (toggles(win, key))
-					if (specific_param(win, key))
+	if (!zoom(win, key, win->param->centr_x, win->param->centr_y))
+		if (!map_offset(win, key))
+			if (!iterate_change(win, key))
+				if (!toggles(win, key))
+					if (!specific_param(win, key))
 						deal_keyboard2(key, win);
-	printf("key %d ", key);
+
 	return (0);
 }
 
@@ -45,6 +46,7 @@ int			deal_mouse(int key, int x, int y, t_win *win)
 {
 	if (!win)
 		return (1);
+//	printf("key %d ", key);
 	if (key == MOUSE_SCROLL_UP)
 		zoom(win, PLUS, x, y);
 	else if (key == MOUSE_SCROLL_DOWN)

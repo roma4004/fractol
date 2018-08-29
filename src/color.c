@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 20:56:20 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/24 19:54:37 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,12 @@ int		change_hue(int color, int offset, int mask_offset)
 int		get_color(t_win *win, int i)
 {
 	t_col	*col;
-
 	if (!win->flags->color_type)
-		return (win->param->color_step * i);
+	{
+		int color = win->param->color_step * i;
+		//printf("i = %d color=%x\n", color, i);
+		return (color);
+	}
 	col = gen_color(win, i);
 	return ((col->a << 24) | ((col->r) << 16) | ((col->g) << 8) | (col->b));
 }

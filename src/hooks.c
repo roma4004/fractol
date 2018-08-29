@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 21:01:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/29 20:38:01 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ int			map_offset(t_win *win, int key)
 		par->offset_x += offset_x;
 		par->offset_y += offset_y;
 		redraw_fract(win);
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int			specific_param(t_win *win, int key)
@@ -83,9 +83,9 @@ int			specific_param(t_win *win, int key)
 	if (need_redraw)
 	{
 		redraw_fract(win);
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int			iterate_change(t_win *win, int key)
@@ -108,9 +108,9 @@ int			iterate_change(t_win *win, int key)
 		param->iter += iter_offset;
 		param->color_step = 0xFFFFFFFF / param->iter;
 		redraw_fract(win); printf("iter ch %d\n", param->iter);
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 
 }
 
@@ -124,9 +124,9 @@ int			zoom(t_win *win, int key, float x, float y)
 	need_redraw = 0;
 	zoom_factor = 0;
 	if (key == MINUS && (need_redraw = 1))
-		zoom_factor = -0.5;
+		zoom_factor = -0.1;
 	else if (key == PLUS && (need_redraw = 1))
-		zoom_factor = 0.5;
+		zoom_factor = 0.1;
 	if (need_redraw && param->zoom + zoom_factor > 0)
 	{
 		param->zoom += zoom_factor;
@@ -162,7 +162,7 @@ int			toggles(t_win *win, int key)
 	int need_redraw;
 
 	need_redraw = 0;
-	if (key == NUM_1 || key == ONE)
+	if ((key == NUM_1 || key == ONE) && (need_redraw = 1))
 		toggle_param(&win->flags->man_1);
 	else if ((key == NUM_2 || key == TWO) && (need_redraw = 1))
 		toggle_param(&win->flags->man_2);
@@ -181,9 +181,9 @@ int			toggles(t_win *win, int key)
 	if (need_redraw)
 	{
 		redraw_fract(win);
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 void		reset(t_win *win)
@@ -191,5 +191,6 @@ void		reset(t_win *win)
 	if (!win)
 		return ;
 	init_fract(win->param, win->param->fr_id);
+	//need to reset flags
 	redraw_fract(win);
 }

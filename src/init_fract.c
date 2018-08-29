@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init2.c                                            :+:      :+:    :+:   */
+/*   init_fract.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/21 17:57:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/23 15:45:17 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/29 20:53:53 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void		init_fract(t_param *param, int id)
+
+void		init_batman(t_param *param, int id)
 {
 	param->fr_id = id;
-	param->iter = (param->fr_id == FR_BARNSLEY) ? 42000 : 100;
-	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 0.5;
+	param->iter = (param->fr_id == FR_BARNSLEY) ? 42000 : 10;
+	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 1;
 	//param->color = DEF_COLOR;
 	param->centr_x = WIN_WIDTH / 2;
 	param->centr_y = WIN_HEIGHT / 2;
@@ -26,13 +27,33 @@ void		init_fract(t_param *param, int id)
 	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
 	param->spec_step = (param->fr_id == FR_BARNSLEY) ? 0.01 : 1;
 	param->offset_step = (param->fr_id == FR_BARNSLEY) ? 10 : 0.1;
-	param->iter_step = (param->fr_id == FR_BARNSLEY) ? 1000 : 100;
+	param->iter_step = (param->fr_id == FR_BARNSLEY) ? 1000 : 10;
 	param->spec1 = (param->fr_id == FR_BARNSLEY) ? 0.04 : 0;
 	param->spec2 = (param->fr_id == FR_BARNSLEY) ? 0.85 : 2;
 	param->offset_x = (param->fr_id == FR_BARNSLEY) ? -0.5 : 0;
 	param->offset_y = 0;
 }
 
+void		init_fract(t_param *param, int id)
+{
+	param->fr_id = id;
+	param->iter = (param->fr_id == FR_BARNSLEY) ? 42000 : 10;
+	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 1;
+	//param->color = DEF_COLOR;
+	param->centr_x = WIN_WIDTH / 2;
+	param->centr_y = WIN_HEIGHT / 2;
+	param->color_step = 0xFFFFFFFF / param->iter;
+	param->zoom_x = param->zoom * param->centr_x;
+	param->zoom_y = param->zoom * param->centr_y;
+	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
+	param->spec_step = (param->fr_id == FR_BARNSLEY) ? 0.01 : 1;
+	param->offset_step = (param->fr_id == FR_BARNSLEY) ? 10 : 0.1;
+	param->iter_step = (param->fr_id == FR_BARNSLEY) ? 1000 : 10;
+	param->spec1 = (param->fr_id == FR_BARNSLEY) ? 0.04 : 0;
+	param->spec2 = (param->fr_id == FR_BARNSLEY) ? 0.85 : 2;
+	param->offset_x = (param->fr_id == FR_BARNSLEY) ? -0.5 : 0;
+	param->offset_y = 0;
+}
 
 t_img	*init_img(void *mlx_ptr, int width, int height)
 {

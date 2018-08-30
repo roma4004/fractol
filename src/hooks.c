@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/29 20:38:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 18:15:23 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void		change_color(t_win *win, int key)
 	{
 		while (++y < WIN_HEIGHT && (x = -1))
 			while (++x < WIN_WIDTH)
-				win->img->data[y * WIN_WIDTH + x] =
-				change_hue(win->img->data[y * WIN_WIDTH + x], offset, chanel);
+				win->img->data[y * (int)WIN_WIDTH + x] =
+				change_hue(win->img->data[y * (int)WIN_WIDTH + x], offset, chanel);
 		redraw_img(win);
 	}
 }
@@ -94,20 +94,18 @@ int			iterate_change(t_win *win, int key)
 	int		need_redraw;
 	t_param *param;
 
-	param = win->param;
+	param = win->param;printf("iter ch %d\n", param->iter);
 	iter_offset = 0;
 	need_redraw = 0;
 	if ((key == NUM_MINUS || key == NINE) && (need_redraw = 1))
 		iter_offset = -param->iter_step;
 	else if ((key == NUM_PLUS || key == ZERO) && (need_redraw = 1))
 		iter_offset = param->iter_step;
-	if (param->iter + iter_offset >= 0)
-		param->iter += iter_offset;
-	if ((need_redraw) && (param->iter + iter_offset >= 0))
+	if ((need_redraw) && (param->iter + iter_offset > 0))
 	{
 		param->iter += iter_offset;
 		param->color_step = 0xFFFFFFFF / param->iter;
-		redraw_fract(win); printf("iter ch %d\n", param->iter);
+		redraw_fract(win);
 		return (1);
 	}
 	return (0);
@@ -116,25 +114,23 @@ int			iterate_change(t_win *win, int key)
 
 int			zoom(t_win *win, int key, float x, float y)
 {
-	double	zoom_factor;
-	int		need_redraw;
-	t_param *param;
+	t_param	*param;
 
 	param = win->param;
-	need_redraw = 0;
-	zoom_factor = 0;
-	if (key == MINUS && (need_redraw = 1))
-		zoom_factor = -0.1;
-	else if (key == PLUS && (need_redraw = 1))
-		zoom_factor = 0.1;
-	if (need_redraw && param->zoom + zoom_factor > 0)
+	if (key == MINUS || key == PLUS)
 	{
-		param->zoom += zoom_factor;
-		param->zoom_x = param->zoom * param->centr_x;
-		param->zoom_y = param->zoom * param->centr_y;
-		param->offset_x += (x - WIN_WIDTH / 2) / (param->zoom * WIN_WIDTH);
-		param->offset_y += (y - WIN_HEIGHT / 2) / (param->zoom * WIN_HEIGHT);
-		printf("%f\n", param->zoom);
+//		printf("%f\n", param->zoom);
+		if (key == MINUS && (param->zoom / 1.4) < 10)
+			return (0);
+		param->zoom = (key == PLUS) ? param->zoom * 1.4 : param->zoom / 1.4;
+		param->zoom_x = (x - WIN_CENTER_X) / (param->zoom * WIN_WIDTH);
+		param->zoom_y = (y - WIN_CENTER_Y) / (param->zoom * WIN_HEIGHT);
+		param->offset_x += 0.1 / param->zoom;
+		param->offset_y += 0.1 / param->zoom;
+		x++; y++;
+//		param->offset_x += (x - WIN_WIDTH / 2) / (param->zoom * WIN_WIDTH);
+//		param->offset_y += (y - WIN_HEIGHT / 2) / (param->zoom * WIN_HEIGHT);
+
 		redraw_fract(win);
 		//or
 		// win->param->offset_x += (x - WIN_WIDTH / 2)

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/29 18:02:59 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 16:29:13 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		toggle_param(int *param)
 void	px_to_img(t_img *img, int x, int y, int color)
 {
 	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
-		img->data[y * WIN_WIDTH + x] = color;
+		img->data[y * (int)WIN_WIDTH + x] = color;
 }
 
 void	redraw_img(t_win *win)
@@ -63,7 +63,7 @@ int		get_processors_num(void)
 		if (count < 1)
 			count = 1;
 	}
-	return (count);
+	return (count*2);
 	//return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
 //	return (WIN_WIDTH);
 }

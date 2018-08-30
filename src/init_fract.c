@@ -6,24 +6,22 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/21 17:57:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/29 20:53:53 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 21:01:33 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
 
-void		init_batman(t_param *param, int id)
+void		init_fract(t_param *param, int id)
 {
 	param->fr_id = id;
 	param->iter = (param->fr_id == FR_BARNSLEY) ? 42000 : 10;
-	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 1;
+	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 100;
 	//param->color = DEF_COLOR;
-	param->centr_x = WIN_WIDTH / 2;
-	param->centr_y = WIN_HEIGHT / 2;
 	param->color_step = 0xFFFFFFFF / param->iter;
-	param->zoom_x = param->zoom * param->centr_x;
-	param->zoom_y = param->zoom * param->centr_y;
+	param->zoom_x = param->zoom * WIN_CENTER_X;
+	param->zoom_y = param->zoom * WIN_CENTER_Y;
 	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
 	param->spec_step = (param->fr_id == FR_BARNSLEY) ? 0.01 : 1;
 	param->offset_step = (param->fr_id == FR_BARNSLEY) ? 10 : 0.1;
@@ -34,17 +32,15 @@ void		init_batman(t_param *param, int id)
 	param->offset_y = 0;
 }
 
-void		init_fract(t_param *param, int id)
+void		init_batman(t_param *param, int id)
 {
 	param->fr_id = id;
 	param->iter = (param->fr_id == FR_BARNSLEY) ? 42000 : 10;
-	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 1;
+	param->zoom = (param->fr_id == FR_BARNSLEY) ? 50 : 100;
 	//param->color = DEF_COLOR;
-	param->centr_x = WIN_WIDTH / 2;
-	param->centr_y = WIN_HEIGHT / 2;
 	param->color_step = 0xFFFFFFFF / param->iter;
-	param->zoom_x = param->zoom * param->centr_x;
-	param->zoom_y = param->zoom * param->centr_y;
+	param->zoom_x = param->zoom * WIN_CENTER_X;
+	param->zoom_y = param->zoom * WIN_CENTER_Y;
 	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
 	param->spec_step = (param->fr_id == FR_BARNSLEY) ? 0.01 : 1;
 	param->offset_step = (param->fr_id == FR_BARNSLEY) ? 10 : 0.1;
@@ -63,11 +59,10 @@ t_img	*init_img(void *mlx_ptr, int width, int height)
 		return (NULL);
 	if ((new_img = (t_img *)malloc(sizeof(t_img))))
 	{
-		new_img->col.a = 0;
-		new_img->col.r = 0;
-		new_img->col.g = 0;
-		new_img->col.b = 0;
-		new_img->ratio = (float)WIN_WIDTH / (float)WIN_HEIGHT;
+//		new_img->col.a = 0;
+//		new_img->col.r = 0;
+//		new_img->col.g = 0;
+//		new_img->col.b = 0;
 		new_img->bits_per_pixel = 0;
 		new_img->size_line = 0;
 		new_img->endian = 0;
@@ -80,31 +75,35 @@ t_img	*init_img(void *mlx_ptr, int width, int height)
 	return (new_img);
 }
 
-t_pth_dt	*init_pthread_dt(t_win *win, int id)
+pthread_t	*init_pthreads(t_win *win)
 {
-	t_pth_dt	*new_pthread_data;
+	int			i;
+	int			cpu_cores;
+	pthread_t	*new_thread_id;
 
 	if (!win)
 		return (NULL);
-	if ((new_pthread_data = (t_pth_dt *)malloc(sizeof(t_pth_dt))))
+	cpu_cores = win->param->cpu_cores;
+	if (!(new_thread_id = (pthread_t *)malloc(sizeof(pthread_t) * cpu_cores)))
+	{
+		i = 0;
+		while (i < cpu_cores)
+			new_thread_id[i++] = NULL;
+	}
+	return (new_thread_id);
+}
+
+t_pth_dt	*init_pthread_dt(t_win *win, int offset)
+{
+	t_pth_dt	*new_pthread_data;
+
+	new_pthread_data = NULL;
+	if (win && (new_pthread_data = (t_pth_dt *)malloc(sizeof(t_pth_dt))))
 	{
 		new_pthread_data->win = win;
-		new_pthread_data->id = id;
+		new_pthread_data->offset = offset;
 	}
 	return (new_pthread_data);
 }
 
-pthread_t	*init_pthreads(t_win *win)
-{
-	pthread_t	*new_pthread;
-
-	if (!win)
-		return (NULL);
-	if ((new_pthread =
-		 (pthread_t *)malloc(sizeof(pthread_t) * win->param->cpu_cores)))
-	{
-		return (new_pthread);
-	}
-	return (new_pthread);
-}
 

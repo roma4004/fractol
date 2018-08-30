@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/26 16:45:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 16:25:47 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static int	deal_keyboard2(int key, t_win *win)
 		reset(win);
 	else if (key == ENTER)
 		fractal_switch(win);
+	else if (key == ZERO)
+		toggle_param(&win->flags->man_0);
 	else
 		change_color(win, key);
 	return (0);
@@ -32,7 +34,7 @@ int			deal_keyboard(int key, t_win *win)
 	//printf("key %d ", key);
 	if (!win)
 		return (1);
-	if (!zoom(win, key, win->param->centr_x, win->param->centr_y))
+	if (!zoom(win, key, WIN_CENTER_X, WIN_CENTER_Y))
 		if (!map_offset(win, key))
 			if (!iterate_change(win, key))
 				if (!toggles(win, key))

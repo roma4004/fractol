@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/29 21:16:11 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 21:10:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ int		get_fractal_col(t_win *win, int x, int y)
 	return (0);
 }
 
-int		if_сardioid(double pr, double pi)
+int		if_сardioid(t_win *win, double pr, double pi)
 {
 	double		pr_pow;
 	double		pi_pow;
 	double		q;
 	double		p;
+	pr *= ((win->flags->man_6) ? -1 : 1);
 
 	pr_pow = ((pr - 0.25) * (pr - 0.25));
 
@@ -45,7 +46,7 @@ int		if_сardioid(double pr, double pi)
 //		return (1);
 
 	//if (q * (q + (pr - 0.25)) < 0.25 * pow_of(pi, 2))
-	if ((pr < p - 2.5 * pow(p, 2) + 0.25)
+	if ((pr < p - 2 * pow(p, 2) + 0.25)
 	|| (pow_of(pr + 1, 2) + pi_pow < 0.0625))
 		return (1);
 
@@ -59,6 +60,7 @@ int		mandel_break(t_win *win, t_cnb *c)
 {
 	if (pow_of(c->newR, 2) + pow_of(c->newI, 2) > 4)
 		return (1);
+	//win->param->color_step++;
 	if (win->flags->man_5 && (c->newR > 0.5 || c->newR < -2.0))
 		return (1);
 	if (win->flags->man_5 && (c->newI > 0.8 || c->newI < -0.8))
@@ -76,30 +78,24 @@ int		mandelbrot_col(t_win *win, int x, int y)
 	t_param *par;
 
 	par = win->param;
-	pr = 1.5 * (x - par->centr_x) / (0.5 * par->zoom_x) + par->offset_x;
-	pi =       (y - par->centr_y) / (0.5 * par->zoom_y) + par->offset_y;
+	pr = WIN_RATIO * (x - WIN_CENTER_X) / par->zoom + par->offset_x;
+	pi =		(y - WIN_CENTER_Y) / par->zoom + par->offset_y;
 
-	//pr = x / WIN_WIDTH * (1.8 * 2) + 1.5 - 1.8 - 0.75 - 1.8;
-	//pi = y / WIN_HEIGHT * (1.44 * 2) + 1.2 - 1.44 - 1.44;
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;
-
-	//if (check_mndl(((pr * pr - 0.5 * pr + 0.825) + pi * pi), pr, pi))
-//	if (if_сardioid(pr, pi))
-//		return (0xffffff);
-	while (++i < par->iter && i >= 0)//&& (x*x + y*y < 2*2))
+	//if (if_сardioid(win, pr, pi)
+	//&& !win->flags->man_1 && !win->flags->man_2 && !win->flags->man_3)
+	//	return (0);
+	while (++i < par->iter && i >= 0)
 	{
 		if (mandel_break(win, &c))
 			break ;
 		c.oldR = (win->flags->man_2) ? fabs(c.newR) : c.newR;
 		c.oldI = (win->flags->man_3) ? fabs(c.newI) : c.newI;
-		c.newR = pow_of(c.oldR, 2) - pow_of(c.oldI, 2) + pr
+		c.newR = pow_of(c.oldR, 2) * pow_of(c.oldI, 2) + pr
 											* ((win->flags->man_6) ? -1 : 1);
 		c.newI = (2 * c.oldR * c.oldI + pi) * ((win->flags->man_1) ? -1 : 1);
-//		c.newR = pow_of(c.oldR, 2) - 2 * pow_of(c.oldI, 2) + pr
-//											* ((win->flags->man_6) ? -1 : 1);
-//		c.newI = (2 * c.oldR * c.oldI + pi) * ((win->flags->man_1) ? -1 : 1);
 	}
 	return (get_color(win, i));
 }
@@ -113,19 +109,16 @@ int		mandelbrot2_col(t_win *win, int x, int y)
 	t_param *par;
 
 	par = win->param;
-	pr = 1.5 * (x - par->centr_x) / par->zoom_x + par->offset_x;
-	pi =       (y - par->centr_y) / par->zoom_y + par->offset_y;
+	pr = WIN_RATIO * (x - WIN_CENTER_X) / par->zoom + par->offset_x;
+	pi =			 (y - WIN_CENTER_Y) / par->zoom + par->offset_y;
 
-	//pr = x / WIN_WIDTH * (1.8 * 2) + 1.5 - 1.8 - 0.75 - 1.8;
-	//pi = y / WIN_HEIGHT * (1.44 * 2) + 1.2 - 1.44 - 1.44;
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;
-
-	//if (check_mndl(((pr * pr - 0.5 * pr + 0.825) + pi * pi), pr, pi))
-//	if (if_сardioid(pr, pi))
-//		return (0xffffff);
-	while (++i < par->iter && i >= 0)//&& (x*x + y*y < 2*2))
+	if (if_сardioid(win, pr, pi)
+		&& !win->flags->man_1 && !win->flags->man_2 && !win->flags->man_3)
+		return (0);
+	while (++i < par->iter && i >= 0)
 	{
 		if (mandel_break(win, &c))
 			break ;
@@ -147,14 +140,13 @@ int		batman_col(t_win *win, int x, int y)
 	t_param *par;
 
 	par = win->param;
-	pr = 1.5 * (x - par->centr_x) / par->zoom_x + par->offset_x;
-	pi =       (y - par->centr_y) / par->zoom_y + par->offset_y;
+	pr = 1.5 * (x - WIN_CENTER_X) / par->zoom_x + par->offset_x;
+	pi =       (y - WIN_CENTER_Y) / par->zoom_y + par->offset_y;
 
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;
-
-	while (++i < par->iter && i >= 0)//&& (x*x + y*y < 2*2))
+	while (++i < par->iter && i >= 0)
 	{
 		if (mandel_break(win, &c))
 			break ;
@@ -176,9 +168,8 @@ int		mandelbrot_cuboid(t_win *win, int x, int y)
 	t_param *par;
 
 	par = win->param;
-	pr = win->img->ratio * (x - par->centr_x) / par->zoom_x
-		+ par->offset_x;
-	pi = (y - par->centr_y) / par->zoom_y + par->offset_y;
+	pr = WIN_RATIO * (x - WIN_CENTER_X) / par->zoom_x + par->offset_x;
+	pi =             (y - WIN_CENTER_Y) / par->zoom_y + par->offset_y;
 	i = -1;
 	c.newR = 0;
 	c.newI = 0;

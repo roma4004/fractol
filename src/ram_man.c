@@ -34,7 +34,7 @@ t_win	*clear_img(t_win *win)
 	y = -1;
 	while (++y < WIN_HEIGHT && (x = -1))
 		while (++x < WIN_WIDTH)
-			win->img->data[y * WIN_WIDTH + x] = 0;
+			win->img->data[y * (int)WIN_WIDTH + x] = 0;
 	return (win);
 }
 

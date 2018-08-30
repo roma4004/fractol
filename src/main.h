@@ -6,15 +6,18 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/29 18:03:11 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 19:45:45 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1400
-# define WIN_HEIGHT 1400
+# define WIN_WIDTH 1024.0
+# define WIN_HEIGHT 768.0
+# define WIN_CENTER_X WIN_WIDTH / 2.0
+# define WIN_CENTER_Y WIN_HEIGHT / 2.0
+# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
 //# define CPU_CORES 8
@@ -73,11 +76,9 @@ typedef struct	s_param
 	int		fr_id;
 	int		iter;
 	int		cpu_cores;
-	float	zoom;
-	float	zoom_x;
-	float	zoom_y;
-	float	centr_x;
-	float	centr_y;
+	double	zoom;
+	double	zoom_x;
+	double	zoom_y;
 	double	iter_step;
 	double	spec_step;
 	double	color_step;
@@ -90,6 +91,7 @@ typedef struct	s_param
 
 typedef struct	s_flags
 {
+	int		man_0;
 	int		man_1;
 	int		man_2;
 	int		man_3;
@@ -97,6 +99,8 @@ typedef struct	s_flags
 	int		man_5;
 	int		man_6;
 	int		man_7;
+	int		man_8;
+	int		man_9;
 	int		color_type;
 	int		interface_on;
 	int		error_code;
@@ -118,13 +122,12 @@ typedef struct	s_img
 	int		size_line;
 	int		endian;
 	t_col	col;
-	float	ratio;
 }				t_img;
 
 typedef struct	s_pthread_data
 {
 	struct	s_win	*win;
-	int				id;
+	int				offset;
 }				t_pth_dt;
 
 typedef struct	s_win
@@ -134,8 +137,6 @@ typedef struct	s_win
 	void		*mlx_ptr;
 	void		*win_ptr;
 	t_img		*img;
-	pthread_t	*pthreads_id;
-
 }				t_win;
 
 enum			e_offset
@@ -156,17 +157,18 @@ enum			e_keys
 	NUM_6 = 88, SIX = 22,
 	NUM_7 = 89, SEVEN = 26,
 	NUM_8 = 91, EIGHT = 28,
-	NUM_MINUS = 78, NINE = 25,
-	NUM_PLUS = 69, ZERO = 29,
-	Q = 12, W = 13, E = 14, R = 15,
-	A = 0,  S = 1,  D = 2,  F= 3, G = 5,
-	Z = 6,  X = 7,  C = 8,  V = 9,
-	 ENTER = 36, ESC = 53,
+	NUM_9 = 75, NINE = 25,
+	NUM_0 = 75, ZERO = 29,
+	NUM_MINUS = 78, MINUS = 27, MOUSE_SCROLL_UP = 4,
+	NUM_PLUS = 69, PLUS = 24, MOUSE_SCROLL_DOWN = 5,
+	Q = 12, W = 13, E = 14, R = 15, T = 17,
+	A = 0 , S = 1 , D = 2 , F = 3 , G = 5,
+	Z = 6 , X = 7 , C = 8 , V = 9 , B = 11,
+	ENTER = 36, ESC = 53,
 	ARROW_UP = 126, ARROW_DOWN = 125,
 	ARROW_LEFT = 123, ARROW_RIGHT = 124,
-	MOUSE_SCROLL_UP = 4, MINUS = 27,
-	MOUSE_SCROLL_DOWN = 5, PLUS = 24,
-	HOME = 115, END = 119, PAGE_UP = 116, PAGE_DOWN = 121
+	HOME = 115, PAGE_UP = 116,
+	END = 119, PAGE_DOWN = 121
 };
 
 enum			e_errors
@@ -205,7 +207,7 @@ void		draw_barnsley(t_win *win);
 void		init_fract(t_param *param, int id);
 t_win		*init_win(void);
 t_img		*init_img(void *mlx_ptr, int width, int height);
-t_pth_dt	*init_pthread_dt(t_win *win, int id);
+t_pth_dt	*init_pthread_dt(t_win *win, int offset);
 pthread_t	*init_pthreads(t_win *win);
 t_win		*clear_img(t_win *win);
 

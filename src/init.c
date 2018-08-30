@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/21 17:53:12 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 17:02:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,6 @@ static t_flags		*init_flags(void)
 	return (new_flags);
 }
 
-static pthread_t	*init_thread_id(t_win *win)
-{
-	int			i;
-	int			cpu_cores;
-	pthread_t	*new_thread_id;
-
-	if (!win)
-		return (NULL);
-	cpu_cores = win->param->cpu_cores;
-	if (!(new_thread_id = (pthread_t *)malloc(sizeof(pthread_t) * cpu_cores)))
-	{
-		i = 0;
-		while (i < cpu_cores)
-			new_thread_id[i++] = NULL;
-	}
-	return (new_thread_id);
-}
 
 t_win			*init_win(void)
 {
@@ -73,8 +56,7 @@ t_win			*init_win(void)
 		|| !(new_win->mlx_ptr = mlx_init())
 		|| !(new_win->win_ptr =
 			 mlx_new_window(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
-		|| !(new_win->img = init_img(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT))
-		|| !(new_win->pthreads_id = init_thread_id(new_win)))
+		|| !(new_win->img = init_img(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT)))
 		free_win(new_win);
 	return (new_win);
 }

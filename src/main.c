@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/28 18:16:15 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/08/30 17:24:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	draw_fractal(t_win *win)
 	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->img_ptr, 0, 0);
 }
 
-void	*draw_threads(void *thread_data)
+void	*parallel_draw(void *thread_data)
 {
 	int		col;
 	int		x;
@@ -44,14 +44,14 @@ void	*draw_threads(void *thread_data)
 
 	thread_dt = (t_pth_dt *)thread_data;
 	win = thread_dt->win;
-	y = (win->param->centr_y * -1) / win->param->zoom_y;
+	y = (WIN_HEIGHT / 2  * -1) / win->param->zoom;
 	while(y < WIN_HEIGHT)
 	{
-		x = (win->param->centr_x * -1) / win->param->zoom_x;
+		x = (WIN_WIDTH / 2 * -1) / win->param->zoom;
 		while (x < WIN_WIDTH)
 		{
-			col = get_fractal_col(win, y + thread_dt->id, x);
-			px_to_img(win->img, y + thread_dt->id, x, col);
+			col = get_fractal_col(win, x, y + thread_dt->offset);
+			px_to_img(win->img, x, y + thread_dt->offset, col);
 			x++;
 		}
 		y += win->param->cpu_cores;
@@ -68,39 +68,32 @@ void	change_fract(t_win *win, int fr_new_type)
 
 void	paralel_put_to_img(t_win *win)
 {
-	int			i;
+	int			id;
 	int			id_max;
-	t_pth_dt	**thread_dt;
-
-	thread_dt = (t_pth_dt **)malloc(sizeof(t_pth_dt) * win->param->cpu_cores);
+	t_pth_dt	*data;
+	pthread_t	*pthreads;
+	
+	pthreads = init_pthreads(win);
+	data = (t_pth_dt *)malloc(sizeof(t_pth_dt) * win->param->cpu_cores);
 	id_max = win->param->cpu_cores;
-	i = -1;
-	while (++i < id_max)
+	id = -1;
+	while (++id < id_max)
 	{
-		thread_dt[i] = init_pthread_dt(win, i);
-		pthread_create(&win->pthreads_id[i], NULL, draw_threads, thread_dt[i]);
+		data[id].win = win;
+		data[id].offset = id;
+		pthread_create(&pthreads[id], NULL, parallel_draw, &data[id]);
 	}
-	i = -1;
-	while (++i < id_max)
-		pthread_join(win->pthreads_id[i], NULL);
-	//завершаем поток
-	//pthread_exit(0);
+	id = -1;
+	while (++id < id_max)
+		pthread_join(pthreads[id], NULL);
 }
 
 int		main(void)//int argc, char **argv)
 {
-	//y * WIN_WIDTH + x + (thr_num - thr_id)
 	t_win *win;
-	//t_pth_dt *thread_data;
-	int i;
 
-	i = 0;
 	printf("cores: %d", get_processors_num());
 	win = init_win();
-	win->pthreads_id = init_pthreads(win);
-
-	//pthread_create();
-	//	pthread_create(&thread, NULL, threadFunc, thread_data);
 
 	//if (argc > 1 && (win = init_win()))
 	//{
@@ -115,7 +108,8 @@ int		main(void)//int argc, char **argv)
 			mlx_loop(win->mlx_ptr);
 	//	}
 	//}
-	/*t_win	*win;
+
+	/*
 
 	if (argc == 2 && (win = init_win()))
 	{

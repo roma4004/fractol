@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-int		free_win(t_win *win)
+int		free_win(t_env *win)
 {
 	if (win)
 	{
@@ -26,7 +26,7 @@ int		free_win(t_win *win)
 	return (0);
 }
 
-t_win	*clear_img(t_win *win)
+t_env	*clear_img(t_env *win)
 {
 	int		y;
 	int		x;
@@ -38,7 +38,7 @@ t_win	*clear_img(t_win *win)
 	return (win);
 }
 
-int		exit_x(t_win *win)
+int		exit_x(t_env *win)
 {
 	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
 	free_win(win);

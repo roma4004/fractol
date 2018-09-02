@@ -6,20 +6,21 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/30 19:45:45 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/01 19:59:36 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1024.0
-# define WIN_HEIGHT 768.0
-# define WIN_CENTER_X WIN_WIDTH / 2.0
-# define WIN_CENTER_Y WIN_HEIGHT / 2.0
-# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
+//# define WIN_CENTER_X WIN_WIDTH / 2.0
+//# define WIN_CENTER_Y WIN_HEIGHT / 2.0
+//# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
+# define AMOUNT_FRACTALS 3
 //# define CPU_CORES 8
 # define ALMOST_HYPER_THREADING 0
 
@@ -76,9 +77,12 @@ typedef struct	s_param
 	int		fr_id;
 	int		iter;
 	int		cpu_cores;
-	double	zoom;
-	double	zoom_x;
-	double	zoom_y;
+	float	zoom;
+	float	zoom_x;
+	float	zoom_y;
+	float	center_x;
+	float	center_y;
+	double	ratio;
 	double	iter_step;
 	double	spec_step;
 	double	color_step;
@@ -112,11 +116,11 @@ typedef struct	s_color
 	int		r;
 	int		g;
 	int		b;
-}				t_col;
+}	t_col;
 
 typedef struct	s_img
 {
-	void	*img_ptr;
+	void	*ptr;
 	int		*data;
 	int		bits_per_pixel;
 	int		size_line;
@@ -124,20 +128,22 @@ typedef struct	s_img
 	t_col	col;
 }				t_img;
 
-typedef struct	s_pthread_data
-{
-	struct	s_win	*win;
-	int				offset;
-}				t_pth_dt;
-
-typedef struct	s_win
+typedef struct	s_environment
 {
 	t_param		*param;
 	t_flags		*flags;
 	void		*mlx_ptr;
 	void		*win_ptr;
 	t_img		*img;
-}				t_win;
+	//	pthread_t	*pthreads_id;
+	void		(*init_func[AMOUNT_FRACTALS])(t_param *);
+}				t_env;
+
+typedef struct	s_pthread_data
+{
+	t_env	*win;
+	int		offset;
+}				t_pth_dt;
 
 enum			e_offset
 {
@@ -183,55 +189,66 @@ enum			e_fr_type
 {
 	FR_BARNSLEY = 0,
 	FR_MANDELBROT = 1,
+	FR_BATMAN = 2,
 	BARNSLEY_PART_BODY = 1,
 	BARNSLEY_PART_LEFT = 2,
 	BARNSLEY_PART_RIGHT = 3,
 	BARNSLEY_PART_CURVE = 4,
 };
 
+enum			e_default_param
+{
+	ZOOM_DEFAULT = 50,
+};
 
-void		redraw_fract(t_win *win);
-int			get_fractal_col(t_win *win, int x, int y);
-int			mandelbrot_col(t_win *win, int x, int y);
-int			mandelbrot_cuboid(t_win *win, int x, int y);
 
-t_col		*gen_color(t_win *win, int i);
-int			get_color(t_win *win, int i);
-int			change_hue(int color, int offset, int mask_offset);
-void		change_color(t_win *win, int key);
+void		redraw_fract(t_env *win);
+int			get_fractal_col(t_env *win, int x, int y);
+int			mandelbrot_col(t_env *win, int x, int y);
+int			mandelbrot_cuboid(t_env *win, int x, int y);
+int			batman_col(t_env *win, int x, int y);
 
-int			specific_param(t_win *win, int key);
-void		draw_fractal(t_win *win);
-void		draw_barnsley(t_win *win);
+int			get_color(t_env *win, int i);
+int change_color(t_env *win, int key);
 
-void		init_fract(t_param *param, int id);
-t_win		*init_win(void);
+int			specific_param(t_env *win, int key);
+void		draw_fractal(t_env *win);
+void		draw_barnsley(t_env *win);
+
+t_env		*init_win(void);
 t_img		*init_img(void *mlx_ptr, int width, int height);
-t_pth_dt	*init_pthread_dt(t_win *win, int offset);
-pthread_t	*init_pthreads(t_win *win);
-t_win		*clear_img(t_win *win);
 
-int			deal_keyboard(int key, t_win *win);
-int			deal_mouse(int key, int x, int y, t_win *win);
-int			exit_x(t_win *par);
+void		init_barnsley(t_param *param);
+void		init_mandelbrot(t_param *param);
+void		init_batman(t_param *param);
 
-int			zoom(t_win *win, int key, float x, float y);
-int			iterate_change(t_win *win, int iter_offset);
-void		fractal_switch(t_win *win);
-int			map_offset(t_win *win, int key);
-void		show_interface(t_win *win);
-void		show_errors(t_win *win);
+t_env		*clear_img(t_env *win);
+
+int			deal_keyboard(int key, t_env *win);
+int			deal_mouse(int key, int x, int y, t_env *win);
+int			exit_x(t_env *par);
+
+int			zoom(t_env *win, int key, float x, float y);
+int			iterate_change(t_env *win, int iter_offset);
+void		fractal_switch(t_env *win);
+int			map_offset(t_env *win, int key);
+void		show_interface(t_env *win);
+void		show_errors(t_env *win);
 
 double		pow_of(double num, int exp);
-int			toggles(t_win *win, int key);
+int			toggles(t_env *win, int key);
 int			toggle_param(int *param);
 void		px_to_img(t_img *img, int x, int y, int color);
-void		redraw_img(t_win *win);
+void		redraw_img(t_env *win);
 int			get_processors_num(void);
 
-void		paralel_put_to_img(t_win *win);
+void		change_fract(t_env *win, int fr_new_type);
+void		parallel_draw_fractal(t_env *win);
+//void		parallel_draw_fractal(t_env *win);
+t_pth_dt	*init_pthread_dt(t_env *win, int id);
+pthread_t	*init_pthreads(t_env *win);
 
-void		reset(t_win *win);
-int			free_win(t_win *win);
+void		reset(t_env *win);
+int			free_win(t_env *win);
 
 #endif

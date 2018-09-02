@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-int		change_hue(int color, int offset, int mask_offset)
+static int		change_hue(int color, int offset, int mask_offset)
 {
 	int mask;
 	int increment;
@@ -20,33 +20,43 @@ int		change_hue(int color, int offset, int mask_offset)
 	mask = 0x000000FF << mask_offset;
 	increment = mask & 0x01010101;
 	if (offset == 1)
-	{
-		//if ((color + increment) < (color | mask))
-			color += increment;
-	}
+		color += increment;
 	else
-	{
-		//if ((color - increment) > (color & ~mask));
-			color -= increment;
-	}
-	//printf("change_color, pre color %d, new color %d\n", prev_col, color);
+		color -= increment;	//printf("change_color, pre color %d, new color %d\n", prev_col, color);
 	return (color);
 }
 
-int		get_color(t_win *win, int i)
+int				change_color(t_env *win, int key)
 {
-	t_col	*col;
-	if (!win->flags->color_type)
+	int		y;
+	int		x;
+	int		offset;
+	int		chanel;
+
+	offset = 0;
+	if (!win && key == G && toggle_param(&win->flags->color_type))
+		return (0);
+	if ((key == A || (key == Z)) && (chanel = ALPHA))
+		offset = (key == A) ? 1 : -1;
+	else if ((key == S || (key == X)) && (chanel = RED))
+		offset = (key == S) ? 1 : -1;
+	else if ((key == D || (key == C)) && (chanel = GREEN))
+		offset = (key == D) ? 1 : -1;
+	else if ((key == F || (key == V)) && !(chanel = BLUE))
+		offset = (key == F) ? 1 : -1;
+	if (offset && (y = -1))
 	{
-		int color = win->param->color_step * i;
-		//printf("i = %d color=%x\n", color, i);
-		return (color);
+		while (++y < WIN_HEIGHT && (x = -1))
+			while (++x < WIN_WIDTH)
+				px_to_img(win->img, x, y,
+						  change_hue(win->img->data[y * WIN_WIDTH + x], offset, chanel));
+		redraw_img(win);
+		return (1);
 	}
-	col = gen_color(win, i);
-	return ((col->a << 24) | ((col->r) << 16) | ((col->g) << 8) | (col->b));
+	return (0);
 }
 
-t_col	*gen_color(t_win *win, int i)
+static t_col	*gen_color(t_env *win, int i)
 {
 	double step;
 	t_img *img;
@@ -58,4 +68,16 @@ t_col	*gen_color(t_win *win, int i)
 	img->col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);
 	img->col.b = (int)(8.5 * (1 - step) * (1 - step) * (1 - step) * 255);
 	return (&win->img->col);
+}
+
+int				get_color(t_env *win, int i)
+{
+	t_col	*col;
+	if (!win->flags->color_type)
+	{
+		int color = win->param->color_step * i;		//printf("i = %d color=%x\n", color, i);
+		return (color);
+	}
+	col = gen_color(win, i);
+	return ((col->a << 24) | ((col->r) << 16) | ((col->g) << 8) | (col->b));
 }

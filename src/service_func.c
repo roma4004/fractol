@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/30 16:29:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/01 19:06:46 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 double	pow_of(double num, int exp)
 {
-	double result;
+	double	result;
 
 	result = 1.0;
 	while (exp > 0)
@@ -33,24 +33,11 @@ int		toggle_param(int *param)
 	return (1);
 }
 
-void	px_to_img(t_img *img, int x, int y, int color)
-{
-	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
-		img->data[y * (int)WIN_WIDTH + x] = color;
-}
-
-void	redraw_img(t_win *win)
-{
-	mlx_clear_window(win->mlx_ptr, win->win_ptr);
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr,
-							win->img->img_ptr, 0, 0);
-}
-
 int		get_processors_num(void)
 {
-	int				nm[2];
-	size_t			count;
-	size_t			len;
+	int		nm[2];
+	int		count;
+	size_t	len;
 
 	len = 4;
 	nm[0] = CTL_HW;
@@ -64,6 +51,7 @@ int		get_processors_num(void)
 			count = 1;
 	}
 	return (count*2);
+	//printf("cores: %d", count);
 	//return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
-//	return (WIN_WIDTH);
+	//	return (WIN_WIDTH);
 }

@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/08/23 13:53:25 by dromanic         ###   ########.fr        #
+#    Updated: 2018/09/01 17:41:30 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,13 +20,14 @@ SRC_N =	main.c \
 		draw.c \
 		keys.c \
 		init.c \
-		init2.c \
 		hooks.c \
 		color.c \
 		parser.c \
+		threads.c \
 		ram_man.c \
 		fractals.c \
 		interface.c \
+		init_fract.c \
 		service_func.c
 
 SRC = $(addprefix src/, $(SRC_N))

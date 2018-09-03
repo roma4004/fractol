@@ -33,10 +33,10 @@ static void	*draw_threads(void *thread_data)
 	data = (t_pth_dt *)thread_data;
 	win = data->win;
 	par = win->param;
-	y = (int)((par->center_y * -1) / par->zoom_y);
+	y = (int)((par->center_y * -1) / par->zoom);
 	while(y < WIN_HEIGHT)
 	{
-		x = (int)((par->center_x * -1) / par->zoom_x);
+		x = (int)((par->center_x * -1) / par->zoom);
 		while (x < WIN_WIDTH)
 		{
 			px_to_img(win->img, x, y + data->offset,

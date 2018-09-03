@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/01 19:59:36 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/03 20:04:06 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define DEF_COLOR 0x0f9100FF
 # define AMOUNT_FRACTALS 3
 //# define CPU_CORES 8
-# define ALMOST_HYPER_THREADING 0
+# define ALMOST_HYPER_THREADING 1
 
 # define PI 3.14159265359
 
@@ -201,7 +201,6 @@ enum			e_default_param
 	ZOOM_DEFAULT = 50,
 };
 
-
 void		redraw_fract(t_env *win);
 int			get_fractal_col(t_env *win, int x, int y);
 int			mandelbrot_col(t_env *win, int x, int y);
@@ -244,10 +243,7 @@ int			get_processors_num(void);
 
 void		change_fract(t_env *win, int fr_new_type);
 void		parallel_draw_fractal(t_env *win);
-//void		parallel_draw_fractal(t_env *win);
-t_pth_dt	*init_pthread_dt(t_env *win, int id);
-pthread_t	*init_pthreads(t_env *win);
-
+double		interpolate(double start, double end, double interpolation);
 void		reset(t_env *win);
 int			free_win(t_env *win);
 

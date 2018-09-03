@@ -6,11 +6,16 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/01 19:06:46 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/03 20:39:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+
+double interpolate(double start, double end, double interpolation)
+{
+	return start + ((end - start) * interpolation);
+}
 
 double	pow_of(double num, int exp)
 {
@@ -50,8 +55,8 @@ int		get_processors_num(void)
 		if (count < 1)
 			count = 1;
 	}
-	return (count*2);
-	//printf("cores: %d", count);
+	printf("cores: %d", count * 256);
+	return (count * 256);
 	//return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
 	//	return (WIN_WIDTH);
 }

@@ -24,7 +24,7 @@ static t_param		*init_param(void)
 		new_param->cpu_cores = get_processors_num();
 		new_param->spec_step = 1;
 		new_param->offset_step = 0.05;
-		new_param->iter_step = 10;
+		new_param->iter_step = 1;
 		new_param->spec1 = 0;
 		new_param->spec2 = 2;
 		//param->color = DEF_COLOR;

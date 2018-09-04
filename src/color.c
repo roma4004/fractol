@@ -75,7 +75,7 @@ int				get_color(t_env *win, int i)
 	t_col	*col;
 	if (!win->flags->color_type)
 	{
-		int color = win->param->color_step * i;		//printf("i = %d color=%x\n", color, i);
+		int color = win->param->color_step * i;		//printf("I = %d color=%x\n", color, I);
 		return (color);
 	}
 	col = gen_color(win, i);

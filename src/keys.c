@@ -38,7 +38,7 @@ int		deal_keyboard(int key, t_env *win)
 		redraw_fract(win);
 	}
 	else if (key == ZERO)
-		toggle_param(&win->flags->man_0);
+		toggle_param(&win->flags->n0);
 	else
 		change_color(win, key);
 	return (0);

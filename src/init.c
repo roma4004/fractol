@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/02 17:19:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 14:09:01 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,21 @@ static t_flags		*init_flags(void)
 
 	if ((new_flags = (t_flags *)malloc(sizeof(t_flags))))
 	{
-		new_flags->man_0 = 0;
-		new_flags->man_1 = 0;
-		new_flags->man_2 = 0;
-		new_flags->man_3 = 0;
-		new_flags->man_4 = 0;
-		new_flags->man_5 = 0;
-		new_flags->man_6 = 0;
-		new_flags->man_7 = 0;
-		new_flags->man_8 = 0;
-		new_flags->man_9 = 0;
+		new_flags->n0 = 0;
+		new_flags->n1 = 0;
+		new_flags->n2 = 0;
+		new_flags->n3 = 0;
+		new_flags->n4 = 0;
+		new_flags->n5 = 0;
+		new_flags->n6 = 0;
+		new_flags->n7 = 0;
+		new_flags->n8 = 0;
+		new_flags->n9 = 0;
+		new_flags->Q = 0;
+		new_flags->W = 0;
+		new_flags->E = 0;
+		new_flags->T = 1;
+		new_flags->Y = 1;
 		new_flags->color_type = 0;
 		new_flags->interface_on = 0;
 		new_flags->error_code = 0;
@@ -68,7 +73,7 @@ t_img	*init_img(void *mlx_ptr, int width, int height)
 	if ((new_img = (t_img *)malloc(sizeof(t_img))))
 	{
 		//		new_img->col.a = 0;
-		//		new_img->col.r = 0;
+		//		new_img->col.R = 0;
 		//		new_img->col.g = 0;
 		//		new_img->col.b = 0;
 		new_img->bits_per_pixel = 0;

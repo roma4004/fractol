@@ -6,15 +6,16 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/03 20:04:06 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 14:24:03 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+///menu
+///6, 7 mirroring fractals
+# define WIN_WIDTH 2000
+# define WIN_HEIGHT 2000
 //# define WIN_CENTER_X WIN_WIDTH / 2.0
 //# define WIN_CENTER_Y WIN_HEIGHT / 2.0
 //# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
@@ -59,11 +60,18 @@
 
 typedef struct		s_complex_number
 {
+	double	j;
+	double	R;
+	double	cR;
+	double	sqR;
+	double	I;
+	double	cI;
+	double	sqI;
+
 	double			newR;
 	double			oldR;
 	double			newI;
 	double			oldI;
-
 }					t_cnb;
 
 typedef struct		s_coordinate_iterator
@@ -95,16 +103,21 @@ typedef struct	s_param
 
 typedef struct	s_flags
 {
-	int		man_0;
-	int		man_1;
-	int		man_2;
-	int		man_3;
-	int		man_4;
-	int		man_5;
-	int		man_6;
-	int		man_7;
-	int		man_8;
-	int		man_9;
+	int		n0;
+	int		n1;
+	int		n2;
+	int		n3;
+	int		n4;
+	int		n5;
+	int		n6;
+	int		n7;
+	int		n8;
+	int		n9;
+	int		Q;
+	int		W;
+	int		E;
+	int		T;
+	int		Y;
 	int		color_type;
 	int		interface_on;
 	int		error_code;
@@ -135,7 +148,6 @@ typedef struct	s_environment
 	void		*mlx_ptr;
 	void		*win_ptr;
 	t_img		*img;
-	//	pthread_t	*pthreads_id;
 	void		(*init_func[AMOUNT_FRACTALS])(t_param *);
 }				t_env;
 
@@ -167,7 +179,7 @@ enum			e_keys
 	NUM_0 = 75, ZERO = 29,
 	NUM_MINUS = 78, MINUS = 27, MOUSE_SCROLL_UP = 4,
 	NUM_PLUS = 69, PLUS = 24, MOUSE_SCROLL_DOWN = 5,
-	Q = 12, W = 13, E = 14, R = 15, T = 17,
+	Q = 12, W = 13, E = 14, R = 15, T = 17, Y = 16,
 	A = 0 , S = 1 , D = 2 , F = 3 , G = 5,
 	Z = 6 , X = 7 , C = 8 , V = 9 , B = 11,
 	ENTER = 36, ESC = 53,
@@ -200,6 +212,16 @@ enum			e_default_param
 {
 	ZOOM_DEFAULT = 50,
 };
+
+enum			e_iter_color
+{
+	GRAY = 51,
+	WHITE = 129,
+	BLACK_N_WHITE = 120,
+	BLUE_GREEN = 127,
+	BLUE_BLACK = 253,
+};
+
 
 void		redraw_fract(t_env *win);
 int			get_fractal_col(t_env *win, int x, int y);
@@ -234,7 +256,7 @@ int			map_offset(t_env *win, int key);
 void		show_interface(t_env *win);
 void		show_errors(t_env *win);
 
-double		pow_of(double num, int exp);
+double		pow2(double num, int exp);
 int			toggles(t_env *win, int key);
 int			toggle_param(int *param);
 void		px_to_img(t_img *img, int x, int y, int color);

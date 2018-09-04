@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/02 20:43:56 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 14:09:01 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,23 @@ static void	barnsley_part(t_env *win, char part, t_cnb *c)
 {
 	if (part == BARNSLEY_PART_BODY)
 	{
-		c->newR = 0;
-		c->newI = 0.16f * c->newI;
+		c->R = 0;
+		c->I = 0.16f * c->I;
 	}
 	else if (part == BARNSLEY_PART_RIGHT)
 	{
-		c->newR = -0.15f * c->newR + 0.28f * c->newI;
-		c->newI = 0.26f * c->newR + 0.24f * c->newI + 0.44f;
+		c->R = -0.15f * c->R + 0.28f * c->I;
+		c->I = 0.26f * c->R + 0.24f * c->I + 0.44f;
 	}
 	else if (part == BARNSLEY_PART_LEFT)
 	{
-		c->newR = 0.2f * c->newR + -0.26f * c->newI;
-		c->newI = 0.23f * c->newR + 0.22f * c->newI + 1.6f;
+		c->R = 0.2f * c->R + -0.26f * c->I;
+		c->I = 0.23f * c->R + 0.22f * c->I + 1.6f;
 	}
 	else
 	{
-		c->newR =  0.85 * c->newR + win->param->spec1 * c->newI;
-		c->newI = -0.04 * c->newR + win->param->spec2 * c->newI + 1.6;
+		c->R =  0.85 * c->R + win->param->spec1 * c->I;
+		c->I = -0.04 * c->R + win->param->spec2 * c->I + 1.6;
 	}
 }
 
@@ -68,7 +68,7 @@ void	draw_barnsley(t_env *win)
 	t_cnb		c;
 	t_param		*par;
 
-	c = (t_cnb){.newR = 0, .newI = 0};
+	c = (t_cnb){.R = 0, .I = 0};
 	par = win->param;
 	n = par->iter;
 	while (n--)
@@ -82,8 +82,8 @@ void	draw_barnsley(t_env *win)
 			barnsley_part(win, BARNSLEY_PART_LEFT, &c);
 		else
 			barnsley_part(win, BARNSLEY_PART_CURVE, &c);
-		i.x = (int)((c.newR + 4) * par->zoom - par->offset_x) ;
-		i.y = (int)(WIN_HEIGHT - c.newI * par->zoom - par->offset_y);
+		i.x = (int)((c.R + 4) * par->zoom - par->offset_x) ;
+		i.y = (int)(WIN_HEIGHT - c.I * par->zoom - par->offset_y);
 		px_to_img(win->img->ptr, i.x, i.y, DEF_COLOR);
 	}
 	redraw_img(win);

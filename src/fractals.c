@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/03 19:45:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 17:52:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int		get_fractal_col(t_env *win, int x, int y)
 	if (win->param->fr_id == FR_BATMAN)
 		return (batman_col(win, x, y));
 	if (win->param->fr_id == FR_MANDELBROT)
-		return ((win->flags->man_4) ? mandelbrot_cuboid(win, x, y)
+		return ((win->flags->n4) ? mandelbrot_cuboid(win, x, y)
 									: mandelbrot_col(win, x, y));
 	return (0);
 }
@@ -31,9 +31,8 @@ static int	if_сardioid(t_env *win, double pr, double pi)
 
 	if (!win
 		|| !(flags = win->flags)
-		|| flags->man_1 || flags->man_2 || flags->man_3)
+		|| flags->n1 || flags->n2 || flags->n3 || flags->n7)// || flags->n8)
 		return (0);
-	pr *= ((win->flags->man_6) ? -1 : 1);
 	pr_pow = ((pr - 0.25) * (pr - 0.25));
 	pi_pow = pi * pi;
 	q = pr_pow + pi_pow;
@@ -44,14 +43,14 @@ static int	if_сardioid(t_env *win, double pr, double pi)
 	return (0);
 }
 
-int		mandel_break(t_env *win, t_cnb *c)
+int		mandel_break(t_env *win, t_cnb *z)
 {
-	if (pow_of(c->newR, 2) + pow_of(c->newI, 2) > 4)
+	if ((z->sqR = pow2(z->R, 2)) + (z->sqI = pow2(z->I, 2)) > 4)
 		return (1);
 	//win->param->color_step++;
-	if (win->flags->man_5 && (c->newR > 0.5 || c->newR < -2.0))
+	if (win->flags->n5 && (z->R > 0.5 || z->R < -2.0))
 		return (1);
-	if (win->flags->man_5 && (c->newI > 0.8 || c->newI < -0.8))
+	if (win->flags->n5 && (z->I > 0.8 || z->I < -0.8))
 		return (1);
 
 	return (0);
@@ -59,77 +58,70 @@ int		mandel_break(t_env *win, t_cnb *c)
 
 int		mandelbrot_col(t_env *win, int x, int y)
 {
-	int		i;
 	t_cnb	z;
-	double	pr;
-	double	pi;
-	t_param *par;
+	t_param	*p;
+	t_flags	*f;
 
-	par = win->param;
-	pr = par->ratio * (x - par->center_x) / par->zoom + par->offset_x;// (par->zoom + x_coeficien gives allusion)
-	pi =			  (y - par->center_y) / par->zoom + par->offset_y;//
-
-	i = -1;
-	z.newR = 0;
-	z.newI = 0;
-	if (if_сardioid(win, pr, pi))
-		return (0xffffff);
-	while (++i < par->iter && i >= 0)
+	p = win->param;
+	f = win->flags;
+	z.cR = (p->ratio * (x - p->center_x) / p->zoom + p->offset_x)
+			* ((f->n6) ? -1 : 1); // (p->zoom + x_coeficien gives allusion)
+	z.cI = (y - p->center_y) / p->zoom + p->offset_y;
+	if (!(z.j = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
+		return ((f->W) ? 0xffffff : 0x0);
+	z.R = (f->Q) ? z.cR : 0;
+	z.I = (f->E) ? z.cI : 0;
+	while (++z.j < p->iter && !mandel_break(win, &z))
 	{
-		//		z.r = 0;
-		//		z.i = 0;
-		//		zrsqr = z.r * z.r;
-		//		zisqr = z.i * z.i;
-		//		while (zrsqr + zisqr <= 4.0)
-		//		{
-		//			z.i = square(z.r + z.i) – zrsqr – zisqr;
-		//			z.i += c.i;
-		//			z.r = zrsqr – zisqr + c.r;
-		//			zrsqr = square(z.r);
-		//			zisqr = square(z.i);
-		//		}
-
-		if (mandel_break(win, &z))
-			break ;
-		z.oldR = (win->flags->man_2) ? fabs(z.newR) : z.newR;
-		z.oldI = (win->flags->man_3) ? fabs(z.newI) : z.newI;
-		z.newR = z.oldR * z.oldR - z.oldI * z.oldI + pr
-													 * ((win->flags->man_6) ? -1 : 1);
-		z.newI = (2 * z.oldR * z.oldI + pi) * ((win->flags->man_1) ? -1 : 1);
+		z.I = (pow2(z.R + z.I, 2) - z.sqR - z.sqI + z.cI) * ((f->n1) ? -1 : 1);
+		z.I = (f->n2) ? fabs(z.I) : z.I;
+		z.I *= (f->n7) ? -1 : 1;
+		z.R = (f->n3) ? fabs(z.sqR - z.sqI + z.cR) : z.sqR - z.sqI + z.cR;
 	}
-	return (get_color(win, i));
+	return (get_color(win, z.j));
+//	while (++I < p->iter && I >= 0)
+//	{
+//		if (mandel_break(win, &z))
+//			break ;
+//		z.oldR = (f->n2) ? fabs(z.R) : z.R;
+//		z.oldI = (f->n3) ? fabs(z.I) : z.I;
+//		z.R = z.oldR * z.oldR - z.oldI * z.oldI + pr
+//													 * ((f->n6) ? -1 : 1);
+//		z.I = (2 * z.oldR * z.oldI + pi) * ((f->n1) ? -1 : 1);
+//	}
+
 }
 
-int		mandelbrot2_col(t_env *win, int x, int y)
-{
-	int		i;
-	t_cnb	c;
-	double	pr;
-	double	pi;
-	t_param *par;
-
-	par = win->param;
-	pr = par->ratio * (x - par->center_x) / par->zoom + par->offset_x;
-	pi =			  (y - par->center_y) / par->zoom + par->offset_y;
-
-	i = -1;
-	c.newR = 0;
-	c.newI = 0;
-	if (if_сardioid(win, pr, pi)
-		&& !win->flags->man_1 && !win->flags->man_2 && !win->flags->man_3)
-		return (0);
-	while (++i < par->iter && i >= 0)
-	{
-		if (mandel_break(win, &c))
-			break ;
-		c.oldR = (win->flags->man_2) ? fabs(c.newR) : c.newR;
-		c.oldI = (win->flags->man_3) ? fabs(c.newI) : c.newI;
-		c.newR = pow_of(c.oldR, 2) - 2 * pow_of(c.oldI, 2) + pr
-															 * ((win->flags->man_6) ? -1 : 1);
-		c.newI = (2 * c.oldR * c.oldI + pi) * ((win->flags->man_1) ? -1 : 1);
-	}
-	return (get_color(win, i));
-}
+//int		mandelbrot2_col(t_env *win, int x, int y)
+//{
+//	int		i;
+//	t_cnb	c;
+//	double	pr;
+//	double	pi;
+//	t_param	*par;
+//
+//	par = win->param;
+//	pr = par->ratio * (x - par->center_x) / par->zoom + par->offset_x;
+//	pi =			  (y - par->center_y) / par->zoom + par->offset_y;
+//
+//	i = -1;
+//	c.R = 0;
+//	c.I = 0;
+//	if (if_сardioid(win, pr, pi)
+//		&& !win->flags->n1 && !win->flags->n2 && !win->flags->n3)
+//		return (0);
+//	while (++i < par->iter && i >= 0)
+//	{
+//		if (mandel_break(win, &c))
+//			break ;
+//		c.oldR = (win->flags->n2) ? fabs(c.R) : c.R;
+//		c.oldI = (win->flags->n3) ? fabs(c.I) : c.I;
+//		c.R = pow_of(c.oldR, 2) - 2 * pow2(c.oldI, 2) + pr
+//															 * ((win->flags->n6) ? -1 : 1);
+//		c.I = (2 * c.oldR * c.oldI + pi) * ((win->flags->n1) ? -1 : 1);
+//	}
+//	return (get_color(win, i));
+//}
 
 int		batman_col(t_env *win, int x, int y)
 {
@@ -144,19 +136,19 @@ int		batman_col(t_env *win, int x, int y)
 	pi =			(y - par->center_y) / (par->zoom);
 
 	i = -1;
-	z.newR = 0;
-	z.newI = 0;
-	if (if_сardioid(win, pr, pi))
-		return (0xffffff);
+	z.R = 0;
+	z.I = 0;
+	//if (if_сardioid(win, pr, pi))
+	//	return (0xffffff);
 	while (++i < par->iter && i >= 0)
 	{
 		if (mandel_break(win, &z))
 			break ;
-		z.oldR = (win->flags->man_2) ? fabs(z.newR) : z.newR;
-		z.oldI = (win->flags->man_3) ? fabs(z.newI) : z.newI;
-		z.newR = (pow_of(z.oldR, 2) * pow_of(z.oldI, 2) + pr)
-				 * ((win->flags->man_6) ? -1 : 1);
-		z.newI = (2 * z.oldR * z.oldI + pi) * ((win->flags->man_1) ? -1 : 1);
+		z.oldR = (win->flags->n2) ? fabs(z.R) : z.R;
+		z.oldI = (win->flags->n3) ? fabs(z.I) : z.I;
+		z.R = (pow2(z.oldR, 2) * pow2(z.oldI, 2) + pr)
+				 * ((win->flags->n6) ? -1 : 1);
+		z.I = (2 * z.oldR * z.oldI + pi) * ((win->flags->n1) ? -1 : 1);
 	}
 	return (get_color(win, i));
 }
@@ -173,17 +165,17 @@ int		mandelbrot_cuboid(t_env *win, int x, int y)
 	pr = par->ratio * (x - par->center_x) / par->zoom_x	+ par->offset_x;
 	pi =			(y - par->center_y) / par->zoom_y + par->offset_y;
 	i = -1;
-	c.newR = 0;
-	c.newI = 0;
+	c.R = 0;
+	c.I = 0;
 	while (++i < win->param->iter)
 	{
-		c.oldR = (win->flags->man_2) ? fabs(c.newR) : c.newR;
-		c.oldI = (win->flags->man_3) ? fabs(c.newI) : c.newI;
-		c.newR = pow_of(c.oldR, 3) - 3 * c.oldR * pow_of(c.oldI, 2) + pr
-																	  * ((win->flags->man_6) ? -1 : 1);
-		c.newI = (3 * pow_of(c.oldR, 2) * c.oldI - pow_of(c.oldI, 3) + pi)
-				 * ((win->flags->man_1) ? -1 : 1);
-		if ((pow_of(c.newR, 2) + pow_of(c.newI, 2)) > 4)
+		c.oldR = (win->flags->n2) ? fabs(c.R) : c.R;
+		c.oldI = (win->flags->n3) ? fabs(c.I) : c.I;
+		c.R = pow2(c.oldR, 3) - 3 * c.oldR * pow2(c.oldI, 2) + pr
+																	  * ((win->flags->n6) ? -1 : 1);
+		c.I = (3 * pow2(c.oldR, 2) * c.oldI - pow2(c.oldI, 3) + pi)
+				 * ((win->flags->n1) ? -1 : 1);
+		if ((pow2(c.R, 2) + pow2(c.I, 2)) > 4)
 			break;
 	}
 	return (get_color(win, i));

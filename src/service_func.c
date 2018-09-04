@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/03 20:39:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 14:24:03 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ double interpolate(double start, double end, double interpolation)
 	return start + ((end - start) * interpolation);
 }
 
-double	pow_of(double num, int exp)
+double	pow2(double num, int exp)
 {
 	double	result;
 

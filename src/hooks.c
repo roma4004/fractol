@@ -6,12 +6,16 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/03 20:51:31 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 19:28:31 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
+//void		set_iterate(t_env *win, int newIter)
+//{
+//	win->param->iter = 129;// white fractal
+//}
 int			map_offset(t_env *win, int key)
 {
 	double	offset_x;
@@ -56,34 +60,36 @@ int			specific_param(t_env *win, int key)
 int			iterate_change(t_env *win, int key)
 {
 	int		iter_offset;
-	t_param	*param;
+	t_param	*par;
+	t_flags	*fl;
 
-	param = win->param;
-	printf("iter ch %d\n", param->iter);
+	par = win->param;
+	fl = win->flags;
 	iter_offset = 0;
-	if (((key == NUM_MINUS || key == NINE) && (iter_offset = -param->iter_step))
-    || ((key == NUM_PLUS || key == ZERO) && (iter_offset = param->iter_step)))
-		if (iter_offset && (param->iter + iter_offset > 0))
+	if (((key == NUM_MINUS || key == NINE) && (iter_offset = -par->iter_step))
+    || ((key == NUM_PLUS || key == ZERO) && (iter_offset = par->iter_step)))
+		if (iter_offset && (par->iter + iter_offset > 0))
 		{
-			param->iter += iter_offset;
-			param->color_step = 0xFFFFFFFF / param->iter;
+			par->iter += iter_offset;
+			par->color_step = ((fl->T) ? 0xFFFFFFFF : 0xFFFFFF) / par->iter;
 			redraw_fract(win);
+			printf("iter ch %d\n", par->iter);
 			return (1);
 		}
 	return (0);
 	//
 	//	int		sign;
-	//	t_param	*param;
+	//	t_param	*par;
 	//
-	//	param = win->param; printf("iter ch %d\n", param->iter);
+	//	par = win->par; printf("iter ch %d\n", par->iter);
 	//	sign = 0;
 	//	if (((key == NUM_MINUS || key == NINE) && (sign = -1))
 	//		|| ((key == NUM_PLUS || key == ZERO) && (sign = 1)))
 	//	{
-	//		if (param->iter + param->iter_step > 11)
+	//		if (par->iter + par->iter_step > 11)
 	//		{
-	//			param->iter += param->iter_step * sign;
-	//			param->color_step = 0xFFFFFFFF / param->iter;
+	//			par->iter += par->iter_step * sign;
+	//			par->color_step = 0xFFFFFFFF / par->iter;
 	//			redraw_fract(win);
 	//		}
 	//		return (1);
@@ -97,8 +103,8 @@ int			zoom(t_env *win, int key, float x, float y)
 	t_param	*par;
 
 	par = win->param;
-	if ((key == PLUS && (par->zoom *= 1.5) )
-	|| (key == MINUS && (par->zoom /= 1.5) ))
+	if ((key == PLUS && (par->zoom *= 1.5) && (par->offset_step /= 1.5)  )
+	|| (key == MINUS && (par->zoom /= 1.5) && (par->offset_step *= 1.5) ))
 	{
 		par->offset_x += (x - par->center_x) * par->center_x / (par->zoom * WIN_WIDTH);
 		par->offset_y += (y - par->center_y) * par->center_y / (par->zoom * WIN_HEIGHT);
@@ -117,19 +123,28 @@ int			zoom(t_env *win, int key, float x, float y)
 
 int			toggles(t_env *win, int key)
 {
-	t_flags	*flags;
+	t_flags	*fl;
+	t_param	*par;
 	int		*flag;
 
-	flags = win->flags;
+	fl = win->flags;
+	par = win->param;
 	flag = 0;
-	if (((key == NUM_1 || key == ONE) && (flag = &flags->man_1))
-		|| ((key == NUM_2 || key == TWO) && (flag = &flags->man_2))
-		|| ((key == NUM_3 || key == THREE) && (flag = &flags->man_3))
-		|| ((key == NUM_4 || key == FOUR) && (flag = &flags->man_4))
-		|| ((key == NUM_5 || key == FIVE) && (flag = &flags->man_5))
-		|| ((key == NUM_6 || key == SIX) && (flag = &flags->man_6))
-		|| ((key == NUM_7 || key == SEVEN) && (flag = &flags->man_7))
-		|| ((key == NUM_8 || key == EIGHT) && (flag = &flags->man_8)))
+	if (((key == NUM_1 || key == ONE) && (flag = &fl->n1))
+		|| ((key == NUM_2 || key == TWO) && (flag = &fl->n2))
+		|| ((key == NUM_3 || key == THREE) && (flag = &fl->n3))
+		|| ((key == NUM_4 || key == FOUR) && (flag = &fl->n4))
+		|| ((key == NUM_5 || key == FIVE) && (flag = &fl->n5))
+		|| ((key == NUM_6 || key == SIX) && (flag = &fl->n6))
+		|| ((key == NUM_7 || key == SEVEN) && (flag = &fl->n7))
+		|| ((key == NUM_8 || key == EIGHT) && (flag = &fl->n8))
+		|| (key == Q && (flag = &fl->Q))
+		|| (key == W && (flag = &fl->W))
+		|| (key == E && (flag = &fl->E))
+		|| ((key == T && (flag = &fl->T))
+			&& (par->color_step = ((fl->T) ? 0xFFFFFFFF : 0xFFFFFF) / par->iter))
+		|| (key == Y && (flag = &fl->Y))
+	)
 	{
 		*flag = (*flag == 0) ? 1 : 0;
 		redraw_fract(win);

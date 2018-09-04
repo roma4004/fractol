@@ -14,7 +14,7 @@
 
 void	draw_fractal(t_env *win)
 {
-	//	int		i;
+	//	int		I;
 	//	int 	x;
 	//	int 	y;
 	t_img	*img;
@@ -26,8 +26,8 @@ void	draw_fractal(t_env *win)
 	//		x = -1;
 	//		while (++x < WIN_WIDTH)
 	//		{
-	//			i = get_fractal_point(win, x, y);
-	//			px_to_img(img, x, y, get_color(gen_color(win, i)));
+	//			I = get_fractal_point(win, x, y);
+	//			px_to_img(img, x, y, get_color(gen_color(win, I)));
 	//		}
 	//	}
 	parallel_draw_fractal(win);

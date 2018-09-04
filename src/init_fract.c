@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/21 17:57:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/03 20:52:06 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/04 18:30:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	init_mandelbrot(t_param *param)
 	param->zoom_x = param->zoom * param->center_x;
 	param->zoom_y = param->zoom * param->center_y;
 	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
-	param->spec_step = 1;
-	param->offset_step = 0.04 * param->zoom;
+	param->spec_step = 0.01;
+	param->offset_step = 0.04;
 	param->iter_step = 1;
 	param->spec1 = 0;
 	param->spec2 = 2;
@@ -62,7 +62,7 @@ void	init_batman(t_param *param)
 	param->zoom_y = param->zoom * param->center_y;
 	//param->color_step = 0xffffff / param->iter * PI; // / 1114112;
 	param->spec_step = 1;
-	param->offset_step = 0.04 * param->zoom;
+	param->offset_step = 0.04;
 	param->iter_step = 10;
 	param->spec1 = 0;
 	param->spec2 = 2;

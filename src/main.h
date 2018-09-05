@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/04 14:24:03 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/05 19:39:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 # define MAIN_H
 ///menu
 ///6, 7 mirroring fractals
-# define WIN_WIDTH 2000
-# define WIN_HEIGHT 2000
+# define WIN_WIDTH 1800
+# define WIN_HEIGHT 1300
 //# define WIN_CENTER_X WIN_WIDTH / 2.0
 //# define WIN_CENTER_Y WIN_HEIGHT / 2.0
 //# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
-# define AMOUNT_FRACTALS 3
+# define AMOUNT_FRACTALS 4
 //# define CPU_CORES 8
 # define ALMOST_HYPER_THREADING 1
 
@@ -202,6 +202,7 @@ enum			e_fr_type
 	FR_BARNSLEY = 0,
 	FR_MANDELBROT = 1,
 	FR_BATMAN = 2,
+	FR_MANDELBROT_CUBOID = 3,
 	BARNSLEY_PART_BODY = 1,
 	BARNSLEY_PART_LEFT = 2,
 	BARNSLEY_PART_RIGHT = 3,
@@ -228,6 +229,7 @@ int			get_fractal_col(t_env *win, int x, int y);
 int			mandelbrot_col(t_env *win, int x, int y);
 int			mandelbrot_cuboid(t_env *win, int x, int y);
 int			batman_col(t_env *win, int x, int y);
+int			julia_col(t_env *win, int x, int y);
 
 int			get_color(t_env *win, int i);
 int change_color(t_env *win, int key);
@@ -242,6 +244,7 @@ t_img		*init_img(void *mlx_ptr, int width, int height);
 void		init_barnsley(t_param *param);
 void		init_mandelbrot(t_param *param);
 void		init_batman(t_param *param);
+void		init_mandelbrot_cuboid(t_param *param);
 
 t_env		*clear_img(t_env *win);
 

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/04 14:09:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/05 17:46:49 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_param		*init_param(void)
 		new_param->spec_step = 1;
 		new_param->offset_step = 0.05;
 		new_param->iter_step = 1;
-		new_param->spec1 = 0;
+		new_param->spec1 = 4;
 		new_param->spec2 = 2;
 		//param->color = DEF_COLOR;
 		new_param->zoom = ZOOM_DEFAULT;
@@ -102,6 +102,7 @@ t_env			*init_win(void)
 		|| !(new_win->init_func[0] = init_barnsley)
 		|| !(new_win->init_func[1] = init_mandelbrot)
 		|| !(new_win->init_func[2] = init_batman)
+		|| !(new_win->init_func[3] = init_mandelbrot_cuboid)
 	)
 		free_win(new_win);
 	return (new_win);

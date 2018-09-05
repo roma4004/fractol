@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/04 14:24:03 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/05 20:44:01 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,5 @@ int		get_processors_num(void)
 		if (count < 1)
 			count = 1;
 	}
-	printf("cores: %d", count * 256);
-	return (count * 256);
-	//return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
-	//	return (WIN_WIDTH);
+	return ((ALMOST_HYPER_THREADING) ? (count * 2) : count);
 }

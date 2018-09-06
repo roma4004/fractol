@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/05 19:39:30 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/06 20:29:10 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 //# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
-# define AMOUNT_FRACTALS 4
+# define AMOUNT_FRACTALS 5
 //# define CPU_CORES 8
 # define ALMOST_HYPER_THREADING 1
 
@@ -60,13 +60,14 @@
 
 typedef struct		s_complex_number
 {
-	double	j;
+	double	iter;
 	double	R;
 	double	cR;
 	double	sqR;
 	double	I;
 	double	cI;
 	double	sqI;
+
 
 	double			newR;
 	double			oldR;
@@ -99,11 +100,13 @@ typedef struct	s_param
 	double	offset_step;
 	double	offset_y;
 	double	offset_x;
+	double	seed_jR;
+	double	seed_jI;
+
 }				t_param;
 
 typedef struct	s_flags
 {
-	int		n0;
 	int		n1;
 	int		n2;
 	int		n3;
@@ -113,6 +116,7 @@ typedef struct	s_flags
 	int		n7;
 	int		n8;
 	int		n9;
+	int		n0;
 	int		Q;
 	int		W;
 	int		E;
@@ -121,6 +125,7 @@ typedef struct	s_flags
 	int		color_type;
 	int		interface_on;
 	int		error_code;
+	int		lock_julia;
 }				t_flags;
 
 typedef struct	s_color
@@ -177,8 +182,8 @@ enum			e_keys
 	NUM_8 = 91, EIGHT = 28,
 	NUM_9 = 75, NINE = 25,
 	NUM_0 = 75, ZERO = 29,
-	NUM_MINUS = 78, MINUS = 27, MOUSE_SCROLL_UP = 4,
-	NUM_PLUS = 69, PLUS = 24, MOUSE_SCROLL_DOWN = 5,
+	NUM_MINUS = 78, MINUS = 27, MOUSE_SCROLL_UP = 4, MOUSE_LBT = 1,
+	NUM_PLUS = 69, PLUS = 24, MOUSE_SCROLL_DOWN = 5, MOUSE_RBT = 2,
 	Q = 12, W = 13, E = 14, R = 15, T = 17, Y = 16,
 	A = 0 , S = 1 , D = 2 , F = 3 , G = 5,
 	Z = 6 , X = 7 , C = 8 , V = 9 , B = 11,
@@ -203,6 +208,7 @@ enum			e_fr_type
 	FR_MANDELBROT = 1,
 	FR_BATMAN = 2,
 	FR_MANDELBROT_CUBOID = 3,
+	FR_JULIA = 4,
 	BARNSLEY_PART_BODY = 1,
 	BARNSLEY_PART_LEFT = 2,
 	BARNSLEY_PART_RIGHT = 3,
@@ -245,11 +251,13 @@ void		init_barnsley(t_param *param);
 void		init_mandelbrot(t_param *param);
 void		init_batman(t_param *param);
 void		init_mandelbrot_cuboid(t_param *param);
+void		init_julia(t_param *param);
 
 t_env		*clear_img(t_env *win);
 
 int			deal_keyboard(int key, t_env *win);
 int			deal_mouse(int key, int x, int y, t_env *win);
+int			deal_mouse_move(int x, int y, t_env *win);
 int			exit_x(t_env *par);
 
 int			zoom(t_env *win, int key, float x, float y);

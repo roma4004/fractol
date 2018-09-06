@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/05 21:14:02 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/06 21:26:19 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 
 int		get_fractal_col(t_env *win, int x, int y)
 {
+	if (win->param->fr_id == FR_JULIA)
+		return (julia_col(win, x, y));
 	if (win->param->fr_id == FR_BATMAN)
 		return (batman_col(win, x, y));
 	if (win->param->fr_id == FR_MANDELBROT)
 		return (mandelbrot_col(win, x, y));
 	if (win->param->fr_id == FR_MANDELBROT_CUBOID)
 		return (mandelbrot_cuboid(win, x, y));
+
 	return (0);
 }
 static int	if_сardioid(t_env *win, double pr, double pi)
@@ -31,6 +34,7 @@ static int	if_сardioid(t_env *win, double pr, double pi)
 	t_flags		*flags;
 
 	if (!win
+		|| win->param->fr_id == FR_JULIA
 		|| !(flags = win->flags)
 		|| flags->n1 || flags->n2 || flags->n3 || flags->n7)
 		return (0);
@@ -76,18 +80,18 @@ int		mandelbrot_col(t_env *win, int x, int y)
 	z.cR = (p->ratio * (x - p->center_x) / p->zoom + p->offset_x)
 			* ((f->n6) ? -1 : 1); // (p->zoom + x_coeficien gives allusion)
 	z.cI = (y - p->center_y) / p->zoom + p->offset_y;
-	if (!(z.j = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
+	if (!(z.iter = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
 		return ((f->W) ? 0xffffff : 0x0);
 	z.R = (f->Q) ? z.cR : 0;
 	z.I = (f->E) ? z.cI : 0;
-	while (++z.j < p->iter && !mandel_break(win, &z))
+	while (++z.iter < p->iter && !mandel_break(win, &z))
 	{
 		z.I = (pow2(z.R + z.I, 2) - z.sqR - z.sqI + z.cI) * ((f->n1) ? -1 : 1);
 		z.I = (f->n2) ? fabs(z.I) : z.I;
 		z.I *= (f->n7) ? -1 : 1;
 		z.R = (f->n3) ? fabs(z.sqR - z.sqI + z.cR) : z.sqR - z.sqI + z.cR;
 	}
-	return (get_color(win, z.j));
+	return (get_color(win, z.iter));
 //	while (++I < p->iter && I >= 0)
 //	{
 //		if (mandel_break(win, &z))
@@ -101,7 +105,32 @@ int		mandelbrot_col(t_env *win, int x, int y)
 
 }
 
-//int		mandelbrot2_col(t_env *win, int x, int y)
+int		julia_col(t_env *win, int x, int y)
+{
+	t_cnb z;
+	t_param *p;
+	t_flags *f;
+
+	p = win->param;
+	f = win->flags;
+	z.cR = (p->ratio * (x - p->center_x) / p->zoom + p->offset_x)
+		   * ((f->n6) ? -1 : 1); // (p->zoom + x_coeficien gives allusion)
+	z.cI = (y - p->center_y) / p->zoom + p->offset_y;
+	if (!(z.iter = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
+		return ((f->W) ? 0xffffff : 0x0);
+	z.R = (f->Q) ? 0 : z.cR;
+	z.I = (f->E) ? 0 : z.cI;
+	while (++z.iter < p->iter && !mandel_break(win, &z))
+	{
+		z.I = (pow2(z.R + z.I, 2) - z.sqR - z.sqI + p->seed_jI) * ((f->n1) ? -1 : 1);
+		z.I = (f->n2) ? fabs(z.I) : z.I;
+		z.I *= (f->n7) ? -1 : 1;
+		z.R = (f->n3) ? fabs(z.sqR - z.sqI + z.cR) : z.sqR - z.sqI + p->seed_jR;
+	}
+	return (get_color(win, z.iter));
+}
+
+	//int		mandelbrot2_col(t_env *win, int x, int y)
 //{
 //	int		i;
 //	t_cnb	c;
@@ -134,32 +163,27 @@ int		mandelbrot_col(t_env *win, int x, int y)
 
 int		batman_col(t_env *win, int x, int y)
 {
-	int		i;
 	t_cnb	z;
-	double	pr;
-	double	pi;
-	t_param *par;
+	t_param	*p;
+	t_flags	*f;
 
-	par = win->param;
-	pr = par->ratio * (x - par->center_x) / par->zoom + par->offset_x;
-	pi =			(y - par->center_y) / par->zoom + par->offset_y;
-
-	i = -1;
-	z.R = 0;
-	z.I = 0;
-	//if (if_сardioid(win, pr, pi))
-	//	return (0xffffff);
-	while (++i < par->iter && i >= 0)
+	p = win->param;
+	f = win->flags;
+	z.cR = (p->ratio * (x - p->center_x) / p->zoom + p->offset_x)
+		   * ((f->n6) ? -1 : 1); // (p->zoom + x_coeficien gives allusion)
+	z.cI = (y - p->center_y) / p->zoom + p->offset_y;
+	if (!(z.iter = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
+		return ((f->W) ? 0xffffff : 0x0);
+	z.R = (f->Q) ? z.cR : 0;
+	z.I = (f->E) ? z.cI : 0;
+	while (++z.iter < p->iter && !mandel_break(win, &z))
 	{
-		if (mandel_break(win, &z))
-			break ;
-		z.oldR = (win->flags->n2) ? fabs(z.R) : z.R;
-		z.oldI = (win->flags->n3) ? fabs(z.I) : z.I;
-		z.R = (pow2(z.oldR, 2) * pow2(z.oldI, 2) + pr)
-				 * ((win->flags->n6) ? -1 : 1);
-		z.I = (2 * z.oldR * z.oldI + pi) * ((win->flags->n1) ? -1 : 1);
+		z.I = (pow2(z.R + z.I, 2) - z.sqR - z.sqI + z.cI) * ((f->n1) ? -1 : 1);
+		z.I = (f->n2) ? fabs(z.I) : z.I;
+		z.I *= (f->n7) ? -1 : 1;
+		z.R = (f->n3) ? fabs(z.sqR - z.sqI + z.cR) : z.sqR * z.sqI + z.cR;
 	}
-	return (get_color(win, i));
+	return (get_color(win, z.iter));
 }
 
 int		mandelbrot_cuboid(t_env *win, int x, int y)
@@ -170,21 +194,22 @@ int		mandelbrot_cuboid(t_env *win, int x, int y)
 //
 //	p = win->param;
 //	f = win->flags;
-//	z.cR = (p->ratio * (x - p->center_x) / p->zoom + p->offset_x)
+//	z.cR = (1.5 * (x - p->center_x) / p->zoom + p->offset_x)
 //		   * ((f->n6) ? -1 : 1); // (p->zoom + x_coeficien gives allusion)
 //	z.cI = (y - p->center_y) / p->zoom + p->offset_y;
-//	if (!(z.j = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
+//	if (!(z.iter = -1) || (f->Y && if_сardioid(win, z.cR, z.cI)))
 //		return ((f->W) ? 0xffffff : 0x0);
 //	z.R = (f->Q) ? z.cR : 0;
 //	z.I = (f->E) ? z.cI : 0;
-//	while (++z.j < p->iter && !mandel_break(win, &z))
+//	while (++z.iter < p->iter && !mandel_break(win, &z))
 //	{
-//		z.I = (pow2(z.R + z.I, 2) - z.sqR - z.sqI + z.cI) * ((f->n1) ? -1 : 1);
+//		z.I = 3 * pow2(z.R, 2) * z.I - pow2(z.I, 3) + z.cI; //* ((f->n1) ? -1 : 1);
 //		z.I = (f->n2) ? fabs(z.I) : z.I;
 //		z.I *= (f->n7) ? -1 : 1;
-//		z.R = (f->n3) ? fabs(z.sqR - z.sqI + z.cR) : z.sqR - z.sqI + z.cR;
+//		z.R = (f->n3) ? fabs(pow2(z.R, 3) - 3 * z.R * pow2(z.I, 2) + z.cR) :
+//			  pow2(z.R, 3) - 3 * z.R * pow2(z.I, 2) + z.cR;
 //	}
-//	return (get_color(win, z.j));
+//	return (get_color(win, z.iter));
 	int		i;
 	t_cnb	c;
 	double	pr;

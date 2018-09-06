@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/05 17:46:49 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/06 18:19:06 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static t_flags		*init_flags(void)
 		new_flags->color_type = 0;
 		new_flags->interface_on = 0;
 		new_flags->error_code = 0;
+		new_flags->lock_julia = 0;
 	}
 	return (new_flags);
 }
@@ -103,6 +104,7 @@ t_env			*init_win(void)
 		|| !(new_win->init_func[1] = init_mandelbrot)
 		|| !(new_win->init_func[2] = init_batman)
 		|| !(new_win->init_func[3] = init_mandelbrot_cuboid)
+		|| !(new_win->init_func[4] = init_julia)
 	)
 		free_win(new_win);
 	return (new_win);

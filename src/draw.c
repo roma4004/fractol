@@ -12,13 +12,6 @@
 
 #include "main.h"
 
-void	change_fract(t_env *win, int fr_new_type)
-{
-	win->param->fr_id = fr_new_type;
-	init_mandelbrot(win->param);
-	redraw_fract(win);
-}
-
 void	redraw_img(t_env *win)
 {
 	mlx_clear_window(win->mlx_ptr, win->win_ptr);

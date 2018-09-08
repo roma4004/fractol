@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/06 20:29:10 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/08 21:20:16 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MAIN_H
 ///menu
 ///6, 7 mirroring fractals
-# define WIN_WIDTH 1800
-# define WIN_HEIGHT 1300
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
 //# define WIN_CENTER_X WIN_WIDTH / 2.0
 //# define WIN_CENTER_Y WIN_HEIGHT / 2.0
 //# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
@@ -68,7 +68,6 @@ typedef struct		s_complex_number
 	double	cI;
 	double	sqI;
 
-
 	double			newR;
 	double			oldR;
 	double			newI;
@@ -87,8 +86,6 @@ typedef struct	s_param
 	int		iter;
 	int		cpu_cores;
 	float	zoom;
-	float	zoom_x;
-	float	zoom_y;
 	float	center_x;
 	float	center_y;
 	double	ratio;
@@ -122,7 +119,7 @@ typedef struct	s_flags
 	int		E;
 	int		T;
 	int		Y;
-	int		color_type;
+	int		G;
 	int		interface_on;
 	int		error_code;
 	int		lock_julia;
@@ -169,7 +166,7 @@ enum			e_offset
 	GREEN = 8,
 	BLUE = 0
 };
-
+//NUM_0 = ??,
 enum			e_keys
 {
 	NUM_1 = 83, ONE = 18,
@@ -194,14 +191,6 @@ enum			e_keys
 	END = 119, PAGE_DOWN = 121
 };
 
-enum			e_errors
-{
-	MAP_INVALID = 404,
-	WIDTH_ERR = 405,
-	READ_ERR = 406,
-	COLOR_ERR = 407,
-};
-
 enum			e_fr_type
 {
 	FR_BARNSLEY = 0,
@@ -213,11 +202,6 @@ enum			e_fr_type
 	BARNSLEY_PART_LEFT = 2,
 	BARNSLEY_PART_RIGHT = 3,
 	BARNSLEY_PART_CURVE = 4,
-};
-
-enum			e_default_param
-{
-	ZOOM_DEFAULT = 50,
 };
 
 enum			e_iter_color
@@ -238,7 +222,7 @@ int			batman_col(t_env *win, int x, int y);
 int			julia_col(t_env *win, int x, int y);
 
 int			get_color(t_env *win, int i);
-int change_color(t_env *win, int key);
+int			change_color(t_env *win, int key);
 
 int			specific_param(t_env *win, int key);
 void		draw_fractal(t_env *win);

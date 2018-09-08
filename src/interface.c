@@ -27,9 +27,9 @@ void	show_interface(t_env *win)
 	mlx_string_put(win->mlx_ptr, win->win_ptr, 20, 130, DEF_COLOR,
 				   "reset           : R");
 	mlx_string_put(win->mlx_ptr, win->win_ptr, 20, 150, DEF_COLOR,
-				   "add visual style: 1..7 or numpad 1..7 (|, /, -, \\, fdf, layer, dot)");
+				   "add visual G: 1..7 or numpad 1..7 (|, /, -, \\, fdf, layer, dot)");
 	mlx_string_put(win->mlx_ptr, win->win_ptr, 20, 110, DEF_COLOR,
-				   "next style      : enter (hold to animate)");
+				   "next G      : enter (hold to animate)");
 }
 
 void	show_errors(t_env *win)

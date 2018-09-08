@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/06 19:58:06 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/07 18:10:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		main(void)//int argc, char **argv)
 	//	if (parse_map(argv[1], win))
 	//	{
 	//init_mandelbrot(win->param);
-	win->init_func[FR_MANDELBROT_CUBOID](win->param);
+	win->init_func[FR_MANDELBROT](win->param);
 	redraw_fract(win);
 	//parallel_draw_fractal(win);
 	mlx_hook(win->win_ptr, 17, 1L << 17, exit_x, win);

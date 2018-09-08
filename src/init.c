@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/06 18:19:06 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/08 20:40:07 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static t_param		*init_param(void)
 		new_param->zoom = ZOOM_DEFAULT;
 		new_param->offset_x = 0;
 		new_param->offset_y = 0;
+		new_param->seed_jI = 0;
+		new_param->seed_jR = 0;
 		//init_mandelbrot(new_param);
 	}
 	return (new_param);
@@ -57,7 +59,7 @@ static t_flags		*init_flags(void)
 		new_flags->E = 0;
 		new_flags->T = 1;
 		new_flags->Y = 1;
-		new_flags->color_type = 0;
+		new_flags->G = 0;
 		new_flags->interface_on = 0;
 		new_flags->error_code = 0;
 		new_flags->lock_julia = 0;

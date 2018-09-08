@@ -12,11 +12,6 @@
 
 #include "main.h"
 
-double interpolate(double start, double end, double interpolation)
-{
-	return start + ((end - start) * interpolation);
-}
-
 double	pow2(double num, int exp)
 {
 	double	result;

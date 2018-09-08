@@ -6,10 +6,11 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/24 19:54:37 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/08 20:46:33 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <math.h>
 #include "main.h"
 
 static int		change_hue(int color, int offset, int mask_offset)
@@ -22,7 +23,7 @@ static int		change_hue(int color, int offset, int mask_offset)
 	if (offset == 1)
 		color += increment;
 	else
-		color -= increment;	//printf("change_color, pre color %d, new color %d\n", prev_col, color);
+		color -= increment;
 	return (color);
 }
 
@@ -33,8 +34,7 @@ int				change_color(t_env *win, int key)
 	int		offset;
 	int		chanel;
 
-	offset = 0;
-	if (!win && key == G && toggle_param(&win->flags->color_type))
+	if (!(offset = 0) && !win)
 		return (0);
 	if ((key == A || (key == Z)) && (chanel = ALPHA))
 		offset = (key == A) ? 1 : -1;
@@ -49,7 +49,7 @@ int				change_color(t_env *win, int key)
 		while (++y < WIN_HEIGHT && (x = -1))
 			while (++x < WIN_WIDTH)
 				px_to_img(win->img, x, y,
-						  change_hue(win->img->data[y * WIN_WIDTH + x], offset, chanel));
+				change_hue(win->img->data[y * WIN_WIDTH + x], offset, chanel));
 		redraw_img(win);
 		return (1);
 	}
@@ -58,8 +58,8 @@ int				change_color(t_env *win, int key)
 
 static t_col	*gen_color(t_env *win, int i)
 {
-	double step;
-	t_img *img;
+	double	step;
+	t_img	*img;
 
 	img = win->img;
 	step = (double)i / (double)win->param->iter;
@@ -72,10 +72,12 @@ static t_col	*gen_color(t_env *win, int i)
 
 int				get_color(t_env *win, int i)
 {
+	int		color;
 	t_col	*col;
-	if (!win->flags->color_type)
+
+	if (!win->flags->G)
 	{
-		int color = win->param->color_step * i;		//printf("I = %d color=%x\n", color, I);
+		color = (int)(win->param->color_step * i);
 		return (color);
 	}
 	col = gen_color(win, i);

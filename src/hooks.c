@@ -6,16 +6,12 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/04 19:28:31 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/08 20:56:59 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-//void		set_iterate(t_env *win, int newIter)
-//{
-//	win->param->iter = 129;// white fractal
-//}
 int			map_offset(t_env *win, int key)
 {
 	double	offset_x;
@@ -138,12 +134,10 @@ int			toggles(t_env *win, int key)
 		|| ((key == NUM_6 || key == SIX) && (flag = &fl->n6))
 		|| ((key == NUM_7 || key == SEVEN) && (flag = &fl->n7))
 		|| ((key == NUM_8 || key == EIGHT) && (flag = &fl->n8))
-		|| (key == Q && (flag = &fl->Q))
-		|| (key == W && (flag = &fl->W))
-		|| (key == E && (flag = &fl->E))
-		|| ((key == T && (flag = &fl->T))
+		|| (key == Q && (flag = &fl->Q)) || (key == W && (flag = &fl->W))
+		|| (key == E && (flag = &fl->E)) || ((key == T && (flag = &fl->T))
 			&& (par->color_step = ((fl->T) ? 0xFFFFFFFF : 0xFFFFFF) / par->iter))
-		|| (key == Y && (flag = &fl->Y))
+		|| (key == Y && (flag = &fl->Y)) || (key == G && (flag = &fl->G))
 	)
 	{
 		*flag = (*flag == 0) ? 1 : 0;

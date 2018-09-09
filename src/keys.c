@@ -6,70 +6,75 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/08 21:02:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/09 19:29:00 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int		deal_keyboard(int key, t_env *win)
+int		toggle_par(int *param)
+{//maybe need remove this func to ternary if
+	*param = (*param == 0) ? 1 : 0;
+	return (1);
+}
+
+int		deal_keyboard(int key, t_env *env)
 {
-	if (!win)
+	if (!env)
 		return (1);
-	if (!zoom(win, key, win->param->center_x, win->param->center_y))
-		if (!map_offset(win, key))
-			if (!iterate_change(win, key))
-				if (!toggles(win, key))
-					if (specific_param(win, key))
+	if (!zoom(env, key, env->param->center_x, env->param->center_y))
+		if (!map_offset(env, key))
+			if (!iterate_change(env, key))
+				if (!toggles(env, key, env->param, env->flags))
+					if (specific_param(env, key))
 						return (0);
 	if (key == ESC)
-		exit_x(win);
+		exit_x(env);
 	else if (key == R)
 	{
-		win->init_func[win->param->fr_id](win->param);//todo: need to reset flags
-		redraw_fract(win);
+		env->init_func[env->param->fr_id](env->param);
+		flag_reset(env->flags);
+		redraw_fract(env);
 	}
 	else if (key == ENTER)
 	{
-		if (++win->param->fr_id == AMOUNT_FRACTALS)
-			win->param->fr_id = 0;
-		win->init_func[win->param->fr_id](win->param);
-		redraw_fract(win);
+		if (++env->param->fr_id == AMOUNT_FRACTALS)
+			env->param->fr_id = 0;
+		env->init_func[env->param->fr_id](env->param);
+		redraw_fract(env);
 	}
-	else if (key == ZERO)
-		toggle_param(&win->flags->n0);
 	else
-		change_color(win, key);
+		change_color(env, key);
 	return (0);
 }
 
-int		deal_mouse(int key, int x, int y, t_env *win)
+int		deal_mouse(int key, int x, int y, t_env *env)
 {
-	if (!win)
+	if (!env)
 		return (1);
 	if (key == MOUSE_SCROLL_UP)
-		zoom(win, PLUS, x, y);
+		zoom(env, PLUS, x, y);
 	else if (key == MOUSE_SCROLL_DOWN)
-		zoom(win, MINUS, x, y);
-	else if (key == MOUSE_LBT)
-		toggle_param(&win->flags->lock_julia);
+		zoom(env, MINUS, x, y);
+	else if (key == MOUSE_RBT)
+		toggle_par(&env->flags->lock_julia);
 	return (0);
 }
 
-int		deal_mouse_move(int x, int y, t_env *win)
+int		deal_mouse_move(int x, int y, t_env *env)
 {
 	t_param	*p;
 	t_flags	*f;
 
-	p = win->param;
-	f = win->flags;
-	if (!win)
+	p = env->param;
+	f = env->flags;
+	if (env == NULL)
 		return (1);
 	if (f->lock_julia)
 	{
 		p->seed_jI = ((double)x - p->center_x) / WIN_WIDTH - 0.7;
 		p->seed_jR = ((double)y - p->center_y) / WIN_HEIGHT + 0.27015;
-		redraw_fract(win);
+		redraw_fract(env);
 	}
 	return (0);
 }

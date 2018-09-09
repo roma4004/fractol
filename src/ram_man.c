@@ -6,27 +6,40 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:23:50 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/19 18:47:15 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/09 18:38:52 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int		free_win(t_env *win)
+int		free_img(t_env *win, t_img *img)
 {
-	if (win)
+	if (win && img)
 	{
-		if (win->param)
-			ft_memdel((void *)&win->param);
-		ft_memdel((void *)&win->flags);
-		//ft_memdel((void *)&win->img); need to free img func for inner pointers
-		ft_memdel((void *)&win);
+		if (win->mlx_ptr && img->ptr)
+			mlx_destroy_image(win->mlx_ptr, img->ptr);
+		ft_memdel((void *)&img);
 		return (1);
 	}
 	return (0);
 }
 
-t_env	*clear_img(t_env *win)
+int		free_win(t_env *env)
+{
+	if (env)
+	{
+		if (env->param)
+			ft_memdel((void *)&env->param);
+		if (env->flags)
+			ft_memdel((void *)&env->flags);
+		free_img(env, env->img);
+		ft_memdel((void *)&env);
+		return (1);
+	}
+	return (0);
+}
+
+t_env	*clear_img(t_env *env)
 {
 	int		y;
 	int		x;
@@ -34,8 +47,8 @@ t_env	*clear_img(t_env *win)
 	y = -1;
 	while (++y < WIN_HEIGHT && (x = -1))
 		while (++x < WIN_WIDTH)
-			win->img->data[y * (int)WIN_WIDTH + x] = 0;
-	return (win);
+			env->img->data[y * (int)WIN_WIDTH + x] = 0;
+	return (env);
 }
 
 int		exit_x(t_env *win)

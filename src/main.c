@@ -6,34 +6,11 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/07 18:10:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/09 21:14:56 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-
-void	draw_fractal(t_env *win)
-{
-	//	int		I;
-	//	int 	x;
-	//	int 	y;
-	t_img	*img;
-
-	img = win->img;
-	//	y = -1;
-	//	while(++y < WIN_HEIGHT)
-	//	{
-	//		x = -1;
-	//		while (++x < WIN_WIDTH)
-	//		{
-	//			I = get_fractal_point(win, x, y);
-	//			px_to_img(img, x, y, get_color(gen_color(win, I)));
-	//		}
-	//	}
-	parallel_draw_fractal(win);
-	mlx_put_image_to_window(win->mlx_ptr, win->win_ptr, img->ptr, 0, 0);
-}
-
 
 int		main(void)//int argc, char **argv)
 {

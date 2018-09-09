@@ -14,7 +14,7 @@ NAME = fractol
 
 CC = gcc -Ipthreads -Wall -Wextra -Werror
 
-LIBKEY = -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
+LIBKEY = -O3 -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
 
 SRC_N =	main.c \
 		draw.c \

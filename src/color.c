@@ -6,11 +6,10 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/08 20:46:33 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/09 16:22:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
 #include "main.h"
 
 static int		change_hue(int color, int offset, int mask_offset)
@@ -27,14 +26,14 @@ static int		change_hue(int color, int offset, int mask_offset)
 	return (color);
 }
 
-int				change_color(t_env *win, int key)
+int				change_color(t_env *env, int key)
 {
 	int		y;
 	int		x;
 	int		offset;
 	int		chanel;
 
-	if (!(offset = 0) && !win)
+	if (!(offset = 0) && !env)
 		return (0);
 	if ((key == A || (key == Z)) && (chanel = ALPHA))
 		offset = (key == A) ? 1 : -1;
@@ -48,38 +47,38 @@ int				change_color(t_env *win, int key)
 	{
 		while (++y < WIN_HEIGHT && (x = -1))
 			while (++x < WIN_WIDTH)
-				px_to_img(win->img, x, y,
-				change_hue(win->img->data[y * WIN_WIDTH + x], offset, chanel));
-		redraw_img(win);
+				px_to_img(env->img, x, y,
+				change_hue(env->img->data[y * WIN_WIDTH + x], offset, chanel));
+		redraw_img(env);
 		return (1);
 	}
 	return (0);
 }
 
-static t_col	*gen_color(t_env *win, int i)
+static t_col	*gen_color(t_env *env, int i)
 {
 	double	step;
 	t_img	*img;
 
-	img = win->img;
-	step = (double)i / (double)win->param->iter;
+	img = env->img;
+	step = (double)i / (double)env->param->iter;
 	img->col.a = 0;
 	img->col.r = (int)(9 * (1 - step) * step * step * 255);
 	img->col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);
 	img->col.b = (int)(8.5 * (1 - step) * (1 - step) * (1 - step) * 255);
-	return (&win->img->col);
+	return (&env->img->col);
 }
 
-int				get_color(t_env *win, int i)
+int				get_color(t_env *env, int i)
 {
 	int		color;
 	t_col	*col;
 
-	if (!win->flags->G)
+	if (!env->flags->G)
 	{
-		color = (int)(win->param->color_step * i);
+		color = (int)(env->param->color_step * i);
 		return (color);
 	}
-	col = gen_color(win, i);
+	col = gen_color(env, i);
 	return ((col->a << 24) | ((col->r) << 16) | ((col->g) << 8) | (col->b));
 }

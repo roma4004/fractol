@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/21 17:57:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/08 20:54:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/09 16:12:56 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	init_mandelbrot(t_param *param)
 	param->fr_id = FR_MANDELBROT;
 	param->iter = 50;
 	param->zoom = 150;
-	//param->color = DEF_COLOR;
 	param->color_step = 0xFFFFFFFF / param->iter;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
@@ -55,7 +54,6 @@ void	init_batman(t_param *param)
 	param->iter_step = 10;
 	param->spec1 = 4;
 	param->spec2 = 2;
-	//param->color = DEF_COLOR;
 	param->offset_x = 0;
 	param->offset_y = 0;
 	param->seed_jI = 0;

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/08 21:20:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/09 20:09:44 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MAIN_H
 ///menu
 ///6, 7 mirroring fractals
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
 //# define WIN_CENTER_X WIN_WIDTH / 2.0
 //# define WIN_CENTER_Y WIN_HEIGHT / 2.0
 //# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
@@ -84,12 +84,14 @@ typedef struct	s_param
 {
 	int		fr_id;
 	int		iter;
+	int		iter_step;
 	int		cpu_cores;
+	int		txt_offset_x;
+	int		txt_offset_y;
 	float	zoom;
 	float	center_x;
 	float	center_y;
 	double	ratio;
-	double	iter_step;
 	double	spec_step;
 	double	color_step;
 	double	spec1;
@@ -112,15 +114,15 @@ typedef struct	s_flags
 	int		n6;
 	int		n7;
 	int		n8;
-	int		n9;
-	int		n0;
 	int		Q;
 	int		W;
 	int		E;
 	int		T;
 	int		Y;
 	int		G;
-	int		interface_on;
+	int		Hints_on;
+	int		Values_on;
+	int		Menu_on;
 	int		error_code;
 	int		lock_julia;
 }				t_flags;
@@ -166,7 +168,7 @@ enum			e_offset
 	GREEN = 8,
 	BLUE = 0
 };
-//NUM_0 = ??,
+
 enum			e_keys
 {
 	NUM_1 = 83, ONE = 18,
@@ -176,14 +178,15 @@ enum			e_keys
 	NUM_5 = 87, FIVE = 23,
 	NUM_6 = 88, SIX = 22,
 	NUM_7 = 89, SEVEN = 26,
-	NUM_8 = 91, EIGHT = 28,
-	NUM_9 = 75, NINE = 25,
-	NUM_0 = 75, ZERO = 29,
-	NUM_MINUS = 78, MINUS = 27, MOUSE_SCROLL_UP = 4, MOUSE_LBT = 1,
-	NUM_PLUS = 69, PLUS = 24, MOUSE_SCROLL_DOWN = 5, MOUSE_RBT = 2,
+	NUM_8 = 91, EIGHT = 28, MINUS = 27,
+	NUM_9 = 92, NINE = 25, PLUS = 24,
+	NUM_0 = 82, ZERO = 29, NUM_MINUS = 78,
+	NUM_DIV = 75, NUM_MUL = 67, NUM_PLUS = 69,
+	MOUSE_SCROLL_UP = 4, MOUSE_LBT = 1,
+	MOUSE_SCROLL_DOWN = 5, MOUSE_RBT = 2,
 	Q = 12, W = 13, E = 14, R = 15, T = 17, Y = 16,
-	A = 0 , S = 1 , D = 2 , F = 3 , G = 5,
-	Z = 6 , X = 7 , C = 8 , V = 9 , B = 11,
+	A = 0 , S = 1 , D = 2 , F = 3 , G = 5, H = 4,
+	Z = 6 , X = 7 , C = 8 , V = 9 , B = 11, N = 45, M = 46,
 	ENTER = 36, ESC = 53,
 	ARROW_UP = 126, ARROW_DOWN = 125,
 	ARROW_LEFT = 123, ARROW_RIGHT = 124,
@@ -214,22 +217,23 @@ enum			e_iter_color
 };
 
 
-void		redraw_fract(t_env *win);
-int			get_fractal_col(t_env *win, int x, int y);
-int			mandelbrot_col(t_env *win, int x, int y);
-int			mandelbrot_cuboid(t_env *win, int x, int y);
-int			batman_col(t_env *win, int x, int y);
-int			julia_col(t_env *win, int x, int y);
+void		redraw_fract(t_env *env);
+int			get_fractal_col(t_env *env, int x, int y);
+int			mandelbrot_col(t_env *env, int x, int y);
+int			mandelbrot_cuboid(t_env *env, int x, int y);
+int			batman_col(t_env *env, int x, int y);
+int			julia_col(t_env *env, int x, int y);
 
-int			get_color(t_env *win, int i);
-int			change_color(t_env *win, int key);
+int			get_color(t_env *env, int i);
+int			change_color(t_env *env, int key);
 
-int			specific_param(t_env *win, int key);
-void		draw_fractal(t_env *win);
-void		draw_barnsley(t_env *win);
+int			specific_param(t_env *env, int key);
+void		draw_fractal(t_env *env);
+void		draw_barnsley(t_env *env);
 
 t_env		*init_win(void);
 t_img		*init_img(void *mlx_ptr, int width, int height);
+void		flag_reset(t_flags *flags);
 
 void		init_barnsley(t_param *param);
 void		init_mandelbrot(t_param *param);
@@ -237,31 +241,33 @@ void		init_batman(t_param *param);
 void		init_mandelbrot_cuboid(t_param *param);
 void		init_julia(t_param *param);
 
-t_env		*clear_img(t_env *win);
+t_env		*clear_img(t_env *env);
 
-int			deal_keyboard(int key, t_env *win);
-int			deal_mouse(int key, int x, int y, t_env *win);
-int			deal_mouse_move(int x, int y, t_env *win);
+int			deal_keyboard(int key, t_env *env);
+int			deal_mouse(int key, int x, int y, t_env *env);
+int			deal_mouse_move(int x, int y, t_env *env);
 int			exit_x(t_env *par);
 
-int			zoom(t_env *win, int key, float x, float y);
-int			iterate_change(t_env *win, int iter_offset);
-void		fractal_switch(t_env *win);
-int			map_offset(t_env *win, int key);
-void		show_interface(t_env *win);
-void		show_errors(t_env *win);
+int			zoom(t_env *env, int key, float x, float y);
+int			iterate_change(t_env *env, int iter_offset);
+int			map_offset(t_env *env, int key);
 
+void		show_menu(t_env *env, int x, int y);
+void		show_combo(t_env *env, int x, int y);
+void		show_value(t_env *env, int x, int y);
+void		show_errors(t_env *env);
+
+int			if_сardioid(t_env *env, double pr, double pi);
+int			mandel_break(t_env *env, t_cnb *z);
 double		pow2(double num, int exp);
-int			toggles(t_env *win, int key);
-int			toggle_param(int *param);
+int			toggles(t_env *env, int key, t_param *p, t_flags *f);
+int			toggle_par(int *param);
 void		px_to_img(t_img *img, int x, int y, int color);
-void		redraw_img(t_env *win);
+void		redraw_img(t_env *env);
 int			get_processors_num(void);
 
-void		change_fract(t_env *win, int fr_new_type);
-void		parallel_draw_fractal(t_env *win);
-double		interpolate(double start, double end, double interpolation);
-void		reset(t_env *win);
-int			free_win(t_env *win);
+void		parallel_draw_fractal(t_env *env);
+void		reset(t_env *env);
+int			free_win(t_env *env);
 
 #endif

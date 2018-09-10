@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 16:22:48 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 16:48:12 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int				change_color(t_env *env, int key)
 			while (++x < WIN_WIDTH)
 				px_to_img(env->img, x, y,
 				change_hue(env->img->data[y * WIN_WIDTH + x], offset, chanel));
-		redraw_img(env);
+		redraw_fract(env, 1);
 		return (1);
 	}
 	return (0);
@@ -61,7 +61,7 @@ static t_col	*gen_color(t_env *env, int i)
 	t_img	*img;
 
 	img = env->img;
-	step = (double)i / (double)env->param->iter;
+	step = (double)i / (double)env->param->iter_max;
 	img->col.a = 0;
 	img->col.r = (int)(9 * (1 - step) * step * step * 255);
 	img->col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);
@@ -74,7 +74,7 @@ int				get_color(t_env *env, int i)
 	int		color;
 	t_col	*col;
 
-	if (!env->flags->G)
+	if (!env->flags->alt_color)
 	{
 		color = (int)(env->param->color_step * i);
 		return (color);

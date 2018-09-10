@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 20:07:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 16:51:11 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static t_param	*init_param(void)
 		new_param->zoom = 50;
 		new_param->offset_x = 0;
 		new_param->offset_y = 0;
-		new_param->seed_jI = 0;
-		new_param->seed_jR = 0;
+		new_param->ij_seed = 0;
+		new_param->rj_seed = 0;
 	}
 	return (new_param);
 }
@@ -46,17 +46,18 @@ void			flag_reset(t_flags *flags)
 	flags->n6 = 0;
 	flags->n7 = 0;
 	flags->n8 = 0;
-	flags->Q = 0;
-	flags->W = 0;
-	flags->E = 0;
-	flags->T = 1;
-	flags->Y = 1;
-	flags->G = 0;
-	flags->Hints_on = 1;
-	flags->Values_on = 1;
-	flags->Menu_on = 1;
+	flags->q = 0;
+	flags->w = 0;
+	flags->e = 0;
+	flags->col_range = 0;
+	flags->if_carioid = 0;
+	flags->alt_color = 0;
+	flags->hints_on = 1;
+	flags->values_on = 1;
+	flags->menu_on = 1;
 	flags->error_code = 0;
 	flags->lock_julia = 0;
+	flags->green_text = 0;
 }
 
 static t_flags	*init_flags(void)

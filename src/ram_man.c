@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-int		free_img(t_env *win, t_img *img)
+static int	free_img(t_env *win, t_img *img)
 {
 	if (win && img)
 	{
@@ -24,7 +24,7 @@ int		free_img(t_env *win, t_img *img)
 	return (0);
 }
 
-int		free_win(t_env *env)
+int			free_win(t_env *env)
 {
 	if (env)
 	{
@@ -39,7 +39,7 @@ int		free_win(t_env *env)
 	return (0);
 }
 
-t_env	*clear_img(t_env *env)
+t_env		*clear_img(t_env *env)
 {
 	int		y;
 	int		x;
@@ -51,7 +51,7 @@ t_env	*clear_img(t_env *env)
 	return (env);
 }
 
-int		exit_x(t_env *win)
+int			exit_x(t_env *win)
 {
 	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
 	free_win(win);

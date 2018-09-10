@@ -6,11 +6,29 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 21:14:56 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 15:50:34 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+
+void		show_errors(t_env *env)
+{
+	if (env->flags->error_code == 404)
+		ft_putstr_fd("MAP_INVALID", 2);
+	if (env->flags->error_code == 405)
+		ft_putstr_fd("WIDTH_ERR", 2);
+	if (env->flags->error_code == 406)
+		ft_putstr_fd("FILE_ERR", 2);
+	if (env->flags->error_code == 407)
+		ft_putstr_fd("COLOR_ERR", 2);
+	if (env->flags->error_code && errno)
+		ft_putstr_fd(" - ", 2);
+	if (errno)
+		ft_putstr_fd(strerror(errno), 2);
+	if (env->flags->error_code || errno)
+		ft_putstr_fd("\n", 2);
+}
 
 int		main(void)//int argc, char **argv)
 {
@@ -23,7 +41,7 @@ int		main(void)//int argc, char **argv)
 	//	{
 	//init_mandelbrot(win->param);
 	win->init_func[FR_MANDELBROT](win->param);
-	redraw_fract(win);
+	redraw_fract(win, 0);
 	//parallel_draw_fractal(win);
 	mlx_hook(win->win_ptr, 17, 1L << 17, exit_x, win);
 	mlx_hook(win->win_ptr, 2, 5, deal_keyboard, win);

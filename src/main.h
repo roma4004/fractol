@@ -6,88 +6,80 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 20:09:44 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 17:04:29 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-///menu
-///6, 7 mirroring fractals
+
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
-//# define WIN_CENTER_X WIN_WIDTH / 2.0
-//# define WIN_CENTER_Y WIN_HEIGHT / 2.0
-//# define WIN_RATIO WIN_WIDTH / WIN_HEIGHT
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEF_COLOR 0x0f9100FF
 # define AMOUNT_FRACTALS 5
-//# define CPU_CORES 8
 # define ALMOST_HYPER_THREADING 1
-
-# define PI 3.14159265359
 
 # include <stdio.h>
 # include <stdlib.h>
 # include <errno.h>
 # include <pthread.h>
 
-/* on macOS detecting number of processors on machine:
- * <sys/param.h>, <sys/sysctl.h> needed for int		func get_processors_num();
- */
 # include <sys/param.h>
 # include <sys/sysctl.h>
 
-/* on linux detecting number of processors on machine:
- * #include <sys/sysinfo.h>
- * and using:
- * 	{
- * 		return (sysconf(_SC_NPROCESSORS_ONLN));
- * 	}
- */
+/*
+** on macOS detecting number of processors on machine:
+** <sys/param.h>, <sys/sysctl.h> needed for int func get_processors_num();
+*/
 
-/* on win32 detecting number of processors on machine:
- * 	{
- * 		SYSTEM_INFO		sysinfo;
- * 		GetSystemInfo(&sysinfo);
- * 		return (sysinfo.dwNumberOfProcessors);
- * 	}
- */
+/*
+** on linux detecting number of processors on machine:
+** #include <sys/sysinfo.h>
+** and using:
+**	{
+**		return (sysconf(_SC_NPROCESSORS_ONLN));
+**	}
+*/
+
+/*
+** on win32 detecting number of processors on machine:
+**	{
+**		SYSTEM_INFO		sysinfo;
+**
+**		GetSystemInfo(&sysinfo);
+**		return (sysinfo.dwNumberOfProcessors);
+**	}
+*/
 
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
-//# include <string.h>
 
-typedef struct		s_complex_number
+typedef struct	s_complex_number
 {
 	double	iter;
-	double	R;
-	double	cR;
-	double	sqR;
-	double	I;
-	double	cI;
-	double	sqI;
+	double	r;
+	double	rc;
+	double	rsq;
+	double	rold;
+	double	i;
+	double	ic;
+	double	isq;
+	double	iold;
+}				t_cnb;
 
-	double			newR;
-	double			oldR;
-	double			newI;
-	double			oldI;
-}					t_cnb;
-
-typedef struct		s_coordinate_iterator
+typedef struct	s_coordinates
 {
-	int				x;
-	int				y;
-}					t_coords;
+	int		x;
+	int		y;
+}				t_coords;
 
 typedef struct	s_param
 {
 	int		fr_id;
-	int		iter;
+	int		iter_max;
 	int		iter_step;
 	int		cpu_cores;
-	int		txt_offset_x;
-	int		txt_offset_y;
 	float	zoom;
 	float	center_x;
 	float	center_y;
@@ -99,8 +91,8 @@ typedef struct	s_param
 	double	offset_step;
 	double	offset_y;
 	double	offset_x;
-	double	seed_jR;
-	double	seed_jI;
+	double	rj_seed;
+	double	ij_seed;
 
 }				t_param;
 
@@ -114,17 +106,18 @@ typedef struct	s_flags
 	int		n6;
 	int		n7;
 	int		n8;
-	int		Q;
-	int		W;
-	int		E;
-	int		T;
-	int		Y;
-	int		G;
-	int		Hints_on;
-	int		Values_on;
-	int		Menu_on;
-	int		error_code;
+	int		q;
+	int		w;
+	int		e;
+	int		col_range;
+	int		if_carioid;
+	int		alt_color;
+	int		hints_on;
+	int		values_on;
+	int		menu_on;
 	int		lock_julia;
+	int		green_text;
+	int		error_code;
 }				t_flags;
 
 typedef struct	s_color
@@ -133,7 +126,7 @@ typedef struct	s_color
 	int		r;
 	int		g;
 	int		b;
-}	t_col;
+}				t_col;
 
 typedef struct	s_img
 {
@@ -185,8 +178,8 @@ enum			e_keys
 	MOUSE_SCROLL_UP = 4, MOUSE_LBT = 1,
 	MOUSE_SCROLL_DOWN = 5, MOUSE_RBT = 2,
 	Q = 12, W = 13, E = 14, R = 15, T = 17, Y = 16,
-	A = 0 , S = 1 , D = 2 , F = 3 , G = 5, H = 4,
-	Z = 6 , X = 7 , C = 8 , V = 9 , B = 11, N = 45, M = 46,
+	A = 0, S = 1, D = 2, F = 3, G = 5, H = 4,
+	Z = 6, X = 7, C = 8, V = 9, B = 11, N = 45, M = 46,
 	ENTER = 36, ESC = 53,
 	ARROW_UP = 126, ARROW_DOWN = 125,
 	ARROW_LEFT = 123, ARROW_RIGHT = 124,
@@ -216,58 +209,54 @@ enum			e_iter_color
 	BLUE_BLACK = 253,
 };
 
+int				change_color(t_env *env, int key);
+int				get_color(t_env *env, int i);
 
-void		redraw_fract(t_env *env);
-int			get_fractal_col(t_env *env, int x, int y);
-int			mandelbrot_col(t_env *env, int x, int y);
-int			mandelbrot_cuboid(t_env *env, int x, int y);
-int			batman_col(t_env *env, int x, int y);
-int			julia_col(t_env *env, int x, int y);
+void			redraw_fract(t_env *env, int img_only);
+int				get_fractal_col(t_env *env, int x, int y);
+void			draw_barnsley(t_env *env);
 
-int			get_color(t_env *env, int i);
-int			change_color(t_env *env, int key);
+int				mandelbrot_col(t_env *env, int x, int y);
+int				julia_col(t_env *env, int x, int y);
+int				batman_col(t_env *env, int x, int y);
+int				mandelbrot_cuboid(t_env *env, int x, int y);
 
-int			specific_param(t_env *env, int key);
-void		draw_fractal(t_env *env);
-void		draw_barnsley(t_env *env);
+void			init_barnsley(t_param *param);
+void			init_mandelbrot(t_param *param);
+void			init_batman(t_param *param);
+void			init_mandelbrot_cuboid(t_param *param);
+void			init_julia(t_param *param);
 
-t_env		*init_win(void);
-t_img		*init_img(void *mlx_ptr, int width, int height);
-void		flag_reset(t_flags *flags);
+void			flag_reset(t_flags *flags);
+t_img			*init_img(void *mlx_ptr, int width, int height);
+t_env			*init_win(void);
 
-void		init_barnsley(t_param *param);
-void		init_mandelbrot(t_param *param);
-void		init_batman(t_param *param);
-void		init_mandelbrot_cuboid(t_param *param);
-void		init_julia(t_param *param);
+int				map_offset(t_env *env, int key, t_param *param);
+int				specific_param(t_env *env, int key, t_param *param);
+int				iterate_change(t_env *env, int iter_offset);
+int				zoom(t_env *env, int key, float x, float y);
+int				toggles(t_env *env, int key, t_param *p, t_flags *f);
 
-t_env		*clear_img(t_env *env);
+void			show_menu(t_env *e, int x, int y, t_flags *f);
+void			show_combo(t_env *env, int x, int y);
+void			show_values(t_env *e, int x, int y);
+void			show_errors(t_env *env);
 
-int			deal_keyboard(int key, t_env *env);
-int			deal_mouse(int key, int x, int y, t_env *env);
-int			deal_mouse_move(int x, int y, t_env *env);
-int			exit_x(t_env *par);
+int				toggle_flag(int *param);
+int				deal_keyboard(int key, t_env *env);
+int				deal_mouse(int key, int x, int y, t_env *env);
+int				deal_mouse_move(int x, int y, t_env *env);
+int				exit_x(t_env *par);
 
-int			zoom(t_env *env, int key, float x, float y);
-int			iterate_change(t_env *env, int iter_offset);
-int			map_offset(t_env *env, int key);
+int				free_win(t_env *env);
+t_env			*clear_img(t_env *env);
 
-void		show_menu(t_env *env, int x, int y);
-void		show_combo(t_env *env, int x, int y);
-void		show_value(t_env *env, int x, int y);
-void		show_errors(t_env *env);
+int				if_сardioid(t_env *env, double pr, double pi);
+int				mandel_break(t_env *env, t_cnb *z);
+double			pow2(double num, int exp);
+int				get_processors_num(void);
 
-int			if_сardioid(t_env *env, double pr, double pi);
-int			mandel_break(t_env *env, t_cnb *z);
-double		pow2(double num, int exp);
-int			toggles(t_env *env, int key, t_param *p, t_flags *f);
-int			toggle_par(int *param);
-void		px_to_img(t_img *img, int x, int y, int color);
-void		redraw_img(t_env *env);
-int			get_processors_num(void);
-
-void		parallel_draw_fractal(t_env *env);
-void		reset(t_env *env);
-int			free_win(t_env *env);
+void			px_to_img(t_img *img, int x, int y, int color);
+void			parallel_draw_fractal(t_env *env);
 
 #endif

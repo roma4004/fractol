@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 20:15:22 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 17:31:14 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,90 +14,76 @@
 
 static void	disp(t_env *env, int x, int y, char *str)
 {
-	mlx_string_put(env->mlx_ptr, env->win_ptr, x, y, DEF_COLOR, str);
+	mlx_string_put(env->mlx_ptr, env->win_ptr, x, y,
+				(env->flags->green_text) ? 0x00ff00 : DEF_COLOR, str);
+	if (env->flags->green_text)
+		toggle_flag(&env->flags->green_text);
 }
 
-void		show_value(t_env *env, int x, int y)
+static void	disp_green(t_env *env, int x, int y, char *str)
 {
-	x += 20 + ((env->flags->Menu_on) ? 550 : 0)
-		+ ((env->flags->Hints_on) ? 450 : 0);
-	y += 10;
-	disp(env, x, y, "ACTUAL VALUES:");
-	disp(env, x, y += 20, "iter         :");
-	disp(env, x + 150, y, ft_itoa(env->param->iter));
-	disp(env, x, y += 20, "zoom         :");
-	disp(env, x + 150, y, ft_itoa(env->param->zoom));
-	disp(env, x, y += 20, "color step   :");
-	disp(env, x + 150, y, ft_itoa(env->param->iter_step));
-	disp(env, x, y += 20, "CPU num      : R + 4 or num_4");
-	disp(env, x + 190, y, ft_itoa(env->param->cpu_cores));
-	disp(env, x, y += 20, "blades       : R + 4 + Z (press Z 17 times)");
-	disp(env, x, y += 20, "burn ship    : R + 2 + 3 (only Mandelbrot)");
-	disp(env, x, y += 20, "tricorn      : R + 2 (only Mandelbrot)");
-	disp(env, x, y += 20, "lohnes       : R + Q, E, T)");
-	disp(env, x, y += 20, "heard        : R + 3 or num_3");
-	disp(env, x, y += 20, "mirror horiz : 6 or num_6");
-	disp(env, x, y += 20, "mirror vertic: 7 or num_7 (only ship, lohnes)");
+	mlx_string_put(env->mlx_ptr, env->win_ptr, x, y, 0x00ff00, str);
+	if (env->flags->green_text)
+		toggle_flag(&env->flags->green_text);
+}
+
+void		show_values(t_env *e, int x, int y)
+{
+	x += ((e->flags->menu_on) ? 550 : 0) + ((e->flags->hints_on) ? 450 : 0);
+	disp(e, x, y, "ACTUAL VALUES:");
+	disp(e, x, y += 20, "iter_max       :");
+	disp(e, x + 170, y, ft_itoa(e->param->iter_max));
+	disp(e, x, y += 20, "zoom           :");
+	disp(e, x + 170, y, ft_itoa(e->param->zoom));
+	disp(e, x, y += 20, "color step     :");
+	disp(e, x + 170, y, ft_itoa(e->param->iter_step));
+	disp(e, x, y += 20, "threads        :");
+	disp(e, x + 170, y, ft_itoa(e->param->cpu_cores));
 }
 
 void		show_combo(t_env *env, int x, int y)
 {
-	x = 20 + ((env->flags->Menu_on) ? 550 : 0);
-	y = 10;
+	x += ((env->flags->menu_on) ? 550 : 0);
 	disp(env, x, y, "COMBO HINT:");
-	disp(env, x, y += 20, "background: R + Q + E");
-	disp(env, x, y += 20, "wind      : R + Q or R + E");
-	disp(env, x, y += 20, "flower    : R + 8 or num_8");
-	disp(env, x, y += 20, "leaf      : R + 4 or num_4");
-	disp(env, x, y += 20, "clouds    : R + 4 or num_4 + 8 or num_8");
-	disp(env, x, y += 20, "blades    : R + 4 + Z (press Z 17 times)");
-	disp(env, x, y += 20, "burn ship : R + 2 + 3 (only Mandelbrot)");
-	disp(env, x, y += 20, "tricorn   : R + 2 (only Mandelbrot)");
-	disp(env, x, y += 20, "lohnes    : R + Q, E, T)");
-	disp(env, x, y += 20, "heard     : R + 3 or num_3");
+	disp(env, x, y += 20, "background: r + q + e");
+	disp(env, x, y += 20, "wind      : r + q or r + e");
+	disp(env, x, y += 20, "flower    : r + 8 or num_8");
+	disp(env, x, y += 20, "leaf      : r + 4 or num_4");
+	disp(env, x, y += 20, "clouds    : r + 4 or num_4 + 8 or num_8");
+	disp(env, x, y += 20, "blades    : r + 4 + Z (press Z 17 times)");
+	disp(env, x, y += 20, "burn ship : r + 2 + 3 (for Mandelbrot)");
+	disp(env, x, y += 20, "tricorn   : r + 2 (for Mandelbrot)");
+	disp(env, x, y += 20, "lohnes    : r + q, e, t)");
+	disp(env, x, y += 20, "heart     : r + 3 or num_3");
 	disp(env, x, y += 20, "mirror hor: 6 or num_6");
-	disp(env, x, y += 20, "mirror ver: 7 or num_7 (only ship, lohnes)");
+	disp(env, x, y += 20, "mirror ver: 7 or num_7 (for Ship, Lohnes)");
 }
 
-void		show_menu(t_env *env, int x, int y)
+void		show_menu(t_env *e, int x, int y, t_flags *f)
 {
-	x = 20;
-	y = 10;
-	disp(env, x, y, "MENU         :");
-	disp(env, x, y += 20, "zoom         : -, + or mouse scroll");
-	disp(env, x, y += 20, "zoom         : -, + or mouse scroll");
-	disp(env, x, y += 20, "Enter        : next fractal");
-	disp(env, x, y += 20, "interface    : num_0");
-	disp(env, x, y += 20, "depth        : num_+, num_- or 9, 0");
-	disp(env, x, y += 20, "depth step   : num_/, num_*");
-	disp(env, x, y += 20, "reset        : R");
-	disp(env, x, y += 20, "effects      : 1..8 or num_1..num_8, Q, E ");
-	disp(env, x, y += 20, "carioid skip : Y");
-	disp(env, x, y += 20, "carioid color: W (black or white))");
-	disp(env, x, y += 20, "color style  : T, G");
-	disp(env, x, y += 20, "shift ARGB   : (+,-)   A,Z   S,X   D,C   F,V");
-	disp(env, x, y += 20, "radius change: Home, End");
-	disp(env, x, y += 20, "curve X      : Home, End (only barnsley)");
-	disp(env, x, y += 20, "curve Y      : Page_Up, Page_Down (only barnsley)");
-	disp(env, x, y += 20, "menu         : M");
-	disp(env, x, y += 20, "combo        : H");
-	disp(env, x, y += 20, "values       : N");
-}
-
-void		show_errors(t_env *env)
-{
-	if (env->flags->error_code == 404)
-		ft_putstr_fd("MAP_INVALID", 2);
-	if (env->flags->error_code == 405)
-		ft_putstr_fd("WIDTH_ERR", 2);
-	if (env->flags->error_code == 406)
-		ft_putstr_fd("FILE_ERR", 2);
-	if (env->flags->error_code == 407)
-		ft_putstr_fd("COLOR_ERR", 2);
-	if (env->flags->error_code && errno)
-		ft_putstr_fd(" - ", 2);
-	if (errno)
-		ft_putstr_fd(strerror(errno), 2);
-	if (env->flags->error_code || errno)
-		ft_putstr_fd("\n", 2);
+	disp(e, x, y, "zoom         : -, + or mouse scroll");
+	disp(e, x, y += 20, "Enter        : next fractal");
+	disp(e, x, y += 20, "interface    : num_0");
+	disp(e, x, y += 20, "depth        : num_+, num_- or 9, 0");
+	disp(e, x, y += 20, "depth step   : num_/, num_*");
+	disp(e, x, y += 20, "reset        : R");
+	disp(e, x, y += 20, "effects      : 1..8 or num_1..num_8");
+	(f->q) ? disp_green(e, x + 360, y, "Q") : disp(e, x + 360, y, "Q");
+	(f->e) ? disp_green(e, x + 380, y, "E") : disp(e, x + 380, y, "E");
+	disp(e, x, y += 20, "calc carioid :");
+	(f->if_carioid) ? disp_green(e, x + 150, y, "Y") : disp(e, x + 150, y, "Y");
+	disp(e, x, y += 20, "white carioid:   (when calk carioid is on)");
+	(f->w) ? disp_green(e, x + 150, y, "W") : disp(e, x + 150, y, "W");
+	disp(e, x, y += 20, "color style  :  ,   ");
+	(f->col_range) ? disp_green(e, x + 150, y, "T") : disp(e, x + 150, y, "T");
+	(f->alt_color) ? disp_green(e, x + 180, y, "G") : disp(e, x + 180, y, "G");
+	disp(e, x, y += 20, "mouse detect : mouse_");
+	(f->lock_julia) ? disp_green(e, x + 210, y, "R") : disp(e, x + 210, y, "R");
+	disp(e, x, y += 20, "shift ARGB   : (+,-)   A,Z   S,X   D,C   F,V");
+	disp(e, x, y += 20, "radius change: Home, End");
+	disp(e, x, y += 20, "curve X      : Home, End (for Barnsley)");
+	disp(e, x, y += 20, "curve Y      : Page_Up, Page_Down (for Barnsley)");
+	disp(e, x, y += 20, "menu         : M");
+	disp(e, x, y += 20, "combo        : H");
+	disp(e, x, y += 20, "values       : N");
 }

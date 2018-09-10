@@ -6,13 +6,13 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 19:10:49 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 17:09:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void		px_to_img(t_img *img, int x, int y, int color)
+void	px_to_img(t_img *img, int x, int y, int color)
 {
 	if (img
 		&& x >= 0 && x < WIN_WIDTH
@@ -70,7 +70,7 @@ void		parallel_draw_fractal(t_env *env)
 	id = -1;
 	while (++id < cpu_cores)
 		pthread_join(threads[id], NULL);
-	redraw_img(env);
+	redraw_fract(env, 1);
 	ft_memdel((void *)&threads);
 	ft_memdel((void *)&data);
 }

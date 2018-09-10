@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 16:11:44 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/10 11:30:39 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,18 @@ int		mandel_break(t_env *env, t_cnb *z)
 {
 	t_flags	*f;
 
-	z->sqR = pow2(z->R, 2);
-	z->sqI = pow2(z->I, 2);
+	z->rsq = pow2(z->r, 2);
+	z->isq = pow2(z->i, 2);
 	f = env->flags;
-	if (f->n8 && z->sqR * z->sqI > env->param->spec1)
+	if (f->n8 && z->rsq * z->isq > env->param->spec1)
 		return (1);
-	if (f->n4 && z->sqR - z->sqI > env->param->spec1)
+	if (f->n4 && z->rsq - z->isq > env->param->spec1)
 		return (1);
-	if (!f->n8 && !f->n4 && z->sqR + z->sqI > env->param->spec1)
+	if (!f->n8 && !f->n4 && z->rsq + z->isq > env->param->spec1)
 		return (1);
-	if (env->flags->n5 && (z->R > 0.5 || z->R < -2.0))
+	if (env->flags->n5 && (z->r > 0.5 || z->r < -2.0))
 		return (1);
-	if (env->flags->n5 && (z->I > 0.8 || z->I < -0.8))
+	if (env->flags->n5 && (z->i > 0.8 || z->i < -0.8))
 		return (1);
 	return (0);
 }

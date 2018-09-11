@@ -27,6 +27,7 @@ SRC = ft_append_list.c \
 	ft_isdigit.c \
 	ft_isprint.c \
 	ft_itoa.c \
+	ft_lltoa.c \
 	ft_lstadd.c \
 	ft_lstdel.c \
 	ft_lstdelone.c \

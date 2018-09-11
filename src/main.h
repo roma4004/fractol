@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/10 17:04:29 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 15:29:59 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,10 @@ typedef struct	s_param
 	double	offset_x;
 	double	rj_seed;
 	double	ij_seed;
-
+	double	alpha_shift_iter;
+	double	red_shift_iter;
+	double	green_shift_iter;
+	double	blue_shift_iter;
 }				t_param;
 
 typedef struct	s_flags
@@ -210,6 +213,7 @@ enum			e_iter_color
 };
 
 int				change_color(t_env *env, int key);
+void			argb_shift(t_env *env, t_param *param);
 int				get_color(t_env *env, int i);
 
 void			redraw_fract(t_env *env, int img_only);
@@ -250,9 +254,14 @@ int				exit_x(t_env *par);
 
 int				free_win(t_env *env);
 t_env			*clear_img(t_env *env);
+int				exit_x(t_env *win);
 
 int				if_сardioid(t_env *env, double pr, double pi);
 int				mandel_break(t_env *env, t_cnb *z);
+void			show_errors(t_env *env);
+
+int				text(t_env *env, int x, int y, char *str);
+int				text_green(t_env *env, int x, int y, char *str);
 double			pow2(double num, int exp);
 int				get_processors_num(void);
 

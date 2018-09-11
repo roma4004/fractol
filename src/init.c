@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/10 16:51:11 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 16:50:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static t_param	*init_param(void)
 		new_param->center_y = WIN_HEIGHT / 2;
 		new_param->cpu_cores = get_processors_num();
 		new_param->spec_step = 1;
-		new_param->offset_step = 0.05;
+		new_param->offset_step = 0.5;
 		new_param->iter_step = 1;
 		new_param->spec1 = 4;
 		new_param->spec2 = 2;
@@ -32,6 +32,10 @@ static t_param	*init_param(void)
 		new_param->offset_y = 0;
 		new_param->ij_seed = 0;
 		new_param->rj_seed = 0;
+		new_param->alpha_shift_iter = 0;
+		new_param->red_shift_iter = 0;
+		new_param->green_shift_iter = 0;
+		new_param->blue_shift_iter = 0;
 	}
 	return (new_param);
 }

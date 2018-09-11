@@ -36,6 +36,10 @@ int		deal_keyboard(int key, t_env *env)
 			env->param->fr_id = 0;
 		env->init_func[env->param->fr_id](env->param);
 		flag_reset(env->flags);
+		env->param->alpha_shift_iter = 0;
+		env->param->red_shift_iter = 0;
+		env->param->green_shift_iter = 0;
+		env->param->blue_shift_iter = 0;
 		redraw_fract(env, 0);
 	}
 	else

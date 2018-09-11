@@ -12,6 +12,18 @@
 
 #include "main.h"
 
+t_env		*clear_img(t_env *env)
+{
+	int		y;
+	int		x;
+
+	y = -1;
+	while (++y < WIN_HEIGHT && (x = -1))
+		while (++x < WIN_WIDTH)
+			env->img->data[y * (int)WIN_WIDTH + x] = 0;
+	return (env);
+}
+
 static int	free_img(t_env *win, t_img *img)
 {
 	if (win && img)
@@ -37,18 +49,6 @@ int			free_win(t_env *env)
 		return (1);
 	}
 	return (0);
-}
-
-t_env		*clear_img(t_env *env)
-{
-	int		y;
-	int		x;
-
-	y = -1;
-	while (++y < WIN_HEIGHT && (x = -1))
-		while (++x < WIN_WIDTH)
-			env->img->data[y * (int)WIN_WIDTH + x] = 0;
-	return (env);
 }
 
 int			exit_x(t_env *win)

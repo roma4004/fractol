@@ -12,6 +12,47 @@
 
 #include "main.h"
 
+int		if_сardioid(t_env *env, double pr, double pi)
+{
+	double		pr_pow;
+	double		pi_pow;
+	double		q;
+	t_flags		*flags;
+
+	if (!env
+		|| env->param->fr_id == FR_JULIA
+		|| !(flags = env->flags)
+		|| flags->n1 || flags->n2 || flags->n3 || flags->n7)
+		return (0);
+	pr_pow = ((pr - 0.25) * (pr - 0.25));
+	pi_pow = pi * pi;
+	q = pr_pow + pi_pow;
+	if ((pr + 1) * (pr + 1) + pi_pow < 0.0625
+		|| (q * (q + (pr - 0.25)) < 0.25 * pi_pow))
+		return (1);
+	return (0);
+}
+
+int		mandel_break(t_env *env, t_cnb *z)
+{
+	t_flags	*f;
+
+	z->rsq = pow2(z->r, 2);
+	z->isq = pow2(z->i, 2);
+	f = env->flags;
+	if (f->n8 && z->rsq * z->isq > env->param->spec1)
+		return (1);
+	if (f->n4 && z->rsq - z->isq > env->param->spec1)
+		return (1);
+	if (!f->n8 && !f->n4 && z->rsq + z->isq > env->param->spec1)
+		return (1);
+	if (env->flags->n5 && (z->r > 0.5 || z->r < -2.0))
+		return (1);
+	if (env->flags->n5 && (z->i > 0.8 || z->i < -0.8))
+		return (1);
+	return (0);
+}
+
 void		show_errors(t_env *env)
 {
 	if (env->flags->error_code == 404)

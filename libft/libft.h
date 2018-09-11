@@ -24,6 +24,7 @@ typedef struct	s_list
 char			**ft_strsplit(char const *s, char c);
 char			*ft_get_word(const char *str, size_t *start_iter, char c);
 char			*ft_itoa(int n);
+char			*ft_lltoa(long long n);
 char			*ft_strcat(char *dest, const char *src);
 char			*ft_strchr(const char *s, int c);
 char			*ft_strcpy(char *dest, const char *src);

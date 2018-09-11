@@ -28,7 +28,7 @@ int		mandelbrot_col(t_env *env, int x, int y)
 		return ((f->w) ? 0xffffff : 0x0);
 	z.r = (f->q) ? z.rc : p->ij_seed;
 	z.i = (f->e) ? z.ic : p->rj_seed;
-	while (++z.iter < p->iter_max && !mandel_break(env, &z))
+	while (++z.iter < p->i_max && !mandel_break(env, &z))
 	{
 		z.i = (pow2(z.r + z.i, 2) - z.rsq - z.isq + z.ic) * ((f->n1) ? -1 : 1);
 		z.i = (f->n2) ? fabs(z.i) : z.i;
@@ -53,7 +53,7 @@ int		julia_col(t_env *env, int x, int y)
 		return ((f->w) ? 0xffffff : 0x0);
 	z.r = (f->q) ? 0 : z.rc;
 	z.i = (f->e) ? 0 : z.ic;
-	while (++z.iter < p->iter_max && !mandel_break(env, &z))
+	while (++z.iter < p->i_max && !mandel_break(env, &z))
 	{
 		z.i = (pow2(z.r + z.i, 2) - z.rsq - z.isq + p->ij_seed)
 			* ((f->n1) ? -1 : 1);
@@ -79,7 +79,7 @@ int		batman_col(t_env *env, int x, int y)
 		return ((f->w) ? 0xffffff : 0x0);
 	z.r = (f->q) ? z.rc : p->rj_seed;
 	z.i = (f->e) ? z.ic : p->ij_seed;
-	while (++z.iter < p->iter_max && !mandel_break(env, &z))
+	while (++z.iter < p->i_max && !mandel_break(env, &z))
 	{
 		z.i = (pow2(z.r + z.i, 2) - z.rsq - z.isq + z.ic) * ((f->n1) ? -1 : 1);
 		z.i = (f->n2) ? fabs(z.i) : z.i;
@@ -103,7 +103,7 @@ int		mandelbrot_cuboid(t_env *env, int x, int y)
 	z.iter = -1;
 	z.r = (f->q) ? z.rc : p->rj_seed;
 	z.i = (f->e) ? z.ic : p->ij_seed;
-	while (++z.iter < p->iter_max && !mandel_break(env, &z))
+	while (++z.iter < p->i_max && !mandel_break(env, &z))
 	{
 		z.iold = (f->n2) ? fabs(z.i) : z.i;
 		z.iold *= (f->n7) ? -1 : 1;

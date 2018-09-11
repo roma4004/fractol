@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 17:59:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 17:59:23 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,11 @@ int				get_color(t_env *env, int i)
 
 	if (!env->flags->alt_color)
 	{
-		color = (int)(env->param->color_step * i);
+		color = (int)(env->param->col_step * i);
 		return (color);
 	}
 	img = env->img;
-	step = (double)i / (double)env->param->iter_max;
+	step = (double)i / (double)env->param->i_max;
 	img->col.a = 0;
 	img->col.r = (int)(9 * (1 - step) * step * step * 255);
 	img->col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);

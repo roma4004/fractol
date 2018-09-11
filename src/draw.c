@@ -78,7 +78,7 @@ void		draw_barnsley(t_env *env)
 
 	c = (t_cnb){.r = 0, .i = 0};
 	par = env->param;
-	n = par->iter_max;
+	n = par->i_max;
 	while (n--)
 	{
 		rng = ((float)rand()) / RAND_MAX;

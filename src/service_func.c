@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 19:23:35 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 17:53:26 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:03:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		text(t_env *env, int x, int y, char *str)
 		mlx_string_put(env->mlx_ptr, env->win_ptr, x, y,
 				(env->flags->green_text) ? 0x00ff00 : DEF_COLOR, str);
 		if (env->flags->green_text)
-			toggle_flag(&env->flags->green_text);
+			env->flags->green_text = ~env->flags->green_text;
 		return (1);
 	}
 	return (0);
@@ -31,7 +31,7 @@ int		text_green(t_env *env, int x, int y, char *str)
 	{
 		mlx_string_put(env->mlx_ptr, env->win_ptr, x, y, 0x00ff00, str);
 		if (env->flags->green_text)
-			toggle_flag(&env->flags->green_text);
+			env->flags->green_text = ~env->flags->green_text;
 		return (1);
 	}
 	return (0);

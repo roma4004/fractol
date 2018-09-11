@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/10 17:07:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:43:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,18 @@ int		deal_keyboard(int key, t_env *env)
 				if (!toggles(env, key, env->param, env->flags))
 					if (specific_param(env, key, env->param))
 						return (0);
-	if (key == ESC)
-		exit_x(env);
-	else if (key == R || key == ENTER)
+	(key == ESC) && exit_x(env);
+	if ((key == R || key == ENTER) && flag_reset(env->flags))
 	{
 		if (key == ENTER && ++env->param->fr_id == AMOUNT_FRACTALS)
 			env->param->fr_id = 0;
 		env->init_func[env->param->fr_id](env->param);
-		flag_reset(env->flags);
 		env->param->alpha_shift_iter = 0;
 		env->param->red_shift_iter = 0;
 		env->param->green_shift_iter = 0;
 		env->param->blue_shift_iter = 0;
+		env->param->spec1 = (env->param->fr_id == FR_BARNSLEY) ? 0.04 : 4;
+		env->param->spec2 = (env->param->fr_id == FR_BARNSLEY) ? 0.85 : 1;
 		redraw_fract(env, 0);
 	}
 	else
@@ -57,7 +57,7 @@ int		deal_mouse(int key, int x, int y, t_env *env)
 		zoom(env, MINUS, x, y);
 	else if (key == MOUSE_RBT)
 	{
-		toggle_flag(&env->flags->lock_julia);
+		env->flags->lock_julia = ~env->flags->lock_julia;
 		redraw_fract(env, 0);
 	}
 	return (0);

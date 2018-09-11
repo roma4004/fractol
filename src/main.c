@@ -6,13 +6,13 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/10 15:50:34 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:36:31 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int		if_сardioid(t_env *env, double pr, double pi)
+int			if_сardioid(t_env *env, double pr, double pi)
 {
 	double		pr_pow;
 	double		pi_pow;
@@ -33,7 +33,7 @@ int		if_сardioid(t_env *env, double pr, double pi)
 	return (0);
 }
 
-int		mandel_break(t_env *env, t_cnb *z)
+int			mandel_break(t_env *env, t_cnb *z)
 {
 	t_flags	*f;
 
@@ -46,74 +46,63 @@ int		mandel_break(t_env *env, t_cnb *z)
 		return (1);
 	if (!f->n8 && !f->n4 && z->rsq + z->isq > env->param->spec1)
 		return (1);
-	if (env->flags->n5 && (z->r > 0.5 || z->r < -2.0))
+	if (env->flags->n5
+	&& (z->r > env->param->right_trim * env->param->spec2
+		|| z->r < env->param->left_trim * env->param->spec2))
 		return (1);
-	if (env->flags->n5 && (z->i > 0.8 || z->i < -0.8))
+	if (env->flags->n5
+	&& (z->i > env->param->down_trim * env->param->spec2
+		|| z->i < env->param->up_trim * env->param->spec2))
 		return (1);
 	return (0);
 }
 
-void		show_errors(t_env *env)
+static int	set_fract(t_env *env, char *name)
 {
-	if (env->flags->error_code == 404)
-		ft_putstr_fd("MAP_INVALID", 2);
-	if (env->flags->error_code == 405)
-		ft_putstr_fd("WIDTH_ERR", 2);
-	if (env->flags->error_code == 406)
-		ft_putstr_fd("FILE_ERR", 2);
-	if (env->flags->error_code == 407)
-		ft_putstr_fd("COLOR_ERR", 2);
-	if (env->flags->error_code && errno)
-		ft_putstr_fd(" - ", 2);
-	if (errno)
-		ft_putstr_fd(strerror(errno), 2);
-	if (env->flags->error_code || errno)
-		ft_putstr_fd("\n", 2);
+	env->param->fr_id = -1;
+	if (((ft_strcmp(name, "Barnsley")) == 0)
+	|| (ft_strcmp(name, "B")) == 0)
+		env->param->fr_id = FR_BARNSLEY;
+	else if (((ft_strcmp(name, "Mandelbrot")) == 0)
+	|| (ft_strcmp(name, "M")) == 0)
+		env->param->fr_id = FR_MANDELBROT;
+	else if (((ft_strcmp(name, "Batman")) == 0)
+	|| (ft_strcmp(name, "BM")) == 0)
+		env->param->fr_id = FR_BATMAN;
+	else if (((ft_strcmp(name, "Mandelbrot_cuboid")) == 0)
+	|| (ft_strcmp(name, "MC")) == 0)
+		env->param->fr_id = FR_MANDELBROT_CUBOID;
+	else if (((ft_strcmp(name, "Julia")) == 0)
+	|| (ft_strcmp(name, "J")) == 0)
+		env->param->fr_id = FR_JULIA;
+	if (env->param->fr_id == -1)
+		return (1);
+	env->init_func[env->param->fr_id](env->param);
+	return (0);
 }
 
-int		main(void)//int argc, char **argv)
+int			main(int argc, char **argv)
 {
-	t_env *win;
+	int		i;
+	t_env	*env;
 
-	win = init_win();
-	//if (argc > 1 && (win = init_win()))
-	//{
-	//	if (parse_map(argv[1], win))
-	//	{
-	//init_mandelbrot(win->param);
-	win->init_func[FR_MANDELBROT](win->param);
-	redraw_fract(win, 0);
-	//parallel_draw_fractal(win);
-	mlx_hook(win->win_ptr, 17, 1L << 17, exit_x, win);
-	mlx_hook(win->win_ptr, 2, 5, deal_keyboard, win);
-	mlx_hook(win->win_ptr, 6, 8, deal_mouse_move, win);
-	mlx_mouse_hook(win->win_ptr, deal_mouse, win);
-	mlx_loop(win->mlx_ptr);
-	//	}
-	//}
-
-	/*
-	if (argc == 2 && (win = init_win()))
+	env = init_win();
+	i = 0;
+	if (++i < argc && (env = init_win()))
 	{
-		if (parse_map(argv[1], win))
-		{
-			draw_map(win);
-			mlx_hook(win->win_ptr, 17, 1L << 17, exit_x, win);
-			mlx_hook(win->win_ptr, 2, 5, deal_keyboard, win);
-			mlx_mouse_hook(win->win_ptr, deal_mouse, win);
-			mlx_loop(win->mlx_ptr);
-		}
-		else
-		{
-			show_errors(win);
-			exit_x(win);
-		}
+		set_fract(env, argv[i]);
+		redraw_fract(env, 0);
+		mlx_hook(env->win_ptr, 17, 1L << 17, exit_x, env);
+		mlx_hook(env->win_ptr, 2, 5, deal_keyboard, env);
+		mlx_hook(env->win_ptr, 6, 8, deal_mouse_move, env);
+		mlx_mouse_hook(env->win_ptr, deal_mouse, env);
+		mlx_loop(env->mlx_ptr);
 	}
 	else
 	{
-		ft_putstr("Usage: ./fdf map.fdf\n");
+		ft_putstr("Usage: ./fractol [ Mandelbrot | M | Julia | J | Barnsley | B"
+					" | Mandelbrot_cuboid | MC | Batman | BM ]\n");
 		exit(1);
-	}*/
-	show_errors(win);
+	}
 	return (0);
 }

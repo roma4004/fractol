@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 15:29:59 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:36:16 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,59 +76,62 @@ typedef struct	s_coordinates
 
 typedef struct	s_param
 {
-	int		fr_id;
-	int		iter_max;
-	int		iter_step;
-	int		cpu_cores;
-	float	zoom;
-	float	center_x;
-	float	center_y;
-	double	ratio;
-	double	spec_step;
-	double	color_step;
-	double	spec1;
-	double	spec2;
-	double	offset_step;
-	double	offset_y;
-	double	offset_x;
-	double	rj_seed;
-	double	ij_seed;
-	double	alpha_shift_iter;
-	double	red_shift_iter;
-	double	green_shift_iter;
-	double	blue_shift_iter;
+	int			fr_id;
+	int			cpu_cores;
+	float		left_trim;
+	float		up_trim;
+	float		right_trim;
+	float		down_trim;
+	long long	i_max;
+	long long	iter_step;
+	float		center_x;
+	float		center_y;
+	float		ratio;
+	double		zoom;
+	double		spec_step;
+	double		col_step;
+	double		spec1;
+	double		spec2;
+	double		offset_step;
+	double		offset_y;
+	double		offset_x;
+	double		rj_seed;
+	double		ij_seed;
+	double		alpha_shift_iter;
+	double		red_shift_iter;
+	double		green_shift_iter;
+	double		blue_shift_iter;
 }				t_param;
 
 typedef struct	s_flags
 {
-	int		n1;
-	int		n2;
-	int		n3;
-	int		n4;
-	int		n5;
-	int		n6;
-	int		n7;
-	int		n8;
-	int		q;
-	int		w;
-	int		e;
-	int		col_range;
-	int		if_carioid;
-	int		alt_color;
-	int		hints_on;
-	int		values_on;
-	int		menu_on;
-	int		lock_julia;
-	int		green_text;
-	int		error_code;
+	unsigned char	n1:1;
+	unsigned char	n2:1;
+	unsigned char	n3:1;
+	unsigned char	n4:1;
+	unsigned char	n5:1;
+	unsigned char	n6:1;
+	unsigned char	n7:1;
+	unsigned char	n8:1;
+	unsigned char	q:1;
+	unsigned char	w:1;
+	unsigned char	e:1;
+	unsigned char	col_range:1;
+	unsigned char	if_carioid:1;
+	unsigned char	alt_color:1;
+	unsigned char	hints_on:1;
+	unsigned char	values_on:1;
+	unsigned char	menu_on:1;
+	unsigned char	lock_julia:1;
+	unsigned char	green_text:1;
 }				t_flags;
 
 typedef struct	s_color
 {
-	int		a;
-	int		r;
-	int		g;
-	int		b;
+	long long	a;
+	long long	r;
+	long long	g;
+	long long	b;
 }				t_col;
 
 typedef struct	s_img
@@ -231,7 +234,7 @@ void			init_batman(t_param *param);
 void			init_mandelbrot_cuboid(t_param *param);
 void			init_julia(t_param *param);
 
-void			flag_reset(t_flags *flags);
+int flag_reset(t_flags *flags);
 t_img			*init_img(void *mlx_ptr, int width, int height);
 t_env			*init_win(void);
 
@@ -244,7 +247,6 @@ int				toggles(t_env *env, int key, t_param *p, t_flags *f);
 void			show_menu(t_env *e, int x, int y, t_flags *f);
 void			show_combo(t_env *env, int x, int y);
 void			show_values(t_env *e, int x, int y);
-void			show_errors(t_env *env);
 
 int				toggle_flag(int *param);
 int				deal_keyboard(int key, t_env *env);
@@ -258,7 +260,6 @@ int				exit_x(t_env *win);
 
 int				if_сardioid(t_env *env, double pr, double pi);
 int				mandel_break(t_env *env, t_cnb *z);
-void			show_errors(t_env *env);
 
 int				text(t_env *env, int x, int y, char *str);
 int				text_green(t_env *env, int x, int y, char *str);

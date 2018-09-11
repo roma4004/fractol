@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 17:55:56 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:51:51 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void		show_values(t_env *e, int x, int y)
 {
 	x += ((e->flags->menu_on) ? 550 : 0) + ((e->flags->hints_on) ? 450 : 0);
-	text(e, x, y, "ACTUAL VALUES:");
+	text(e, x, y, "ACTUAL VALUES  :");
 	text(e, x, y += 20, "current fractal: ");
 	(e->param->fr_id == 0) && (text(e, x + 170, y, "Barnsley"));
 	(e->param->fr_id == 1) && (text(e, x + 170, y, "Mandelbrot"));
@@ -23,7 +23,7 @@ void		show_values(t_env *e, int x, int y)
 	(e->param->fr_id == 3) && (text(e, x + 170, y, "Mandelbrot cuboid"));
 	(e->param->fr_id == 4) && (text(e, x + 170, y, "Julia"));
 	text(e, x, y += 20, "iteration limit:");
-	text(e, x + 170, y, ft_lltoa(e->param->iter_max));
+	text(e, x + 170, y, ft_lltoa(e->param->i_max));
 	text(e, x, y += 20, "iteration step :");
 	text(e, x + 170, y, ft_lltoa(e->param->iter_step));
 	text(e, x, y += 20, "zoom           :");
@@ -71,6 +71,7 @@ static void	show_menu2(t_env *e, int x, int y, t_flags *f)
 	(f->lock_julia) ? text_green(e, x + 210, y, "R") : text(e, x + 210, y, "R");
 	text(e, x, y += 20, "shift ARGB   : (+,-)   A,Z   S,X   D,C   F,V");
 	text(e, x, y += 20, "radius change: Home, End");
+	text(e, x, y += 20, "trim change  : Page_Up, Page_Down (for 5 effect)");
 	text(e, x, y += 20, "curve X      : Home, End (for Barnsley)");
 	text(e, x, y += 20, "curve Y      : Page_Up, Page_Down (for Barnsley)");
 	text(e, x, y += 20, "menu         : M");

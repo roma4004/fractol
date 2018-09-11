@@ -22,7 +22,6 @@ SRC_N =	main.c \
 		init.c \
 		hooks.c \
 		color.c \
-		parser.c \
 		threads.c \
 		ram_man.c \
 		fractals.c \

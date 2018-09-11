@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 16:50:26 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:38:17 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,18 @@ static t_param	*init_param(void)
 		new_param->red_shift_iter = 0;
 		new_param->green_shift_iter = 0;
 		new_param->blue_shift_iter = 0;
+		new_param->left_trim = -2.0;
+		new_param->up_trim = -0.8;
+		new_param->right_trim = 0.5;
+		new_param->down_trim = 0.8;
 	}
 	return (new_param);
 }
 
-void			flag_reset(t_flags *flags)
+int				flag_reset(t_flags *flags)
 {
+	if (!flags)
+		return (0);
 	flags->n1 = 0;
 	flags->n2 = 0;
 	flags->n3 = 0;
@@ -59,9 +65,9 @@ void			flag_reset(t_flags *flags)
 	flags->hints_on = 1;
 	flags->values_on = 1;
 	flags->menu_on = 1;
-	flags->error_code = 0;
 	flags->lock_julia = 0;
 	flags->green_text = 0;
+	return (1);
 }
 
 static t_flags	*init_flags(void)

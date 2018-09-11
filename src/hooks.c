@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/10 17:34:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:27:11 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ int			iterate_change(t_env *env, int key)
 	}
 	if (((key == NUM_MINUS || key == NINE) && (iter_offset = -p->iter_step))
 	|| ((key == NUM_PLUS || key == ZERO) && (iter_offset = p->iter_step)))
-		if (iter_offset && (p->iter_max + iter_offset > 0))
+		if (iter_offset && (p->i_max + iter_offset > 0))
 		{
-			p->iter_max += iter_offset;
-			p->color_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF)
-						/ p->iter_max;
+			p->i_max += iter_offset;
+			p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF)
+						/ p->i_max;
 			redraw_fract(env, 0);
 			return (1);
 		}
@@ -92,25 +92,24 @@ int			zoom(t_env *env, int key, float x, float y)
 
 int			toggles(t_env *env, int key, t_param *p, t_flags *f)
 {
-	if (((key == NUM_1 || key == ONE) && toggle_flag(&f->n1))
-		|| ((key == NUM_2 || key == TWO) && toggle_flag(&f->n2))
-		|| ((key == NUM_3 || key == THREE) && toggle_flag(&f->n3))
-		|| ((key == NUM_4 || key == FOUR) && toggle_flag(&f->n4))
-		|| ((key == NUM_5 || key == FIVE) && toggle_flag(&f->n5))
-		|| ((key == NUM_6 || key == SIX) && toggle_flag(&f->n6))
-		|| ((key == NUM_7 || key == SEVEN) && toggle_flag(&f->n7))
-		|| ((key == NUM_8 || key == EIGHT) && toggle_flag(&f->n8))
-		|| (key == Q && toggle_flag(&f->q))
-		|| (key == W && toggle_flag(&f->w))
-		|| (key == E && toggle_flag(&f->e))
-		|| (key == T && toggle_flag(&f->col_range)
-			&& (p->color_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF)
-							/ p->iter_max))
-		|| (key == Y && toggle_flag(&f->if_carioid))
-		|| (key == G && toggle_flag(&f->alt_color))
-		|| (key == H && toggle_flag(&f->hints_on))
-		|| (key == N && toggle_flag(&f->values_on))
-		|| (key == M && toggle_flag(&f->menu_on)))
+	if (((key == NUM_1 || key == ONE) && (f->n1 = ~f->n1) <= 1)
+	|| ((key == NUM_2 || key == TWO) && (f->n2 = ~f->n2) <= 1)
+	|| ((key == NUM_3 || key == THREE) && (f->n3 = ~f->n3) <= 1)
+	|| ((key == NUM_4 || key == FOUR) && (f->n4 = ~f->n4) <= 1)
+	|| ((key == NUM_5 || key == FIVE) && (f->n5 = ~f->n5) <= 1)
+	|| ((key == NUM_6 || key == SIX) && (f->n6 = ~f->n6) <= 1)
+	|| ((key == NUM_7 || key == SEVEN) && (f->n7 = ~f->n7) <= 1)
+	|| ((key == NUM_8 || key == EIGHT) && (f->n8 = ~f->n8) <= 1)
+	|| (key == Q && (f->q = ~f->q) <= 1)
+	|| (key == W && (f->w = ~f->w) <= 1)
+	|| (key == E && (f->e = ~f->e) <= 1)
+	|| (key == T && (f->col_range = ~f->col_range) <= 1
+		&& (p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF) / p->i_max))
+	|| (key == Y && (f->if_carioid = ~f->if_carioid) <= 1)
+	|| (key == G && (f->alt_color = ~f->alt_color) <= 1)
+	|| (key == H && (f->hints_on = ~f->hints_on) <= 1)
+	|| (key == N && (f->values_on = ~f->values_on) <= 1)
+	|| (key == M && (f->menu_on = ~f->menu_on) <= 1))
 	{
 		redraw_fract(env, 0);
 		return (1);

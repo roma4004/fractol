@@ -73,9 +73,9 @@ int		get_batman_color(t_env *env, int x, int y)
 
 	p = env->param;
 	f = env->flags;
-	z.rc = (p->ratio * (x - p->center_x) / p->zoom + p->offset_x)
+	z.rc = (p->ratio * (y - p->center_y) / p->zoom + p->offset_y)
 			* (f->n6 ? -1 : 1);
-	z.ic = (y - p->center_y) / p->zoom + p->offset_y;
+	z.ic = (x - p->center_x) / p->zoom + p->offset_x;
 	if (!(z.iter = -1) || (!f->if_carioid && if_сardioid(env, z.rc, z.ic)))
 		return (f->w ? 0xffffff : 0x0);
 	z.r = f->q ? z.rc : p->rj_seed;

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 15:37:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 18:02:07 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,10 @@ static int	set_fract(t_env *env, char *name)
 
 int			main(int argc, char **argv)
 {
-	int		i;
 	t_env	*env;
 
-	env = init_win();
-	i = 0;
-	if (++i < argc && (env = init_win()))
+	if (argc == 2 && (env = init_win()) && !set_fract(env, argv[1]))
 	{
-		set_fract(env, argv[i]);
 		redraw_fract(env, 0);
 		mlx_hook(env->win_ptr, 17, 1L << 17, exit_x, env);
 		mlx_hook(env->win_ptr, 2, 5, deal_keyboard, env);

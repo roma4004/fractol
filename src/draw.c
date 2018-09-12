@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:25:48 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 18:59:54 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,30 @@ int			get_fractal_col(t_env *env, int x, int y)
 
 static void	barnsley_part(t_env *env, char part, t_cnb *c)
 {
+	double r_new;
+	double i_new;
+
+	r_new = c->r;
+	i_new = c->i;
 	if (part == BARNSLEY_PART_BODY)
 	{
 		c->r = 0;
-		c->i = 0.16f * c->i;
+		c->i = 0.16f * i_new;
 	}
 	else if (part == BARNSLEY_PART_RIGHT)
 	{
-		c->r = -0.15f * c->r + 0.28f * c->i;
-		c->i = 0.26f * c->r + 0.24f * c->i + 0.44f;
+		c->r = -0.15f * r_new + 0.28f * i_new;
+		c->i = 0.26f * r_new + 0.24f * i_new + 0.44f;
 	}
 	else if (part == BARNSLEY_PART_LEFT)
 	{
-		c->r = 0.2f * c->r + -0.26f * c->i;
-		c->i = 0.23f * c->r + 0.22f * c->i + 1.6f;
+		c->r = 0.2f * r_new + -0.26f * i_new;
+		c->i = 0.23f * r_new + 0.22f * i_new + 1.6f;
 	}
 	else
 	{
-		c->r = 0.85 * c->r + env->param->spec1 * c->i;
-		c->i = -0.04 * c->r + env->param->spec2 * c->i + 1.6;
+		c->r = 0.85 * r_new + env->param->spec1 * i_new;
+		c->i = -0.04 * r_new + env->param->spec2 * i_new + 1.6;
 	}
 }
 
@@ -92,7 +97,7 @@ void		draw_barnsley(t_env *env)
 			barnsley_part(env, BARNSLEY_PART_CURVE, &c);
 		i.x = (int)((c.r + 4) * par->zoom - par->offset_x);
 		i.y = (int)(WIN_HEIGHT - c.i * par->zoom - par->offset_y);
-		px_to_img(env->img->ptr, i.x, i.y, DEFAULT_MENU_COLOR);
+		px_to_img(env->img->ptr, i.x, i.y, 0x007700);
 	}
 	redraw_fract(env, 1);
 }

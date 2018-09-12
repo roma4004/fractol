@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:28:12 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 18:50:58 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,19 @@ typedef struct	s_param
 	int			threads;
 	long long	i_max;
 	long long	i_step;
+	float		ratio;
 	float		left_trim;
 	float		up_trim;
 	float		right_trim;
 	float		down_trim;
 	float		center_x;
 	float		center_y;
-	float		ratio;
-	double		zoom;
-	double		spec_step;
+	float		spec1;
+	float		spec2;
+	float		spec_step;
+	float		offset_step;
 	double		col_step;
-	double		spec1;
-	double		spec2;
-	double		offset_step;
+	double		zoom;
 	double		offset_y;
 	double		offset_x;
 	double		rj_seed;

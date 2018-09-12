@@ -56,8 +56,8 @@ int		deal_keyboard(int key, t_env *env)
 		env->param->green_shift = 0;
 		env->param->blue_shift = 0;
 		env->param->threads = env->param->cores;
-		env->param->spec1 = (env->param->fr_id == FR_BARNSLEY) ? 0.04 : 4;
-		env->param->spec2 = (env->param->fr_id == FR_BARNSLEY) ? 0.85 : 1;
+		env->param->spec1 = (env->param->fr_id == FR_BARNSLEY) ? 0.04f : 4;
+		env->param->spec2 = (env->param->fr_id == FR_BARNSLEY) ? 0.85f : 1;
 		redraw_fract(env, 0);
 	}
 	else

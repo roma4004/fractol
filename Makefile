@@ -6,15 +6,18 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/09/01 17:41:30 by dromanic         ###   ########.fr        #
+#    Updated: 2018/09/12 21:35:29 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fractol
 
-CC = gcc -Ipthreads -Wall -Wextra -Werror
+C = gcc -O3 -Ipthreads -Wall -Wextra -Werror
+L = clang -O3 -Ipthreads -Wall -Wextra -Werror
 
-LIBKEY = -O3 -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
+[[ $1 = "clang" ]] && CC=L || CC=C
+
+LIBKEY = -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
 
 SRC_N =	main.c \
 		draw.c \
@@ -49,6 +52,8 @@ fclean: clean libfclean
 	rm -f $(NAME)
 
 re: fclean all
+
+clang: $(NAME)
 
 liball:
 	@make -C libft/ all

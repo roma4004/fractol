@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/08/07 12:17:01 by dromanic          #+#    #+#              #
-#    Updated: 2018/08/15 16:34:12 by dromanic         ###   ########.fr        #
+#    Updated: 2018/09/12 12:43:25 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRC = ft_append_list.c \
 	ft_destroy_lst.c \
 	ft_end_trim.c \
 	ft_get_word.c \
+	ft_get_processors_num.c \
 	ft_i_atoi.c \
 	ft_isalnum.c \
 	ft_isalpha.c \
@@ -42,6 +43,7 @@ SRC = ft_append_list.c \
 	ft_memdel.c \
 	ft_memmove.c \
 	ft_memset.c \
+	ft_pow.c \
 	ft_putchar.c \
 	ft_putchar_fd.c \
 	ft_putendl.c \

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:14:10 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/15 16:34:04 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 12:54:54 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 int				ft_strnequ(char const *s1, char const *s2, size_t n);
 int				ft_tolower(int c);
 int				ft_toupper(int c);
+int				ft_get_processors_num(void);
 long long		ft_i_atoi(const char *str, size_t *i, size_t max_i);
 long long		ft_atol_base(const char *str, int base);
+double			ft_pow(double num, int exp);
 size_t			ft_strlcat(char *dst, const char *src, size_t size);
 size_t			ft_strlen(const char *s);
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));

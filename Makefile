@@ -26,8 +26,7 @@ SRC_N =	main.c \
 		ram_man.c \
 		fractals.c \
 		interface.c \
-		init_fract.c \
-		service_func.c
+		init_fract.c
 
 SRC = $(addprefix src/, $(SRC_N))
 

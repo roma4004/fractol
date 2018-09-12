@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/10 17:23:05 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 16:25:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void		redraw_fract(t_env *env, int img_only)
 int			get_fractal_col(t_env *env, int x, int y)
 {
 	if (env->param->fr_id == FR_JULIA)
-		return (julia_col(env, x, y));
+		return (get_julia_color(env, x, y));
 	if (env->param->fr_id == FR_BATMAN)
-		return (batman_col(env, x, y));
+		return (get_batman_color(env, x, y));
 	if (env->param->fr_id == FR_MANDELBROT)
-		return (mandelbrot_col(env, x, y));
+		return (get_mandelbrot_color(env, x, y));
 	if (env->param->fr_id == FR_MANDELBROT_CUBOID)
-		return (mandelbrot_cuboid(env, x, y));
+		return (get_mandelbrot_cuboid_color(env, x, y));
 	return (0);
 }
 
@@ -92,7 +92,7 @@ void		draw_barnsley(t_env *env)
 			barnsley_part(env, BARNSLEY_PART_CURVE, &c);
 		i.x = (int)((c.r + 4) * par->zoom - par->offset_x);
 		i.y = (int)(WIN_HEIGHT - c.i * par->zoom - par->offset_y);
-		px_to_img(env->img->ptr, i.x, i.y, DEF_COLOR);
+		px_to_img(env->img->ptr, i.x, i.y, DEFAULT_MENU_COLOR);
 	}
 	redraw_fract(env, 1);
 }

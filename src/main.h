@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 21:36:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 16:28:12 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,41 +16,11 @@
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
-# define DEF_COLOR 0x0f9100FF
+# define DEFAULT_MENU_COLOR 0x0f9100FF
 # define AMOUNT_FRACTALS 5
-# define ALMOST_HYPER_THREADING 1
+# define MAX_THREADS 1000
 
-# include <stdio.h>
 # include <stdlib.h>
-# include <errno.h>
-# include <pthread.h>
-
-# include <sys/param.h>
-# include <sys/sysctl.h>
-
-/*
-** on macOS detecting number of processors on machine:
-** <sys/param.h>, <sys/sysctl.h> needed for int func get_processors_num();
-*/
-
-/*
-** on linux detecting number of processors on machine:
-** #include <sys/sysinfo.h>
-** and using:
-**	{
-**		return (sysconf(_SC_NPROCESSORS_ONLN));
-**	}
-*/
-
-/*
-** on win32 detecting number of processors on machine:
-**	{
-**		SYSTEM_INFO		sysinfo;
-**
-**		GetSystemInfo(&sysinfo);
-**		return (sysinfo.dwNumberOfProcessors);
-**	}
-*/
 
 # include "../minilibx/mlx.h"
 # include "../libft/libft.h"
@@ -77,13 +47,14 @@ typedef struct	s_coordinates
 typedef struct	s_param
 {
 	int			fr_id;
-	int			cpu_cores;
+	int			cores;
+	int			threads;
+	long long	i_max;
+	long long	i_step;
 	float		left_trim;
 	float		up_trim;
 	float		right_trim;
 	float		down_trim;
-	long long	i_max;
-	long long	iter_step;
 	float		center_x;
 	float		center_y;
 	float		ratio;
@@ -97,10 +68,10 @@ typedef struct	s_param
 	double		offset_x;
 	double		rj_seed;
 	double		ij_seed;
-	double		alpha_shift_iter;
-	double		red_shift_iter;
-	double		green_shift_iter;
-	double		blue_shift_iter;
+	double		alpha_shift;
+	double		red_shift;
+	double		green_shift;
+	double		blue_shift;
 }				t_param;
 
 typedef struct	s_flags
@@ -183,8 +154,8 @@ enum			e_keys
 	NUM_DIV = 75, NUM_MUL = 67, NUM_PLUS = 69,
 	MOUSE_SCROLL_UP = 4, MOUSE_LBT = 1,
 	MOUSE_SCROLL_DOWN = 5, MOUSE_RBT = 2,
-	Q = 12, W = 13, E = 14, R = 15, T = 17, Y = 16,
-	A = 0, S = 1, D = 2, F = 3, G = 5, H = 4,
+	Q = 12, W = 13, E = 14, R = 15, T = 17, Y = 16, U = 32,
+	A = 0, S = 1, D = 2, F = 3, G = 5, H = 4, J = 38,
 	Z = 6, X = 7, C = 8, V = 9, B = 11, N = 45, M = 46,
 	ENTER = 36, ESC = 53,
 	ARROW_UP = 126, ARROW_DOWN = 125,
@@ -206,15 +177,6 @@ enum			e_fr_type
 	BARNSLEY_PART_CURVE = 4,
 };
 
-enum			e_iter_color
-{
-	GRAY = 51,
-	WHITE = 129,
-	BLACK_N_WHITE = 120,
-	BLUE_GREEN = 127,
-	BLUE_BLACK = 253,
-};
-
 int				change_color(t_env *env, int key);
 void			argb_shift(t_env *env, t_param *param);
 int				get_color(t_env *env, int i);
@@ -223,10 +185,10 @@ void			redraw_fract(t_env *env, int img_only);
 int				get_fractal_col(t_env *env, int x, int y);
 void			draw_barnsley(t_env *env);
 
-int				mandelbrot_col(t_env *env, int x, int y);
-int				julia_col(t_env *env, int x, int y);
-int				batman_col(t_env *env, int x, int y);
-int				mandelbrot_cuboid(t_env *env, int x, int y);
+int				get_mandelbrot_color(t_env *env, int x, int y);
+int				get_julia_color(t_env *env, int x, int y);
+int				get_batman_color(t_env *env, int x, int y);
+int				get_mandelbrot_cuboid_color(t_env *env, int x, int y);
 
 void			init_barnsley(t_param *param);
 void			init_mandelbrot(t_param *param);
@@ -234,7 +196,7 @@ void			init_batman(t_param *param);
 void			init_mandelbrot_cuboid(t_param *param);
 void			init_julia(t_param *param);
 
-int flag_reset(t_flags *flags);
+int				flag_reset(t_flags *flags);
 t_img			*init_img(void *mlx_ptr, int width, int height);
 t_env			*init_win(void);
 
@@ -248,7 +210,6 @@ void			show_menu(t_env *e, int x, int y, t_flags *f);
 void			show_combo(t_env *env, int x, int y);
 void			show_values(t_env *e, int x, int y);
 
-int				toggle_flag(int *param);
 int				deal_keyboard(int key, t_env *env);
 int				deal_mouse(int key, int x, int y, t_env *env);
 int				deal_mouse_move(int x, int y, t_env *env);
@@ -263,8 +224,6 @@ int				mandel_break(t_env *env, t_cnb *z);
 
 int				text(t_env *env, int x, int y, char *str);
 int				text_green(t_env *env, int x, int y, char *str);
-double			pow2(double num, int exp);
-int				get_processors_num(void);
 
 void			px_to_img(t_img *img, int x, int y, int color);
 void			parallel_draw_fractal(t_env *env);

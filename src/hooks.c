@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 21:27:11 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 16:05:27 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,26 @@ int			specific_param(t_env *env, int key, t_param *param)
 
 int			iterate_change(t_env *env, int key)
 {
-	int		iter_offset;
+	int		offset;
 	t_param	*p;
 	t_flags	*f;
 
 	p = env->param;
 	f = env->flags;
-	iter_offset = 0;
-	if ((key == NUM_MUL && (p->iter_step += 1))
-	|| (key == NUM_DIV && (p->iter_step -= 1)))
+	offset = 0;
+	if ((key == NUM_MUL && p->i_step++) || (key == NUM_DIV && p->i_step--))
 	{
 		redraw_fract(env, 1);
 		return (1);
 	}
-	if (((key == NUM_MINUS || key == NINE) && (iter_offset = -p->iter_step))
-	|| ((key == NUM_PLUS || key == ZERO) && (iter_offset = p->iter_step)))
-		if (iter_offset && (p->i_max + iter_offset > 0))
+	if (((key == NUM_MINUS || key == NINE || key == NUM_9)
+		&& (offset = -p->i_step))
+	|| ((key == NUM_PLUS || key == ZERO || key == NUM_0)
+		&& (offset = p->i_step)))
+		if (offset && (p->i_max + offset > 0))
 		{
-			p->i_max += iter_offset;
-			p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF)
-						/ p->i_max;
+			p->i_max += offset;
+			p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF) / p->i_max;
 			redraw_fract(env, 0);
 			return (1);
 		}
@@ -103,6 +103,8 @@ int			toggles(t_env *env, int key, t_param *p, t_flags *f)
 	|| (key == Q && (f->q = ~f->q) <= 1)
 	|| (key == W && (f->w = ~f->w) <= 1)
 	|| (key == E && (f->e = ~f->e) <= 1)
+	|| (key == U && (p->threads < MAX_THREADS ? p->threads++ : 0))
+	|| (key == J && (p->threads > 1 ? p->threads-- : 0))
 	|| (key == T && (f->col_range = ~f->col_range) <= 1
 		&& (p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF) / p->i_max))
 	|| (key == Y && (f->if_carioid = ~f->if_carioid) <= 1)

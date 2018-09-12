@@ -6,10 +6,11 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 15:29:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 16:30:07 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <pthread.h>
 #include "main.h"
 
 void		px_to_img(t_img *img, int x, int y, int color)
@@ -43,7 +44,7 @@ static void	*draw_threads(void *thread_data)
 					get_fractal_col(win, x, y + data->offset));
 			x++;
 		}
-		y += par->cpu_cores;
+		y += par->threads;
 	}
 	return (NULL);
 }
@@ -57,7 +58,7 @@ void		parallel_draw_fractal(t_env *env)
 
 	if (!env)
 		return ;
-	cpu_cores = env->param->cpu_cores;
+	cpu_cores = env->param->threads;
 	threads = (pthread_t *)malloc(sizeof(pthread_t) * cpu_cores);
 	data = (t_pth_dt *)malloc(sizeof(t_pth_dt) * cpu_cores);
 	id = -1;

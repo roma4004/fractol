@@ -54,16 +54,16 @@ int				change_color(t_env *env, int key)
 	offset = 0;
 	param = env->param;
 	if ((key == A || (key == Z)) && (chanel = ALPHA))
-		param->alpha_shift_iter += (key == A) ? (offset = 1)
+		param->alpha_shift += (key == A) ? (offset = 1)
 											: (offset = -1);
 	else if ((key == S || (key == X)) && (chanel = RED))
-		param->red_shift_iter += (key == S) ? (offset = 1)
+		param->red_shift += (key == S) ? (offset = 1)
 											: (offset = -1);
 	else if ((key == D || (key == C)) && (chanel = GREEN))
-		param->green_shift_iter += (key == D) ? (offset = 1)
+		param->green_shift += (key == D) ? (offset = 1)
 											: (offset = -1);
 	else if ((key == F || (key == V)) && !(chanel = BLUE))
-		param->blue_shift_iter += (key == F) ? (offset = 1)
+		param->blue_shift += (key == F) ? (offset = 1)
 											: (offset = -1);
 	if (shift_apply(env, offset, chanel))
 		return (1);
@@ -76,24 +76,24 @@ void			argb_shift(t_env *env, t_param *param)
 	double	i_max;
 	double	offset;
 
-	i_max = (param->alpha_shift_iter >= 0) ? param->alpha_shift_iter : 0;
-	i = (param->alpha_shift_iter >= 0) ? -1 : param->alpha_shift_iter - 1;
-	offset = (param->alpha_shift_iter >= 0) ? 1 : -1;
+	i_max = (param->alpha_shift >= 0) ? param->alpha_shift : 0;
+	i = (param->alpha_shift >= 0) ? -1 : param->alpha_shift - 1;
+	offset = (param->alpha_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
 		shift_apply(env, offset, ALPHA);
-	i_max = (param->red_shift_iter >= 0) ? param->red_shift_iter : 0;
-	i = (param->red_shift_iter >= 0) ? -1 : param->red_shift_iter - 1;
-	offset = (param->red_shift_iter >= 0) ? 1 : -1;
+	i_max = (param->red_shift >= 0) ? param->red_shift : 0;
+	i = (param->red_shift >= 0) ? -1 : param->red_shift - 1;
+	offset = (param->red_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
 		shift_apply(env, offset, RED);
-	i_max = (param->green_shift_iter >= 0) ? param->green_shift_iter : 0;
-	i = (param->green_shift_iter >= 0) ? -1 : param->green_shift_iter - 1;
-	offset = (param->green_shift_iter >= 0) ? 1 : -1;
+	i_max = (param->green_shift >= 0) ? param->green_shift : 0;
+	i = (param->green_shift >= 0) ? -1 : param->green_shift - 1;
+	offset = (param->green_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
 		shift_apply(env, offset, GREEN);
-	i_max = (param->blue_shift_iter >= 0) ? param->blue_shift_iter : 0;
-	i = (param->blue_shift_iter >= 0) ? -1 : param->blue_shift_iter - 1;
-	offset = (param->blue_shift_iter >= 0) ? 1 : -1;
+	i_max = (param->blue_shift >= 0) ? param->blue_shift : 0;
+	i = (param->blue_shift >= 0) ? -1 : param->blue_shift - 1;
+	offset = (param->blue_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
 		shift_apply(env, offset, BLUE);
 }

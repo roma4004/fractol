@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 21:36:31 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 15:37:13 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int			mandel_break(t_env *env, t_cnb *z)
 {
 	t_flags	*f;
 
-	z->rsq = pow2(z->r, 2);
-	z->isq = pow2(z->i, 2);
+	z->rsq = ft_pow(z->r, 2);
+	z->isq = ft_pow(z->i, 2);
 	f = env->flags;
 	if (f->n8 && z->rsq * z->isq > env->param->spec1)
 		return (1);

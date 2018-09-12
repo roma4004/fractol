@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 21:38:17 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 16:28:12 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,20 @@ static t_param	*init_param(void)
 		new_param->ratio = WIN_WIDTH / WIN_HEIGHT;
 		new_param->center_x = WIN_WIDTH / 2;
 		new_param->center_y = WIN_HEIGHT / 2;
-		new_param->cpu_cores = get_processors_num();
+		new_param->cores = ft_get_processors_num();
+		new_param->threads = new_param->cores;
 		new_param->spec_step = 1;
 		new_param->offset_step = 0.5;
-		new_param->iter_step = 1;
-		new_param->spec1 = 4;
-		new_param->spec2 = 2;
+		new_param->i_step = 1;
 		new_param->zoom = 50;
 		new_param->offset_x = 0;
 		new_param->offset_y = 0;
 		new_param->ij_seed = 0;
 		new_param->rj_seed = 0;
-		new_param->alpha_shift_iter = 0;
-		new_param->red_shift_iter = 0;
-		new_param->green_shift_iter = 0;
-		new_param->blue_shift_iter = 0;
-		new_param->left_trim = -2.0;
-		new_param->up_trim = -0.8;
-		new_param->right_trim = 0.5;
-		new_param->down_trim = 0.8;
+		new_param->alpha_shift = 0;
+		new_param->red_shift = 0;
+		new_param->green_shift = 0;
+		new_param->blue_shift = 0;
 	}
 	return (new_param);
 }

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 21:51:51 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/12 16:09:13 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,19 @@ void		show_values(t_env *e, int x, int y)
 	text(e, x, y += 20, "iteration limit:");
 	text(e, x + 170, y, ft_lltoa(e->param->i_max));
 	text(e, x, y += 20, "iteration step :");
-	text(e, x + 170, y, ft_lltoa(e->param->iter_step));
+	text(e, x + 170, y, ft_lltoa(e->param->i_step));
 	text(e, x, y += 20, "zoom           :");
 	text(e, x + 170, y, ft_lltoa(e->param->zoom));
 	text(e, x, y += 20, "threads        :");
-	text(e, x + 170, y, ft_lltoa(e->param->cpu_cores));
+	text(e, x + 170, y, ft_lltoa(e->param->threads));
 	text(e, x, y += 20, "shift alpha    :");
-	text(e, x + 170, y, ft_lltoa(e->param->alpha_shift_iter));
+	text(e, x + 170, y, ft_lltoa(e->param->alpha_shift));
 	text(e, x, y += 20, "shift red      :");
-	text(e, x + 170, y, ft_lltoa(e->param->red_shift_iter));
+	text(e, x + 170, y, ft_lltoa(e->param->red_shift));
 	text(e, x, y += 20, "shift green    :");
-	text(e, x + 170, y, ft_lltoa(e->param->green_shift_iter));
+	text(e, x + 170, y, ft_lltoa(e->param->green_shift));
 	text(e, x, y += 20, "shift blue     :");
-	text(e, x + 170, y, ft_lltoa(e->param->blue_shift_iter));
+	text(e, x + 170, y, ft_lltoa(e->param->blue_shift));
 }
 
 void		show_combo(t_env *env, int x, int y)
@@ -69,7 +69,8 @@ static void	show_menu2(t_env *e, int x, int y, t_flags *f)
 	(f->alt_color) ? text_green(e, x + 180, y, "G") : text(e, x + 180, y, "G");
 	text(e, x, y += 20, "mouse detect : mouse_");
 	(f->lock_julia) ? text_green(e, x + 210, y, "R") : text(e, x + 210, y, "R");
-	text(e, x, y += 20, "shift ARGB   : (+,-)   A,Z   S,X   D,C   F,V");
+	text(e, x, y += 20, "threads num  : (+, -) U, J");
+	text(e, x, y += 20, "shift ARGB   : (+, -) A, Z,  S, X,  D, C,  F, V");
 	text(e, x, y += 20, "radius change: Home, End");
 	text(e, x, y += 20, "trim change  : Page_Up, Page_Down (for 5 effect)");
 	text(e, x, y += 20, "curve X      : Home, End (for Barnsley)");

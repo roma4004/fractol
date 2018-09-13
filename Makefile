@@ -6,16 +6,18 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/09/12 21:35:29 by dromanic         ###   ########.fr        #
+#    Updated: 2018/09/14 01:26:20 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fractol
 
-C = gcc -O3 -Ipthreads -Wall -Wextra -Werror
-L = clang -O3 -Ipthreads -Wall -Wextra -Werror
+GC = gcc -O3 -Ipthreads -Wall -Wextra -Werror
+CM = cmake -O3 -Ipthreads -Wall -Wextra -Werror
+CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 
-[[ $1 = "clang" ]] && CC=L || CC=C
+[[ $1 = "clang" ]] && CC=CL || CC=GC
+[[ $1 = "cmake" ]] && CC=CM || CC=GC
 
 LIBKEY = -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
 
@@ -54,6 +56,8 @@ fclean: clean libfclean
 re: fclean all
 
 clang: $(NAME)
+
+cmake: $(NAME)
 
 liball:
 	@make -C libft/ all

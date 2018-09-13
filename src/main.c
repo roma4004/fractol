@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-int			if_сardioid(t_env *env, double pr, double pi)
+int			if_cardioid(t_env *env, double pr, double pi)
 {
 	double		pr_pow;
 	double		pi_pow;

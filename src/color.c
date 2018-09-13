@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 17:59:23 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/13 21:17:18 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,15 @@ static int		shift_apply(t_env *env, int offset, int chanel)
 	int		y;
 	int		x;
 
-	if (offset && (y = -1))
+	y = -1;
+	if (offset)
 	{
-		while (++y < WIN_HEIGHT && (x = -1))
+		x = -1;
+		while (++y < WIN_HEIGHT)
 			while (++x < WIN_WIDTH)
 				px_to_img(env->img, x, y,
-				change_hue(env->img->data[y * WIN_WIDTH + x], offset, chanel));
+				change_hue(env->img->data[y * (int)WIN_WIDTH + x],
+							offset, chanel));
 		redraw_fract(env, 1);
 		return (1);
 	}
@@ -72,9 +75,9 @@ int				change_color(t_env *env, int key)
 
 void			argb_shift(t_env *env, t_param *param)
 {
-	double	i;
-	double	i_max;
-	double	offset;
+	int		i;
+	int		i_max;
+	int		offset;
 
 	i_max = (param->alpha_shift >= 0) ? param->alpha_shift : 0;
 	i = (param->alpha_shift >= 0) ? -1 : param->alpha_shift - 1;

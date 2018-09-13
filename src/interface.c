@@ -27,7 +27,7 @@ void		show_values(t_env *e, int x, int y)
 	text(e, x, y += 20, "iteration step :");
 	text(e, x + 170, y, ft_lltoa(e->param->i_step));
 	text(e, x, y += 20, "zoom           :");
-	text(e, x + 170, y, ft_lltoa(e->param->zoom));
+	text(e, x + 170, y, ft_lltoa((long long)e->param->zoom));
 	text(e, x, y += 20, "threads        :");
 	text(e, x + 170, y, ft_lltoa(e->param->threads));
 	text(e, x, y += 20, "shift alpha    :");

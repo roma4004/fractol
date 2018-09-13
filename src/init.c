@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:28:12 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/13 19:35:56 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static t_param	*init_param(void)
 
 	if ((new_param = (t_param *)malloc(sizeof(t_param))))
 	{
-		new_param->ratio = WIN_WIDTH / WIN_HEIGHT;
-		new_param->center_x = WIN_WIDTH / 2;
-		new_param->center_y = WIN_HEIGHT / 2;
+		new_param->ratio = (int)(WIN_WIDTH / WIN_HEIGHT);
+		new_param->center_x = (int)(WIN_WIDTH / 2);
+		new_param->center_y = (int)(WIN_HEIGHT / 2);
 		new_param->cores = ft_get_processors_num();
 		new_param->threads = new_param->cores;
 		new_param->spec_step = 1;
@@ -74,7 +74,7 @@ static t_flags	*init_flags(void)
 	return (new_flags);
 }
 
-t_img			*init_img(void *mlx_ptr, int width, int height)
+t_img			*init_img(void *mlx_ptr, float width, float height)
 {
 	t_img *new_img;
 
@@ -89,10 +89,10 @@ t_img			*init_img(void *mlx_ptr, int width, int height)
 		new_img->bits_per_pixel = 0;
 		new_img->size_line = 0;
 		new_img->endian = 0;
-		new_img->ptr = mlx_new_image(mlx_ptr, width, height);
+		new_img->ptr = mlx_new_image(mlx_ptr, (int)width, (int)height);
 		new_img->data = (int *)mlx_get_data_addr(new_img->ptr,
-												&new_img->size_line,
 												&new_img->bits_per_pixel,
+												&new_img->size_line,
 												&new_img->endian);
 	}
 	return (new_img);
@@ -107,7 +107,8 @@ t_env			*init_win(void)
 		|| !(new_win->flags = init_flags())
 		|| !(new_win->mlx_ptr = mlx_init())
 		|| !(new_win->win_ptr =
-			mlx_new_window(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, WIN_NAME))
+			mlx_new_window(new_win->mlx_ptr,
+							(int)WIN_WIDTH, (int)WIN_HEIGHT, WIN_NAME))
 		|| !(new_win->img = init_img(new_win->mlx_ptr, WIN_WIDTH, WIN_HEIGHT))
 		|| !(new_win->init_func[0] = init_barnsley)
 		|| !(new_win->init_func[1] = init_mandelbrot)

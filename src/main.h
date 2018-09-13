@@ -6,15 +6,15 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 18:50:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/13 21:39:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1920.0f
+# define WIN_HEIGHT 1080.0f
 # define WIN_NAME "Fractol by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define AMOUNT_FRACTALS 5
@@ -27,7 +27,7 @@
 
 typedef struct	s_complex_number
 {
-	double	iter;
+	int		iter;
 	double	r;
 	double	rc;
 	double	rsq;
@@ -46,32 +46,32 @@ typedef struct	s_coordinates
 
 typedef struct	s_param
 {
-	int			fr_id;
-	int			cores;
-	int			threads;
-	long long	i_max;
-	long long	i_step;
-	float		ratio;
-	float		left_trim;
-	float		up_trim;
-	float		right_trim;
-	float		down_trim;
-	float		center_x;
-	float		center_y;
-	float		spec1;
-	float		spec2;
-	float		spec_step;
-	float		offset_step;
-	double		col_step;
-	double		zoom;
-	double		offset_y;
-	double		offset_x;
-	double		rj_seed;
-	double		ij_seed;
-	double		alpha_shift;
-	double		red_shift;
-	double		green_shift;
-	double		blue_shift;
+	int		fr_id;
+	int		cores;
+	int		threads;
+	int		alpha_shift;
+	int		red_shift;
+	int		green_shift;
+	int		blue_shift;
+	int		i_max;
+	int		i_step;
+	float	ratio;
+	float	left_trim;
+	float	up_trim;
+	float	right_trim;
+	float	down_trim;
+	float	center_x;
+	float	center_y;
+	float	spec1;
+	float	spec2;
+	float	spec_step;
+	float	offset_step;
+	double	col_step;
+	double	zoom;
+	double	offset_y;
+	double	offset_x;
+	double	rj_seed;
+	double	ij_seed;
 }				t_param;
 
 typedef struct	s_flags
@@ -99,10 +99,10 @@ typedef struct	s_flags
 
 typedef struct	s_color
 {
-	long long	a;
-	long long	r;
-	long long	g;
-	long long	b;
+	int		a;
+	int		r;
+	int		g;
+	int		b;
 }				t_col;
 
 typedef struct	s_img
@@ -127,7 +127,7 @@ typedef struct	s_environment
 
 typedef struct	s_pthread_data
 {
-	t_env	*win;
+	t_env	*env;
 	int		offset;
 }				t_pth_dt;
 
@@ -197,7 +197,7 @@ void			init_mandelbrot_cuboid(t_param *param);
 void			init_julia(t_param *param);
 
 int				flag_reset(t_flags *flags);
-t_img			*init_img(void *mlx_ptr, int width, int height);
+t_img			*init_img(void *mlx_ptr, float width, float height);
 t_env			*init_win(void);
 
 int				map_offset(t_env *env, int key, t_param *param);
@@ -217,9 +217,8 @@ int				exit_x(t_env *par);
 
 int				free_win(t_env *env);
 t_env			*clear_img(t_env *env);
-int				exit_x(t_env *win);
 
-int				if_сardioid(t_env *env, double pr, double pi);
+int				if_cardioid(t_env *env, double pr, double pi);
 int				mandel_break(t_env *env, t_cnb *z);
 
 int				text(t_env *env, int x, int y, char *str);

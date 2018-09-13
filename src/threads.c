@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:30:07 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/13 19:35:56 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void		px_to_img(t_img *img, int x, int y, int color)
 	if (img
 		&& x >= 0 && x < WIN_WIDTH
 		&& y >= 0 && y < WIN_HEIGHT)
-		img->data[y * WIN_WIDTH + x] = color;
+		img->data[y * (int)WIN_WIDTH + x] = color;
 }
 
 static void	*draw_threads(void *thread_data)
@@ -32,7 +32,7 @@ static void	*draw_threads(void *thread_data)
 	if (!thread_data)
 		return (NULL);
 	data = (t_pth_dt *)thread_data;
-	win = data->win;
+	win = data->env;
 	par = win->param;
 	y = (int)((par->center_y * -1) / par->zoom);
 	while (y < WIN_HEIGHT)
@@ -64,7 +64,7 @@ void		parallel_draw_fractal(t_env *env)
 	id = -1;
 	while (++id < cpu_cores)
 	{
-		data[id].win = env;
+		data[id].env = env;
 		data[id].offset = id;
 		pthread_create(&threads[id], NULL, draw_threads, &data[id]);
 	}

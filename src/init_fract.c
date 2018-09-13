@@ -17,7 +17,7 @@ void	init_barnsley(t_param *param)
 	param->fr_id = FR_BARNSLEY;
 	param->i_max = 4200000;
 	param->zoom = 50;
-	param->col_step = 0xFFFFFFFF / param->i_max;
+	param->col_step = 0xFFFFFFFF / (double)param->i_max;
 	param->spec_step = 0.01;
 	param->offset_step = 10;
 	param->i_step = 1000;
@@ -35,7 +35,7 @@ void	init_mandelbrot(t_param *param)
 	param->fr_id = FR_MANDELBROT;
 	param->i_max = 127;
 	param->zoom = 150;
-	param->col_step = 0xFFFFFFFF / param->i_max;
+	param->col_step = 0xFFFFFFFF / (double)param->i_max;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
 	param->i_step = 1;
@@ -56,7 +56,7 @@ void	init_batman(t_param *param)
 	param->fr_id = FR_BATMAN;
 	param->i_max = 10;
 	param->zoom = 50;
-	param->col_step = 0xFFFFFFFF / param->i_max;
+	param->col_step = 0xFFFFFFFF / (double)param->i_max;
 	param->spec_step = 1;
 	param->offset_step = 0.04;
 	param->i_step = 10;
@@ -77,7 +77,7 @@ void	init_mandelbrot_cuboid(t_param *param)
 	param->fr_id = FR_MANDELBROT_CUBOID;
 	param->i_max = 127;
 	param->zoom = 100;
-	param->col_step = 0xFFFFFFFF / param->i_max;
+	param->col_step = 0xFFFFFFFF / (double)param->i_max;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
 	param->i_step = 1;
@@ -98,7 +98,7 @@ void	init_julia(t_param *param)
 	param->fr_id = FR_JULIA;
 	param->i_max = 127;
 	param->zoom = 100;
-	param->col_step = 0xFFFFFFFF / param->i_max;
+	param->col_step = 0xFFFFFFFF / (double)param->i_max;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
 	param->i_step = 1;

@@ -20,8 +20,8 @@ long long	ft_i_atoi(const char *str, size_t *i, size_t max_i)
 	sign = 1;
 	result = 0;
 	while (*i < max_i
-		   && (str[*i] == '\t' || str[*i] == '\n' || str[*i] == '\r'
-			   || str[*i] == ' ' || str[*i] == '\v' || str[*i] == '\f'))
+	&& (str[*i] == '\t' || str[*i] == '\n' || str[*i] == '\r'
+		|| str[*i] == ' ' || str[*i] == '\v' || str[*i] == '\f'))
 		*i = *i + 1;
 	if (*i < max_i && (str[*i] == '-'))
 		sign = -1;

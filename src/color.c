@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/13 21:17:18 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/14 02:04:27 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,17 @@ static int		shift_apply(t_env *env, int offset, int chanel)
 	int		y;
 	int		x;
 
-	y = -1;
 	if (offset)
 	{
-		x = -1;
+		y = -1;
 		while (++y < WIN_HEIGHT)
+		{
+			x = -1;
 			while (++x < WIN_WIDTH)
 				px_to_img(env->img, x, y,
-				change_hue(env->img->data[y * (int)WIN_WIDTH + x],
-							offset, chanel));
+						change_hue(env->img->data[y * (int)WIN_WIDTH + x],
+								offset, chanel));
+		}
 		redraw_fract(env, 1);
 		return (1);
 	}

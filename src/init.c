@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/13 19:35:56 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/13 21:34:58 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static t_flags	*init_flags(void)
 
 t_img			*init_img(void *mlx_ptr, float width, float height)
 {
-	t_img *new_img;
+	t_img	*new_img;
 
 	if (!mlx_ptr)
 		return (NULL);

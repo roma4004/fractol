@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:09:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/14 03:38:06 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@ void		show_values(t_env *e, int x, int y)
 	(e->param->fr_id == 3) && (text(e, x + 170, y, "Mandelbrot cuboid"));
 	(e->param->fr_id == 4) && (text(e, x + 170, y, "Julia"));
 	text(e, x, y += 20, "iteration limit:");
-	text(e, x + 170, y, ft_lltoa(e->param->i_max));
+	free(text(e, x + 170, y, ft_lltoa(e->param->i_max)));
 	text(e, x, y += 20, "iteration step :");
-	text(e, x + 170, y, ft_lltoa(e->param->i_step));
+	free(text(e, x + 170, y, ft_lltoa(e->param->i_step)));
 	text(e, x, y += 20, "zoom           :");
-	text(e, x + 170, y, ft_lltoa((long long)e->param->zoom));
+	free(text(e, x + 170, y, ft_lltoa((long long)e->param->zoom)));
 	text(e, x, y += 20, "threads        :");
-	text(e, x + 170, y, ft_lltoa(e->param->threads));
+	free(text(e, x + 170, y, ft_lltoa(e->param->threads)));
 	text(e, x, y += 20, "shift alpha    :");
-	text(e, x + 170, y, ft_lltoa(e->param->alpha_shift));
+	free(text(e, x + 170, y, ft_lltoa(e->param->alpha_shift)));
 	text(e, x, y += 20, "shift red      :");
-	text(e, x + 170, y, ft_lltoa(e->param->red_shift));
+	free(text(e, x + 170, y, ft_lltoa(e->param->red_shift)));
 	text(e, x, y += 20, "shift green    :");
-	text(e, x + 170, y, ft_lltoa(e->param->green_shift));
+	free(text(e, x + 170, y, ft_lltoa(e->param->green_shift)));
 	text(e, x, y += 20, "shift blue     :");
-	text(e, x + 170, y, ft_lltoa(e->param->blue_shift));
+	free(text(e, x + 170, y, ft_lltoa(e->param->blue_shift)));
 }
 
 void		show_combo(t_env *env, int x, int y)

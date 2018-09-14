@@ -6,13 +6,13 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:26:05 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/14 03:25:31 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int		text(t_env *env, int x, int y, char *str)
+char	*text(t_env *env, int x, int y, char *str)
 {
 	if (env && str)
 	{
@@ -20,21 +20,21 @@ int		text(t_env *env, int x, int y, char *str)
 				(env->flags->green_text) ? 0x00ff00 : DEFAULT_MENU_COLOR, str);
 		if (env->flags->green_text)
 			env->flags->green_text = ~env->flags->green_text;
-		return (1);
+		return (str);
 	}
-	return (0);
+	return (NULL);
 }
 
-int		text_green(t_env *env, int x, int y, char *str)
+char	*text_green(t_env *env, int x, int y, char *str)
 {
 	if (env && str)
 	{
 		mlx_string_put(env->mlx_ptr, env->win_ptr, x, y, 0x00ff00, str);
 		if (env->flags->green_text)
 			env->flags->green_text = ~env->flags->green_text;
-		return (1);
+		return (str);
 	}
-	return (0);
+	return (NULL);
 }
 
 int		deal_keyboard(int key, t_env *env)

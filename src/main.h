@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/13 21:39:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/14 03:25:46 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,8 +221,8 @@ t_env			*clear_img(t_env *env);
 int				if_cardioid(t_env *env, double pr, double pi);
 int				mandel_break(t_env *env, t_cnb *z);
 
-int				text(t_env *env, int x, int y, char *str);
-int				text_green(t_env *env, int x, int y, char *str);
+char			*text(t_env *env, int x, int y, char *str);
+char			*text_green(t_env *env, int x, int y, char *str);
 
 void			px_to_img(t_img *img, int x, int y, int color);
 void			parallel_draw_fractal(t_env *env);

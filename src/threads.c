@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/13 19:35:56 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/14 03:04:16 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,23 @@ static void	*draw_threads(void *thread_data)
 {
 	int			x;
 	int			y;
-	t_env		*win;
+	t_env		*env;
 	t_param		*par;
 	t_pth_dt	*data;
 
 	if (!thread_data)
 		return (NULL);
 	data = (t_pth_dt *)thread_data;
-	win = data->env;
-	par = win->param;
+	env = data->env;
+	par = env->param;
 	y = (int)((par->center_y * -1) / par->zoom);
 	while (y < WIN_HEIGHT)
 	{
 		x = (int)((par->center_x * -1) / par->zoom);
 		while (x < WIN_WIDTH)
 		{
-			px_to_img(win->img, x, y + data->offset,
-					get_fractal_col(win, x, y + data->offset));
+			px_to_img(env->img, x, y + data->offset,
+					get_fractal_col(env, x, y + data->offset));
 			x++;
 		}
 		y += par->threads;

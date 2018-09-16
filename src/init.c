@@ -84,9 +84,8 @@ t_env			*init_env(void)
 	|| !(new_env->param = init_param())
 	|| !(new_env->flags = init_flags())
 	|| !(new_env->mlx_ptr = mlx_init())
-	|| !(new_env->win_ptr =
-		mlx_new_window(new_env->mlx_ptr,
-				(int)WIN_WIDTH, (int)WIN_HEIGHT, WIN_NAME))
+	|| !(new_env->win_ptr = mlx_new_window(new_env->mlx_ptr, (int)WIN_WIDTH,
+											(int)WIN_HEIGHT, WIN_NAME))
 	|| !(new_env->img = init_img(new_env->mlx_ptr, WIN_WIDTH, WIN_HEIGHT))
 	|| !(new_env->init_func[0] = init_barnsley)
 	|| !(new_env->init_func[1] = init_mandelbrot)

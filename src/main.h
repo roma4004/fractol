@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 17:23:37 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:38:40 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,15 +183,6 @@ int				get_julia(t_param *param, t_flags *flags, int x, int y);
 int				get_batman(t_param *param, t_flags *flags, int x, int y);
 int				get_mandelbrot_cuboid(t_param *param, t_flags *flags,
 										int x, int y);
-void			init_barnsley(t_param *param);
-void			init_mandelbrot(t_param *param);
-void			init_batman(t_param *param);
-void			init_mandelbrot_cuboid(t_param *param);
-void			init_julia(t_param *param);
-
-int				flag_reset(t_flags *flags);
-t_img			*init_img(void *mlx_ptr, float width, float height);
-t_env			*init_env(void);
 
 int				map_offset(t_env *env, int key, t_param *param);
 int				specific_param(t_env *env, t_param *param, int key);
@@ -199,23 +190,32 @@ int				fr_depth(t_env *env, t_param *param, t_flags *flags, int key);
 int				zoom(t_env *env, int key, float x, float y);
 int				toggles(t_env *env, int key, t_param *p, t_flags *f);
 
+int				flag_reset(t_flags *flags);
+t_img			*init_img(void *mlx_ptr, float width, float height);
+t_env			*init_env(void);
+
+void			init_barnsley(t_param *param);
+void			init_mandelbrot(t_param *param);
+void			init_batman(t_param *param);
+void			init_mandelbrot_cuboid(t_param *param);
+void			init_julia(t_param *param);
+
 void			show_menu(t_env *env, int x, int y, t_flags *flags);
 void			show_combo(t_env *env, int x, int y);
 void			show_values(t_env *env, int x, int y);
 
+char			*text(t_env *env, int x, int y, char *str);
+char			*text_green(t_env *env, int x, int y, char *str);
 int				deal_keyboard(int key, t_env *env);
 int				deal_mouse(int key, int x, int y, t_env *env);
 int				deal_mouse_move(int x, int y, t_env *env);
 int				exit_x(t_env *env);
 
-int				free_win(t_env *env);
-void			clear_img(t_env *env);
-
 int				is_cardioid(t_param *param, t_flags *flags, t_cnb *z);
 int				mandel_break(t_param *param, t_flags *flags, t_cnb *z);
 
-char			*text(t_env *env, int x, int y, char *str);
-char			*text_green(t_env *env, int x, int y, char *str);
+int				free_win(t_env *env);
+void			clear_img(t_env *env);
 
 void			px_to_img(t_img *img, int x, int y, int color);
 void			parallel_draw_fractal(t_env *env);

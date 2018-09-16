@@ -6,53 +6,42 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/14 03:15:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:40:50 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int			if_cardioid(t_env *env, double pr, double pi)
+int			is_cardioid(t_param *param, t_flags *flags, t_cnb *z)
 {
-	double		pr_pow;
-	double		pi_pow;
 	double		q;
-	t_flags		*flags;
 
-	if (!env
-		|| env->param->fr_id == FR_JULIA
-		|| !(flags = env->flags)
-		|| flags->n1 || flags->n2 || flags->n3 || flags->n7)
+	if (!param || !flags || flags->n1 || flags->n2 || flags->n3 || flags->n7)
 		return (0);
-	pr_pow = ((pr - 0.25) * (pr - 0.25));
-	pi_pow = pi * pi;
-	q = pr_pow + pi_pow;
-	if ((pr + 1) * (pr + 1) + pi_pow < 0.0625
-		|| (q * (q + (pr - 0.25)) < 0.25 * pi_pow))
+	z->rsq = ((z->rc - 0.25) * (z->rc - 0.25));
+	z->isq = z->ic * z->ic;
+	q = z->rsq + z->isq;
+	if ((z->rc + 1) * (z->rc + 1) + z->isq < 0.0625
+		|| (q * (q + (z->rc - 0.25)) < 0.25 * z->isq))
 		return (1);
 	return (0);
 }
 
-int			mandel_break(t_env *env, t_cnb *z)
+int			mandel_break(t_param *param, t_flags *flags, t_cnb *z)
 {
-	t_flags	*f;
-
 	z->rsq = ft_pow(z->r, 2);
 	z->isq = ft_pow(z->i, 2);
-	f = env->flags;
-	if (f->n8 && z->rsq * z->isq > env->param->spec1)
+	if (flags->n8 && z->rsq * z->isq > param->spec1)
 		return (1);
-	if (f->n4 && z->rsq - z->isq > env->param->spec1)
+	if (flags->n4 && z->rsq - z->isq > param->spec1)
 		return (1);
-	if (!f->n8 && !f->n4 && z->rsq + z->isq > env->param->spec1)
+	if (!flags->n8 && !flags->n4 && z->rsq + z->isq > param->spec1)
 		return (1);
-	if (env->flags->n5
-	&& (z->r > env->param->right_trim * env->param->spec2
-		|| z->r < env->param->left_trim * env->param->spec2))
+	if (flags->n5 && (z->r > param->right_trim * param->spec2
+					|| z->r < param->left_trim * param->spec2))
 		return (1);
-	if (env->flags->n5
-	&& (z->i > env->param->down_trim * env->param->spec2
-		|| z->i < env->param->up_trim * env->param->spec2))
+	if (flags->n5 && (z->i > param->down_trim * param->spec2
+					|| z->i < param->up_trim * param->spec2))
 		return (1);
 	return (0);
 }
@@ -85,7 +74,7 @@ int			main(int argc, char **argv)
 {
 	t_env	*env;
 
-	if (argc == 2 && (env = init_win()) && !set_fract(env, argv[1]))
+	if (argc == 2 && (env = init_env()) && !set_fract(env, argv[1]))
 	{
 		redraw_fract(env, 0);
 		mlx_hook(env->win_ptr, 17, 1L << 17, exit_x, env);

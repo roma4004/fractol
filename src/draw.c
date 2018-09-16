@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/13 21:28:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 16:45:49 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,33 @@ void		redraw_fract(t_env *env, int img_only)
 	mlx_clear_window(env->mlx_ptr, env->win_ptr);
 	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr,
 							env->img->ptr, 0, 0);
-	if (env->flags->menu_on)
+	if (!env->flags->menu_off)
 		show_menu(env, 20, 10, env->flags);
-	if (env->flags->hints_on)
+	if (!env->flags->hints_off)
 		show_combo(env, 20, 10);
-	if (env->flags->values_on)
+	if (!env->flags->values_off)
 		show_values(env, 20, 10);
 	if (img_only)
 		return ;
 	if (env->param->fr_id == FR_BARNSLEY)
-		draw_barnsley(clear_img(env));
+	{
+		clear_img(env);
+		draw_barnsley(env, env->param);
+	}
 	else
 		parallel_draw_fractal(env);
 }
 
-int			get_fractal_col(t_env *env, int x, int y)
+int			get_fractal_color(t_param *param, t_flags *flags, int x, int y)
 {
-	if (env->param->fr_id == FR_JULIA)
-		return (get_julia_color(env, x, y));
-	if (env->param->fr_id == FR_BATMAN)
-		return (get_batman_color(env, x, y));
-	if (env->param->fr_id == FR_MANDELBROT)
-		return (get_mandelbrot_color(env, x, y));
-	if (env->param->fr_id == FR_MANDELBROT_CUBOID)
-		return (get_mandelbrot_cuboid_color(env, x, y));
+	if (param->fr_id == FR_JULIA)
+		return (get_julia(param, flags, x, y));
+	if (param->fr_id == FR_BATMAN)
+		return (get_batman(param, flags, x, y));
+	if (param->fr_id == FR_MANDELBROT)
+		return (get_mandelbrot(param, flags, x, y));
+	if (param->fr_id == FR_MANDELBROT_CUBOID)
+		return (get_mandelbrot_cuboid(param, flags, x, y));
 	return (0);
 }
 
@@ -73,20 +76,19 @@ static void	barnsley_part(t_env *env, char part, t_cnb *c)
 	}
 }
 
-void		draw_barnsley(t_env *env)
+void		draw_barnsley(t_env *env, t_param *par)
 {
+	int			x;
+	int			y;
 	float		rng;
-	long		n;
-	t_coords	i;
+	long long	n;
 	t_cnb		c;
-	t_param		*par;
 
 	c = (t_cnb){.r = 0, .i = 0};
-	par = env->param;
-	n = par->i_max;
+	n = par->fr_depth;
 	while (n--)
 	{
-		rng = ((float)rand()) / RAND_MAX;
+		rng = (float)rand() / (float)RAND_MAX;
 		if (rng <= 0.01f)
 			barnsley_part(env, BARNSLEY_PART_BODY, &c);
 		else if (rng <= 0.06f)
@@ -95,9 +97,9 @@ void		draw_barnsley(t_env *env)
 			barnsley_part(env, BARNSLEY_PART_LEFT, &c);
 		else
 			barnsley_part(env, BARNSLEY_PART_CURVE, &c);
-		i.x = (int)((c.r + 4) * par->zoom - par->offset_x);
-		i.y = (int)(WIN_HEIGHT - c.i * par->zoom - par->offset_y);
-		px_to_img(env->img->ptr, i.x, i.y, 0x007700);
+		x = (int)((c.r + 4) * par->actial_zoom - par->offset_x);
+		y = (int)(WIN_HEIGHT - c.i * par->actial_zoom - par->offset_y);
+		px_to_img(env->img->ptr, x, y, 0x007700);
 	}
 	redraw_fract(env, 1);
 }

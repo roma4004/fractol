@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/14 02:04:27 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:07:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ static int		shift_apply(t_env *env, int offset, int chanel)
 	if (offset)
 	{
 		y = -1;
-		while (++y < WIN_HEIGHT)
+		while (++y < (int)WIN_HEIGHT)
 		{
 			x = -1;
-			while (++x < WIN_WIDTH)
+			while (++x < (int)WIN_WIDTH)
 				px_to_img(env->img, x, y,
 						change_hue(env->img->data[y * (int)WIN_WIDTH + x],
 								offset, chanel));
@@ -48,16 +48,14 @@ static int		shift_apply(t_env *env, int offset, int chanel)
 	return (0);
 }
 
-int				change_color(t_env *env, int key)
+int				change_color(t_env *env, t_param *param, int key)
 {
 	int		offset;
 	int		chanel;
-	t_param	*param;
 
 	if (!env)
 		return (0);
 	offset = 0;
-	param = env->param;
 	if ((key == A || (key == Z)) && (chanel = ALPHA))
 		param->alpha_shift += (key == A) ? (offset = 1)
 											: (offset = -1);
@@ -103,24 +101,21 @@ void			argb_shift(t_env *env, t_param *param)
 		shift_apply(env, offset, BLUE);
 }
 
-int				get_color(t_env *env, int i)
+int				get_color(t_param *param, t_flags *flags, int i)
 {
 	int		color;
 	double	step;
-	t_img	*img;
-	t_col	*col;
+	t_color	col;
 
-	if (!env->flags->alt_color)
+	if (!flags->alt_color)
 	{
-		color = (int)(env->param->col_step * i);
+		color = (int)(param->col_step * i);
 		return (color);
 	}
-	img = env->img;
-	step = (double)i / (double)env->param->i_max;
-	img->col.a = 0;
-	img->col.r = (int)(9 * (1 - step) * step * step * 255);
-	img->col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);
-	img->col.b = (int)(8.5 * (1 - step) * (1 - step) * (1 - step) * 255);
-	col = &env->img->col;
-	return ((col->a << 24) | ((col->r) << 16) | ((col->g) << 8) | (col->b));
+	step = (double)i / (double)param->fr_depth;
+	col.a = 0;
+	col.r = (int)(9 * (1 - step) * step * step * 255);
+	col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);
+	col.b = (int)(8.5 * (1 - step) * (1 - step) * (1 - step) * 255);
+	return ((col.a << 24) | ((col.r) << 16) | ((col.g) << 8) | (col.b));
 }

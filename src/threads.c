@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/14 03:04:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 16:45:49 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 void		px_to_img(t_img *img, int x, int y, int color)
 {
 	if (img
-		&& x >= 0 && x < WIN_WIDTH
-		&& y >= 0 && y < WIN_HEIGHT)
+		&& x >= 0 && x < (int)WIN_WIDTH
+		&& y >= 0 && y < (int)WIN_HEIGHT)
 		img->data[y * (int)WIN_WIDTH + x] = color;
 }
 
@@ -26,25 +26,25 @@ static void	*draw_threads(void *thread_data)
 	int			x;
 	int			y;
 	t_env		*env;
-	t_param		*par;
+	t_param		*param;
 	t_pth_dt	*data;
 
 	if (!thread_data)
 		return (NULL);
 	data = (t_pth_dt *)thread_data;
 	env = data->env;
-	par = env->param;
-	y = (int)((par->center_y * -1) / par->zoom);
-	while (y < WIN_HEIGHT)
+	param = env->param;
+	y = (int)((param->center_y * -1) / param->actial_zoom);
+	while (y < (int)WIN_HEIGHT)
 	{
-		x = (int)((par->center_x * -1) / par->zoom);
-		while (x < WIN_WIDTH)
+		x = (int)((param->center_x * -1) / param->actial_zoom);
+		while (x < (int)WIN_WIDTH)
 		{
 			px_to_img(env->img, x, y + data->offset,
-					get_fractal_col(env, x, y + data->offset));
+					get_fractal_color(param, env->flags, x, y + data->offset));
 			x++;
 		}
-		y += par->threads;
+		y += param->threads;
 	}
 	return (NULL);
 }

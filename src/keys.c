@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/14 03:25:31 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:10:02 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int		deal_keyboard(int key, t_env *env)
 {
 	if (!env || !zoom(env, key, env->param->center_x, env->param->center_y))
 		if (!map_offset(env, key, env->param))
-			if (!iterate_change(env, key))
+			if (!fr_depth(env, env->param, env->flags, key))
 				if (!toggles(env, key, env->param, env->flags))
-					if (specific_param(env, key, env->param))
+					if (specific_param(env, env->param, key))
 						return (0);
 	(key == ESC) && exit_x(env);
 	if ((key == R || key == ENTER) && flag_reset(env->flags))
@@ -61,7 +61,7 @@ int		deal_keyboard(int key, t_env *env)
 		redraw_fract(env, 0);
 	}
 	else
-		change_color(env, key);
+		change_color(env, env->param, key);
 	return (1);
 }
 
@@ -83,17 +83,25 @@ int		deal_mouse(int key, int x, int y, t_env *env)
 
 int		deal_mouse_move(int x, int y, t_env *env)
 {
-	t_param	*p;
-	t_flags	*f;
+	int		mult_x;
+	int		mult_y;
+	t_param	*param;
+	t_flags	*flags;
 
-	p = env->param;
-	f = env->flags;
 	if (env == NULL)
 		return (1);
-	if (f->lock_julia)
+	if (x < 0 || x > (int)WIN_WIDTH || y < 0 || y > (int)WIN_HEIGHT)
+		return (0);
+	param = env->param;
+	flags = env->flags;
+	mult_x = (param->fr_id == FR_JULIA) ? 10 : 2;
+	mult_y = (param->fr_id == FR_JULIA) ? 20 : 4;
+	if (flags->lock_julia)
 	{
-		p->ij_seed = ((double)x - p->center_x) / WIN_WIDTH - 0.7;
-		p->rj_seed = ((double)y - p->center_y) / WIN_HEIGHT + 0.27015;
+		param->r_mouse_move_seed =
+				((x - param->center_x) * mult_x) / WIN_HEIGHT + 0.7;
+		param->i_mouse_move_seed =
+				((y - param->center_y) * mult_y) / WIN_WIDTH + 0.27015;
 		redraw_fract(env, 0);
 	}
 	return (0);

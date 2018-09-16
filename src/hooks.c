@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 16:05:27 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:16:55 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int			map_offset(t_env *env, int key, t_param *param)
 	return (0);
 }
 
-int			specific_param(t_env *env, int key, t_param *param)
+int			specific_param(t_env *env, t_param *param, int key)
 {
 	if ((key == PAGE_UP && (param->spec2 += param->spec_step))
 	|| (key == PAGE_DOWN && (param->spec2 -= param->spec_step))
@@ -40,28 +40,26 @@ int			specific_param(t_env *env, int key, t_param *param)
 	return (0);
 }
 
-int			iterate_change(t_env *env, int key)
+int			fr_depth(t_env *env, t_param *param, t_flags *flags, int key)
 {
 	int		offset;
-	t_param	*p;
-	t_flags	*f;
 
-	p = env->param;
-	f = env->flags;
 	offset = 0;
-	if ((key == NUM_MUL && p->i_step++) || (key == NUM_DIV && p->i_step--))
+	if ((key == NUM_MUL && param->fr_depth_step++)
+	|| (key == NUM_DIV && param->fr_depth_step--))
 	{
 		redraw_fract(env, 1);
 		return (1);
 	}
 	if (((key == NUM_MINUS || key == NINE || key == NUM_9)
-		&& (offset = -p->i_step))
+		&& (offset = -param->fr_depth_step))
 	|| ((key == NUM_PLUS || key == ZERO || key == NUM_0)
-		&& (offset = p->i_step)))
-		if (offset && (p->i_max + offset > 0))
+		&& (offset = param->fr_depth_step)))
+		if (offset && (param->fr_depth + offset > 0))
 		{
-			p->i_max += offset;
-			p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF) / p->i_max;
+			param->fr_depth += offset;
+			param->col_step =
+				(flags->col_range ? 0xFFFFFF : 0xFFFFFFFF) / param->fr_depth;
 			redraw_fract(env, 0);
 			return (1);
 		}
@@ -70,20 +68,22 @@ int			iterate_change(t_env *env, int key)
 
 int			zoom(t_env *env, int key, float x, float y)
 {
-	t_param	*par;
+	t_param	*param;
 
-	par = env->param;
+	param = env->param;
 	if ((key == PLUS
-		&& (par->zoom *= 1.5)
-		&& (par->offset_step /= 1.5))
+		&& (param->actial_zoom *= 1.5)
+		&& (param->offset_step /= 1.5))
 	|| (key == MINUS
-		&& (par->zoom /= 1.5)
-		&& (par->offset_step *= 1.5)))
+		&& (param->display_zoom > -10)
+		&& (param->actial_zoom /= 1.5)
+		&& (param->offset_step *= 1.5)))
 	{
-		par->offset_x +=
-			(x - par->center_x) * par->center_x / (par->zoom * WIN_WIDTH);
-		par->offset_y +=
-			(y - par->center_y) * par->center_y / (par->zoom * WIN_HEIGHT);
+		(key == PLUS) ? param->display_zoom++ : param->display_zoom--;
+		param->offset_x += (x - param->center_x) * param->center_x
+							/ (param->actial_zoom * WIN_WIDTH);
+		param->offset_y += (y - param->center_y) * param->center_y
+							/ (param->actial_zoom * WIN_HEIGHT);
 		redraw_fract(env, 0);
 		return (1);
 	}
@@ -106,12 +106,12 @@ int			toggles(t_env *env, int key, t_param *p, t_flags *f)
 	|| (key == U && (p->threads < MAX_THREADS ? p->threads++ : 0))
 	|| (key == J && (p->threads > 1 ? p->threads-- : 0))
 	|| (key == T && (f->col_range = ~f->col_range) <= 1
-		&& (p->col_step = ((f->col_range) ? 0xFFFFFF : 0xFFFFFFFF) / p->i_max))
+		&& (p->col_step = (f->col_range ? 0xFFFFFF : 0xFFFFFFFF) / p->fr_depth))
 	|| (key == Y && (f->if_carioid = ~f->if_carioid) <= 1)
 	|| (key == G && (f->alt_color = ~f->alt_color) <= 1)
-	|| (key == H && (f->hints_on = ~f->hints_on) <= 1)
-	|| (key == N && (f->values_on = ~f->values_on) <= 1)
-	|| (key == M && (f->menu_on = ~f->menu_on) <= 1))
+	|| (key == H && (f->hints_off = ~f->hints_off) <= 1)
+	|| (key == N && (f->values_off = ~f->values_off) <= 1)
+	|| (key == M && (f->menu_off = ~f->menu_off) <= 1))
 	{
 		redraw_fract(env, 0);
 		return (1);

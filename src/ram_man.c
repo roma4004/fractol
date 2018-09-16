@@ -6,30 +6,32 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:23:50 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/09 18:38:52 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:16:55 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-t_env		*clear_img(t_env *env)
+void		clear_img(t_env *env)
 {
 	int		y;
 	int		x;
 
 	y = -1;
-	while (++y < WIN_HEIGHT && (x = -1))
-		while (++x < WIN_WIDTH)
+	while (++y < (int)WIN_HEIGHT)
+	{
+		x = -1;
+		while (++x < (int)WIN_WIDTH)
 			env->img->data[y * (int)WIN_WIDTH + x] = 0;
-	return (env);
+	}
 }
 
-static int	free_img(t_env *win, t_img *img)
+static int	free_img(t_env *env, t_img *img)
 {
-	if (win && img)
+	if (env && img)
 	{
-		if (win->mlx_ptr && img->ptr)
-			mlx_destroy_image(win->mlx_ptr, img->ptr);
+		if (env->mlx_ptr && img->ptr)
+			mlx_destroy_image(env->mlx_ptr, img->ptr);
 		ft_memdel((void *)&img);
 		return (1);
 	}
@@ -51,9 +53,9 @@ int			free_win(t_env *env)
 	return (0);
 }
 
-int			exit_x(t_env *win)
+int			exit_x(t_env *env)
 {
-	mlx_destroy_window(win->mlx_ptr, win->win_ptr);
-	free_win(win);
+	mlx_destroy_window(env->mlx_ptr, env->win_ptr);
+	free_win(env);
 	exit(0);
 }

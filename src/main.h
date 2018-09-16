@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/14 03:25:46 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/16 17:23:37 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 
 typedef struct	s_complex_number
 {
-	int		iter;
 	double	r;
 	double	rc;
 	double	rsq;
@@ -38,13 +37,7 @@ typedef struct	s_complex_number
 	double	iold;
 }				t_cnb;
 
-typedef struct	s_coordinates
-{
-	int		x;
-	int		y;
-}				t_coords;
-
-typedef struct	s_param
+typedef struct	s_fractal_parameters
 {
 	int		fr_id;
 	int		cores;
@@ -53,8 +46,9 @@ typedef struct	s_param
 	int		red_shift;
 	int		green_shift;
 	int		blue_shift;
-	int		i_max;
-	int		i_step;
+	int		fr_depth;
+	int		fr_depth_step;
+	int		display_zoom;
 	float	ratio;
 	float	left_trim;
 	float	up_trim;
@@ -67,14 +61,14 @@ typedef struct	s_param
 	float	spec_step;
 	float	offset_step;
 	double	col_step;
-	double	zoom;
+	double	actial_zoom;
 	double	offset_y;
 	double	offset_x;
-	double	rj_seed;
-	double	ij_seed;
+	double	r_mouse_move_seed;
+	double	i_mouse_move_seed;
 }				t_param;
 
-typedef struct	s_flags
+typedef struct	s_fractal_state_flags
 {
 	unsigned char	n1:1;
 	unsigned char	n2:1;
@@ -90,20 +84,20 @@ typedef struct	s_flags
 	unsigned char	col_range:1;
 	unsigned char	if_carioid:1;
 	unsigned char	alt_color:1;
-	unsigned char	hints_on:1;
-	unsigned char	values_on:1;
-	unsigned char	menu_on:1;
+	unsigned char	hints_off:1;
+	unsigned char	values_off:1;
+	unsigned char	menu_off:1;
 	unsigned char	lock_julia:1;
 	unsigned char	green_text:1;
 }				t_flags;
 
-typedef struct	s_color
+typedef struct	s_color_channels_argb
 {
 	int		a;
 	int		r;
 	int		g;
 	int		b;
-}				t_col;
+}				t_color;
 
 typedef struct	s_img
 {
@@ -112,7 +106,6 @@ typedef struct	s_img
 	int		bits_per_pixel;
 	int		size_line;
 	int		endian;
-	t_col	col;
 }				t_img;
 
 typedef struct	s_environment
@@ -131,7 +124,7 @@ typedef struct	s_pthread_data
 	int		offset;
 }				t_pth_dt;
 
-enum			e_offset
+enum			e_color_offset
 {
 	ALPHA = 24,
 	RED = 16,
@@ -139,7 +132,7 @@ enum			e_offset
 	BLUE = 0
 };
 
-enum			e_keys
+enum			e_keys_code
 {
 	NUM_1 = 83, ONE = 18,
 	NUM_2 = 84, TWO = 19,
@@ -164,7 +157,7 @@ enum			e_keys
 	END = 119, PAGE_DOWN = 121
 };
 
-enum			e_fr_type
+enum			e_fractal_type
 {
 	FR_BARNSLEY = 0,
 	FR_MANDELBROT = 1,
@@ -177,19 +170,19 @@ enum			e_fr_type
 	BARNSLEY_PART_CURVE = 4,
 };
 
-int				change_color(t_env *env, int key);
+int				change_color(t_env *env, t_param *param, int key);
 void			argb_shift(t_env *env, t_param *param);
-int				get_color(t_env *env, int i);
+int				get_color(t_param *param, t_flags *flags, int i);
 
 void			redraw_fract(t_env *env, int img_only);
-int				get_fractal_col(t_env *env, int x, int y);
-void			draw_barnsley(t_env *env);
+int				get_fractal_color(t_param *param, t_flags *flags, int x, int y);
+void			draw_barnsley(t_env *env, t_param *par);
 
-int				get_mandelbrot_color(t_env *env, int x, int y);
-int				get_julia_color(t_env *env, int x, int y);
-int				get_batman_color(t_env *env, int x, int y);
-int				get_mandelbrot_cuboid_color(t_env *env, int x, int y);
-
+int				get_mandelbrot(t_param *param, t_flags *flags, int x, int y);
+int				get_julia(t_param *param, t_flags *flags, int x, int y);
+int				get_batman(t_param *param, t_flags *flags, int x, int y);
+int				get_mandelbrot_cuboid(t_param *param, t_flags *flags,
+										int x, int y);
 void			init_barnsley(t_param *param);
 void			init_mandelbrot(t_param *param);
 void			init_batman(t_param *param);
@@ -198,28 +191,28 @@ void			init_julia(t_param *param);
 
 int				flag_reset(t_flags *flags);
 t_img			*init_img(void *mlx_ptr, float width, float height);
-t_env			*init_win(void);
+t_env			*init_env(void);
 
 int				map_offset(t_env *env, int key, t_param *param);
-int				specific_param(t_env *env, int key, t_param *param);
-int				iterate_change(t_env *env, int iter_offset);
+int				specific_param(t_env *env, t_param *param, int key);
+int				fr_depth(t_env *env, t_param *param, t_flags *flags, int key);
 int				zoom(t_env *env, int key, float x, float y);
 int				toggles(t_env *env, int key, t_param *p, t_flags *f);
 
-void			show_menu(t_env *e, int x, int y, t_flags *f);
+void			show_menu(t_env *env, int x, int y, t_flags *flags);
 void			show_combo(t_env *env, int x, int y);
-void			show_values(t_env *e, int x, int y);
+void			show_values(t_env *env, int x, int y);
 
 int				deal_keyboard(int key, t_env *env);
 int				deal_mouse(int key, int x, int y, t_env *env);
 int				deal_mouse_move(int x, int y, t_env *env);
-int				exit_x(t_env *par);
+int				exit_x(t_env *env);
 
 int				free_win(t_env *env);
-t_env			*clear_img(t_env *env);
+void			clear_img(t_env *env);
 
-int				if_cardioid(t_env *env, double pr, double pi);
-int				mandel_break(t_env *env, t_cnb *z);
+int				is_cardioid(t_param *param, t_flags *flags, t_cnb *z);
+int				mandel_break(t_param *param, t_flags *flags, t_cnb *z);
 
 char			*text(t_env *env, int x, int y, char *str);
 char			*text_green(t_env *env, int x, int y, char *str);

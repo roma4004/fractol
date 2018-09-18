@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 17:24:50 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/18 18:56:35 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	show_menu2(t_env *env, int x, int y, t_flags *f)
 	text(env, x, y += 20, "calc carioid :");
 	(f->if_carioid) ? text_green(env, x + 150, y, "Y")
 					: text(env, x + 150, y, "Y");
-	text(env, x, y += 20, "white carioid:   (when calk carioid is on)");
+	text(env, x, y += 20, "white carioid:   (when calc carioid is on)");
 	(f->w) ? text_green(env, x + 150, y, "W") : text(env, x + 150, y, "W");
 	text(env, x, y += 20, "color style  :  ,   ");
 	(f->col_range) ? text_green(env, x + 150, y, "T")

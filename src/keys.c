@@ -58,7 +58,7 @@ int		deal_keyboard(int key, t_env *env)
 		env->param->threads = env->param->cores;
 		env->param->spec1 = (env->param->fr_id == FR_BARNSLEY) ? 0.04f : 4;
 		env->param->spec2 = (env->param->fr_id == FR_BARNSLEY) ? 0.85f : 1;
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 	}
 	else
 		change_color(env, env->param, key);
@@ -76,7 +76,7 @@ int		deal_mouse(int key, int x, int y, t_env *env)
 	else if (key == MOUSE_RBT)
 	{
 		env->flags->lock_julia = ~env->flags->lock_julia;
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 	}
 	return (0);
 }
@@ -102,7 +102,7 @@ int		deal_mouse_move(int x, int y, t_env *env)
 				((x - param->center_x) * mult_x) / WIN_HEIGHT + 0.7;
 		param->i_mouse_move_seed =
 				((y - param->center_y) * mult_y) / WIN_WIDTH + 0.27015;
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 16:45:49 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/22 19:38:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,54 +25,47 @@ static void	*draw_threads(void *thread_data)
 {
 	int			x;
 	int			y;
+	int			offset;
 	t_env		*env;
 	t_param		*param;
-	t_pth_dt	*data;
 
 	if (!thread_data)
 		return (NULL);
-	data = (t_pth_dt *)thread_data;
-	env = data->env;
+	offset = ((t_pth_dt *)thread_data)->offset;
+	env = ((t_pth_dt *)thread_data)->env;
 	param = env->param;
-	y = (int)((param->center_y * -1) / param->actial_zoom);
-	while (y < (int)WIN_HEIGHT)
+	y = 0;
+	while (++y < (int)WIN_HEIGHT)
 	{
-		x = (int)((param->center_x * -1) / param->actial_zoom);
+		x = 0;
 		while (x < (int)WIN_WIDTH)
 		{
-			px_to_img(env->img, x, y + data->offset,
-					get_fractal_color(param, env->flags, x, y + data->offset));
-			x++;
+			px_to_img(env->img, x + offset, y,
+					get_fractal_color(param, env->flags, x + offset, y));
+			x += param->threads;
 		}
-		y += param->threads;
 	}
 	return (NULL);
 }
 
-void		parallel_draw_fractal(t_env *env)
+void		parallel_draw(t_env *env, int threads)
 {
 	int			id;
-	int			cpu_cores;
-	t_pth_dt	*data;
-	pthread_t	*threads;
+	t_pth_dt	data[threads];
+	pthread_t	threads_arr[threads];
 
 	if (!env)
 		return ;
-	cpu_cores = env->param->threads;
-	threads = (pthread_t *)malloc(sizeof(pthread_t) * cpu_cores);
-	data = (t_pth_dt *)malloc(sizeof(t_pth_dt) * cpu_cores);
 	id = -1;
-	while (++id < cpu_cores)
+	while (++id < threads)
 	{
 		data[id].env = env;
 		data[id].offset = id;
-		pthread_create(&threads[id], NULL, draw_threads, &data[id]);
+		pthread_create(&threads_arr[id], NULL, draw_threads, &data[id]);
 	}
 	id = -1;
-	while (++id < cpu_cores)
-		pthread_join(threads[id], NULL);
-	redraw_fract(env, 1);
+	while (++id < threads)
+		pthread_join(threads_arr[id], NULL);
+	redraw_fract_or_img(env, 1);
 	argb_shift(env, env->param);
-	ft_memdel((void *)&threads);
-	ft_memdel((void *)&data);
 }

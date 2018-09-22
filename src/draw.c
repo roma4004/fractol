@@ -6,13 +6,13 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 16:45:49 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/22 18:35:32 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void		redraw_fract(t_env *env, int img_only)
+void		redraw_fract_or_img(t_env *env, int img_only)
 {
 	mlx_clear_window(env->mlx_ptr, env->win_ptr);
 	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr,
@@ -31,7 +31,7 @@ void		redraw_fract(t_env *env, int img_only)
 		draw_barnsley(env, env->param);
 	}
 	else
-		parallel_draw_fractal(env);
+		parallel_draw(env, env->param->threads);
 }
 
 int			get_fractal_color(t_param *param, t_flags *flags, int x, int y)
@@ -101,5 +101,5 @@ void		draw_barnsley(t_env *env, t_param *par)
 		y = (int)(WIN_HEIGHT - c.i * par->actial_zoom - par->offset_y);
 		px_to_img(env->img->ptr, x, y, 0x007700);
 	}
-	redraw_fract(env, 1);
+	redraw_fract_or_img(env, 1);
 }

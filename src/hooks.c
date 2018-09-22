@@ -21,7 +21,7 @@ int			map_offset(t_env *env, int key, t_param *param)
 	|| (key == ARROW_DOWN && (param->offset_y -= param->offset_step))
 	|| (key == ARROW_RIGHT && (param->offset_x -= param->offset_step)))
 	{
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 		return (1);
 	}
 	return (0);
@@ -34,7 +34,7 @@ int			specific_param(t_env *env, t_param *param, int key)
 	|| (key == HOME && (param->spec1 -= param->spec_step))
 	|| (key == END && (param->spec1 += param->spec_step)))
 	{
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 		return (1);
 	}
 	return (0);
@@ -48,7 +48,7 @@ int			fr_depth(t_env *env, t_param *param, t_flags *flags, int key)
 	if ((key == NUM_MUL && param->fr_depth_step++)
 	|| (key == NUM_DIV && param->fr_depth_step--))
 	{
-		redraw_fract(env, 1);
+		redraw_fract_or_img(env, 1);
 		return (1);
 	}
 	if (((key == NUM_MINUS || key == NINE || key == NUM_9)
@@ -60,7 +60,7 @@ int			fr_depth(t_env *env, t_param *param, t_flags *flags, int key)
 			param->fr_depth += offset;
 			param->col_step =
 				(flags->col_range ? 0xFFFFFF : 0xFFFFFFFF) / param->fr_depth;
-			redraw_fract(env, 0);
+			redraw_fract_or_img(env, 0);
 			return (1);
 		}
 	return (0);
@@ -84,7 +84,7 @@ int			zoom(t_env *env, int key, float x, float y)
 							/ (param->actial_zoom * WIN_WIDTH);
 		param->offset_y += (y - param->center_y) * param->center_y
 							/ (param->actial_zoom * WIN_HEIGHT);
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 		return (1);
 	}
 	return (0);
@@ -113,7 +113,7 @@ int			toggles(t_env *env, int key, t_param *p, t_flags *f)
 	|| (key == N && (f->values_off = ~f->values_off) <= 1)
 	|| (key == M && (f->menu_off = ~f->menu_off) <= 1))
 	{
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 		return (1);
 	}
 	return (0);

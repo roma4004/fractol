@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 17:40:50 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/22 18:35:36 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int			main(int argc, char **argv)
 
 	if (argc == 2 && (env = init_env()) && !set_fract(env, argv[1]))
 	{
-		redraw_fract(env, 0);
+		redraw_fract_or_img(env, 0);
 		mlx_hook(env->win_ptr, 17, 1L << 17, exit_x, env);
 		mlx_hook(env->win_ptr, 2, 5, deal_keyboard, env);
 		mlx_hook(env->win_ptr, 6, 8, deal_mouse_move, env);

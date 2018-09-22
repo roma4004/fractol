@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 17:38:40 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/09/22 18:54:06 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ int				change_color(t_env *env, t_param *param, int key);
 void			argb_shift(t_env *env, t_param *param);
 int				get_color(t_param *param, t_flags *flags, int i);
 
-void			redraw_fract(t_env *env, int img_only);
+void			redraw_fract_or_img(t_env *env, int img_only);
 int				get_fractal_color(t_param *param, t_flags *flags, int x, int y);
 void			draw_barnsley(t_env *env, t_param *par);
 
@@ -218,6 +218,6 @@ int				free_win(t_env *env);
 void			clear_img(t_env *env);
 
 void			px_to_img(t_img *img, int x, int y, int color);
-void			parallel_draw_fractal(t_env *env);
+void			parallel_draw(t_env *env, int threads);
 
 #endif

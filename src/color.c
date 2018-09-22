@@ -42,7 +42,7 @@ static int		shift_apply(t_env *env, int offset, int chanel)
 						change_hue(env->img->data[y * (int)WIN_WIDTH + x],
 								offset, chanel));
 		}
-		redraw_fract(env, 1);
+		redraw_fract_or_img(env, 1);
 		return (1);
 	}
 	return (0);

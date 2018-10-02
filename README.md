@@ -13,9 +13,17 @@ mandelbrot with wind effect:
 
 fractal Mandelbrot with leaf effect:
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-05%20at%205.53.26%20PM.png)
-
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-05%20at%206.59.16%20PM.png)
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-05%20at%206.59.50%20PM.png)
+
+fractal Mandelbrot with other effect:
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%203.54.16%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%203.55.54%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%203.57.17%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.00.13%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.02.18%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.03.52%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.38.16%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-05%20at%206.59.16%20PM.png)
 
 fractal Julia with leaf effect: 
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-08%20at%207.53.16%20PM.png)
@@ -34,14 +42,9 @@ fractal Julia with other effects:
 
 mandelbrot cuboid with blades effect:
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-08%20at%206.37.41%20PM.png)
-
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%203.54.16%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%203.55.54%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%203.57.17%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.00.13%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.02.18%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.03.52%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%204.38.16%20PM.png)
+mandelbrot cuboid with mustache effect:
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%205.42.42%20PM.png)
+
+
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-16%20at%205.34.07%20PM.png)
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-16%20at%205.35.19%20PM.png)

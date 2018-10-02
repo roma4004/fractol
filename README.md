@@ -39,6 +39,8 @@ fractal Julia with other effects:
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-06%20at%208.26.22%20PM.png)
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-06%20at%208.26.51%20PM.png)
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-06%20at%209.07.19%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-16%20at%205.34.07%20PM.png)
+![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-16%20at%205.35.19%20PM.png)
 
 mandelbrot cuboid with blades effect:
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-08%20at%206.37.41%20PM.png)
@@ -46,5 +48,3 @@ mandelbrot cuboid with mustache effect:
 ![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-11%20at%205.42.42%20PM.png)
 
 
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-16%20at%205.34.07%20PM.png)
-![img](https://github.com/roma4004/fractol/blob/master/img/Screen%20Shot%202018-09-16%20at%205.35.19%20PM.png)

@@ -6,27 +6,24 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 17:07:20 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/15 19:38:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static int		change_hue(int color, int offset, int mask_offset)
+static int		change_hue(int *color, int is_increase, int color_offset)
 {
-	int mask;
-	int increment;
+	int		mask;
+	int		increment;
 
-	mask = 0x000000FF << mask_offset;
+	mask = 0x000000FF << color_offset;
 	increment = mask & 0x01010101;
-	if (offset == 1)
-		color += increment;
-	else
-		color -= increment;
-	return (color);
+	*color += (is_increase == 1) ? increment : -increment;
+	return (*color);
 }
 
-static int		shift_apply(t_env *env, int offset, int chanel)
+static int		shift_apply(t_env *env, t_img *img, int offset, int chanel)
 {
 	int		y;
 	int		x;
@@ -38,9 +35,7 @@ static int		shift_apply(t_env *env, int offset, int chanel)
 		{
 			x = -1;
 			while (++x < (int)WIN_WIDTH)
-				px_to_img(env->img, x, y,
-						change_hue(env->img->data[y * (int)WIN_WIDTH + x],
-								offset, chanel));
+				change_hue(&img->data[y * (int)WIN_WIDTH + x], offset, chanel);
 		}
 		redraw_fract_or_img(env, 1);
 		return (1);
@@ -68,7 +63,7 @@ int				change_color(t_env *env, t_param *param, int key)
 	else if ((key == F || (key == V)) && !(chanel = BLUE))
 		param->blue_shift += (key == F) ? (offset = 1)
 											: (offset = -1);
-	if (shift_apply(env, offset, chanel))
+	if (shift_apply(env, env->img, offset, chanel))
 		return (1);
 	return (0);
 }
@@ -83,22 +78,22 @@ void			argb_shift(t_env *env, t_param *param)
 	i = (param->alpha_shift >= 0) ? -1 : param->alpha_shift - 1;
 	offset = (param->alpha_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, offset, ALPHA);
+		shift_apply(env, env->img, offset, ALPHA);
 	i_max = (param->red_shift >= 0) ? param->red_shift : 0;
 	i = (param->red_shift >= 0) ? -1 : param->red_shift - 1;
 	offset = (param->red_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, offset, RED);
+		shift_apply(env, env->img, offset, RED);
 	i_max = (param->green_shift >= 0) ? param->green_shift : 0;
 	i = (param->green_shift >= 0) ? -1 : param->green_shift - 1;
 	offset = (param->green_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, offset, GREEN);
+		shift_apply(env, env->img, offset, GREEN);
 	i_max = (param->blue_shift >= 0) ? param->blue_shift : 0;
 	i = (param->blue_shift >= 0) ? -1 : param->blue_shift - 1;
 	offset = (param->blue_shift >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, offset, BLUE);
+		shift_apply(env, env->img, offset, BLUE);
 }
 
 int				get_color(t_param *param, t_flags *flags, int i)

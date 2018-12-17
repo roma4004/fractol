@@ -6,13 +6,14 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:14:10 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 12:54:54 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/13 19:52:06 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 # include <string.h>
+# include <stdbool.h>
 
 typedef struct	s_list
 {
@@ -95,5 +96,6 @@ void			ft_striter(char *s, void (*f)(char *));
 void			ft_striteri(char *s, void (*f)(unsigned int, char *));
 void			ft_substr_copy(char *dst, char *src, unsigned int *src_i,
 								char stop_sym);
+int				ft_swith(bool *bits);
 
 #endif

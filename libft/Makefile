@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/08/07 12:17:01 by dromanic          #+#    #+#              #
-#    Updated: 2018/09/12 12:43:25 by dromanic         ###   ########.fr        #
+#    Updated: 2018/12/13 19:21:46 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,7 +83,8 @@ SRC = ft_append_list.c \
 	ft_strtrim.c \
 	ft_substr_copy.c \
 	ft_tolower.c \
-	ft_toupper.c
+	ft_toupper.c \
+	ft_switch.c
 
 OBJ = $(SRC:.c=.o)
 

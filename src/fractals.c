@@ -6,118 +6,136 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/16 17:00:57 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/13 11:57:08 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "main.h"
 
-int		get_mandelbrot(t_param *param, t_flags *flags, int x, int y)
+int		get_mandelbrot(t_env *env, t_int_pt pt)
 {
 	int		i;
 	int		i_max;
 	t_cnb	z;
+	t_param *p;
+	t_flags *f;
 
-	z.rc = param->ratio * (x - param->center_x)
-			/ param->actial_zoom + param->offset_x;
-	(flags->n6) ? z.rc *= -1 : 0;
-	z.ic = ((y + param->i_mouse_move_seed - param->center_y)
-			/ (param->actial_zoom) + param->offset_y);
-	if (!flags->if_carioid && is_cardioid(param, flags, &z))
-		return (flags->w ? 0xffffff : 0x0);
-	z.r = flags->q ? z.rc : param->i_mouse_move_seed;
-	z.i = flags->e ? z.ic : param->r_mouse_move_seed;
+	p = env->param;
+	f = env->flags;
+
+	z.rc = env->param->ratio * (pt.x - p->center.x)
+			/ p->actial_zoom + p->offset.x;
+	(f->n6) ? z.rc *= -1 : 0;
+	z.ic = ((pt.y + p->i_mouse_move_seed - p->center.y)
+			/ (p->actial_zoom) + p->offset.y);
+	if (!f->carioid && is_cardioid(p, f, &z))
+		return (f->w ? 0xffffff : 0x0);
+	z.r = f->q ? z.rc : p->i_mouse_move_seed;
+	z.i = f->e ? z.ic : p->r_mouse_move_seed;
 	i = -1;
-	i_max = param->fr_depth;
-	while (++i < i_max && !mandel_break(param, flags, &z))
+	i_max = p->depth;
+	while (++i < i_max && !mandel_break(p, f, &z))
 	{
 		z.i = (ft_pow(z.r + z.i, 2) - z.rsq - z.isq + z.ic);
-		(flags->n1) ? z.i *= -1 : 0;
-		(flags->n2) ? z.i = fabs(z.i) : 0;
-		(flags->n7) ? z.i *= -1 : 0;
+		(f->n1) ? z.i *= -1 : 0;
+		(f->n2) ? z.i = fabs(z.i) : 0;
+		(f->n7) ? z.i *= -1 : 0;
 		z.r = z.rsq - z.isq + z.rc;
-		(flags->n3) ? z.r = fabs(z.r) : 0;
+		(f->n3) ? z.r = fabs(z.r) : 0;
 	}
-	return (get_color(param, flags, i));
+	return (get_color(p, f, i));
 }
 
-int		get_julia(t_param *param, t_flags *flags, int x, int y)
+int		get_julia(t_env *env, t_int_pt pt)
 {
 	int		i;
 	int		i_max;
 	t_cnb	z;
+	t_param *p;
+	t_flags *f;
 
-	z.rc = param->ratio * (x - param->center_x)
-			/ param->actial_zoom + param->offset_x;
-	(flags->n6) ? z.rc *= -1 : 0;
-	z.ic = (y - param->center_y) / param->actial_zoom + param->offset_y;
-	z.r = flags->q ? ft_pow(z.rc, 2) : z.rc;
-	z.i = flags->e ? ft_pow(z.ic, 2) : z.ic;
+	p = env->param;
+	f = env->flags;
+
+	z.rc = p->ratio * (pt.x - p->center.x)
+			/ p->actial_zoom + p->offset.x;
+	(f->n6) ? z.rc *= -1 : 0;
+	z.ic = (pt.y - p->center.y) / p->actial_zoom + p->offset.y;
+	z.r = f->q ? ft_pow(z.rc, 2) : z.rc;
+	z.i = f->e ? ft_pow(z.ic, 2) : z.ic;
 	i = -1;
-	i_max = param->fr_depth;
-	while (++i < i_max && !mandel_break(param, flags, &z))
+	i_max = p->depth;
+	while (++i < i_max && !mandel_break(p, f, &z))
 	{
-		z.i = (ft_pow(z.r + z.i, 2) - z.rsq - z.isq + param->i_mouse_move_seed);
-		(flags->n1) ? z.i *= -1 : 0;
-		(flags->n2) ? z.i = fabs(z.i) : 0;
-		(flags->n7) ? z.i *= -1 : 0;
-		z.r = z.rsq - z.isq + param->r_mouse_move_seed;
-		(flags->n3) ? z.r = fabs(z.r) : 0;
+		z.i = (ft_pow(z.r + z.i, 2) - z.rsq - z.isq + p->i_mouse_move_seed);
+		(f->n1) ? z.i *= -1 : 0;
+		(f->n2) ? z.i = fabs(z.i) : 0;
+		(f->n7) ? z.i *= -1 : 0;
+		z.r = z.rsq - z.isq + p->r_mouse_move_seed;
+		(f->n3) ? z.r = fabs(z.r) : 0;
 	}
-	return (get_color(param, flags, i));
+	return (get_color(p, f, i));
 }
 
-int		get_batman(t_param *param, t_flags *flags, int x, int y)
+int		get_batman(t_env *env, t_int_pt pt)
 {
 	int		i;
 	int		i_max;
 	t_cnb	z;
+	t_param *p;
+	t_flags *f;
 
-	z.rc = param->ratio * (y - param->center_y)
-			/ param->actial_zoom + param->offset_y;
-	(flags->n6) ? z.rc *= -1 : 0;
-	z.ic = (x - param->center_x) / param->actial_zoom + param->offset_x;
-	if (!flags->if_carioid && is_cardioid(param, flags, &z))
-		return (flags->w ? 0xffffff : 0x0);
-	z.r = flags->q ? z.rc : param->r_mouse_move_seed;
-	z.i = flags->e ? z.ic : param->i_mouse_move_seed;
+	p = env->param;
+	f = env->flags;
+
+	z.rc = p->ratio * (pt.y - p->center.y)
+			/ p->actial_zoom + p->offset.y;
+	(f->n6) ? z.rc *= -1 : 0;
+	z.ic = (pt.x - p->center.x) / p->actial_zoom + p->offset.x;
+	if (!f->carioid && is_cardioid(p, f, &z))
+		return (f->w ? 0xffffff : 0x0);
+	z.r = f->q ? z.rc : p->r_mouse_move_seed;
+	z.i = f->e ? z.ic : p->i_mouse_move_seed;
 	i = -1;
-	i_max = param->fr_depth;
-	while (++i < i_max && !mandel_break(param, flags, &z))
+	i_max = p->depth;
+	while (++i < i_max && !mandel_break(p, f, &z))
 	{
 		z.i = (ft_pow(z.r + z.i, 2) - z.rsq - z.isq + z.ic);
-		(flags->n1) ? z.i *= -1 : 0;
-		(flags->n2) ? z.i = fabs(z.i) : 0;
-		(flags->n7) ? z.i *= -1 : 0;
+		(f->n1) ? z.i *= -1 : 0;
+		(f->n2) ? z.i = fabs(z.i) : 0;
+		(f->n7) ? z.i *= -1 : 0;
 		z.r = z.rsq * z.isq + z.rc;
-		(flags->n3) ? z.r = fabs(z.r) : 0;
+		(f->n3) ? z.r = fabs(z.r) : 0;
 	}
-	return (get_color(param, flags, i));
+	return (get_color(p, f, i));
 }
 
-int		get_mandelbrot_cuboid(t_param *param, t_flags *flags, int x, int y)
+int		get_mandelbrot_cuboid(t_env *env, t_int_pt pt)
 {
 	int		i;
 	int		i_max;
 	t_cnb	z;
+	t_param *p;
+	t_flags *f;
 
-	z.rc = param->ratio * (x - param->center_x)
-			/ param->actial_zoom + param->offset_x;
-	(flags->n6) ? z.rc *= -1 : 0;
-	z.ic = (y - param->center_y) / param->actial_zoom + param->offset_y;
-	z.r = flags->q ? z.rc : param->r_mouse_move_seed;
-	z.i = flags->e ? z.ic : param->i_mouse_move_seed;
+	p = env->param;
+	f = env->flags;
+	z.rc = p->ratio * (pt.x - p->center.x) / p->actial_zoom + p->offset.x;
+	(f->n6) ? z.rc *= -1 : 0;
+	z.ic = (pt.y - p->center.y) / p->actial_zoom + p->offset.y;
+	z.r = f->q ? z.rc : p->r_mouse_move_seed;
+	z.i = f->e ? z.ic : p->i_mouse_move_seed;
 	i = -1;
-	i_max = param->fr_depth;
-	while (++i < i_max && !mandel_break(param, flags, &z))
+	i_max = p->depth;
+	while (++i < i_max && !mandel_break(p, f, &z))
 	{
-		z.iold = flags->n2 ? fabs(z.i) : z.i;
-		(flags->n7) ? z.iold *= -1 : 0;
-		z.rold = flags->n3 ? fabs(z.r) : z.r;
+		z.iold = f->n2 ? fabs(z.i) : z.i;
+		(f->n7) ? z.iold *= -1 : 0;
+		z.rold = f->n3 ? fabs(z.r) : z.r;
 		z.i = 3 * z.rsq * z.iold - ft_pow(z.iold, 3) + z.ic;
-		(flags->n1) ? z.i *= -1 : 0;
+		(f->n1) ? z.i *= -1 : 0;
 		z.r = ft_pow(z.rold, 3) - 3 * z.rold * z.isq + z.rc;
 	}
-	return (get_color(param, flags, i));
+	return (get_color(p, f, i));
 }

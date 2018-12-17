@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-void		clear_img(t_env *env)
+t_env		*clear_img(t_env *env)
 {
 	int		y;
 	int		x;
@@ -24,6 +24,7 @@ void		clear_img(t_env *env)
 		while (++x < (int)WIN_WIDTH)
 			env->img->data[y * (int)WIN_WIDTH + x] = 0;
 	}
+	return (env);
 }
 
 static int	free_img(t_env *env, t_img *img)

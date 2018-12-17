@@ -6,100 +6,122 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/22 18:35:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/13 14:46:41 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <pthread.h>
 #include "main.h"
 
-void		redraw_fract_or_img(t_env *env, int img_only)
+static void	px_to_img(t_img *img, t_int_pt pt, int color)
 {
-	mlx_clear_window(env->mlx_ptr, env->win_ptr);
-	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr,
-							env->img->ptr, 0, 0);
-	if (!env->flags->menu_off)
-		show_menu(env, 20, 10, env->flags);
-	if (!env->flags->hints_off)
-		show_combo(env, 20, 10);
-	if (!env->flags->values_off)
-		show_values(env, 20, 10);
-	if (img_only)
-		return ;
-	if (env->param->fr_id == FR_BARNSLEY)
-	{
-		clear_img(env);
-		draw_barnsley(env, env->param);
-	}
-	else
-		parallel_draw(env, env->param->threads);
+	if (img
+		&& pt.x >= 0 && pt.x < (int)WIN_WIDTH
+		&& pt.y >= 0 && pt.y < (int)WIN_HEIGHT)
+		img->data[pt.y * (int)WIN_WIDTH + pt.x] = color;
 }
 
-int			get_fractal_color(t_param *param, t_flags *flags, int x, int y)
+static void	barnsley_part(t_param *param, char part, t_cnb *c)
 {
-	if (param->fr_id == FR_JULIA)
-		return (get_julia(param, flags, x, y));
-	if (param->fr_id == FR_BATMAN)
-		return (get_batman(param, flags, x, y));
-	if (param->fr_id == FR_MANDELBROT)
-		return (get_mandelbrot(param, flags, x, y));
-	if (param->fr_id == FR_MANDELBROT_CUBOID)
-		return (get_mandelbrot_cuboid(param, flags, x, y));
-	return (0);
-}
-
-static void	barnsley_part(t_env *env, char part, t_cnb *c)
-{
-	double r_new;
-	double i_new;
-
-	r_new = c->r;
-	i_new = c->i;
+	c->rold = c->r;
+	c->iold = c->i;
 	if (part == BARNSLEY_PART_BODY)
 	{
 		c->r = 0;
-		c->i = 0.16f * i_new;
+		c->i = 0.16f * c->iold;
 	}
 	else if (part == BARNSLEY_PART_RIGHT)
 	{
-		c->r = -0.15f * r_new + 0.28f * i_new;
-		c->i = 0.26f * r_new + 0.24f * i_new + 0.44f;
+		c->r = -0.15f * c->rold + 0.28f * c->iold;
+		c->i = 0.26f * c->rold + 0.24f * c->iold + 0.44f;
 	}
 	else if (part == BARNSLEY_PART_LEFT)
 	{
-		c->r = 0.2f * r_new + -0.26f * i_new;
-		c->i = 0.23f * r_new + 0.22f * i_new + 1.6f;
+		c->r = 0.2f * c->rold + -0.26f * c->iold;
+		c->i = 0.23f * c->rold + 0.22f * c->iold + 1.6f;
 	}
 	else
 	{
-		c->r = 0.85 * r_new + env->param->spec1 * i_new;
-		c->i = -0.04 * r_new + env->param->spec2 * i_new + 1.6;
+		c->r = 0.85 * c->rold + param->spec1 * c->iold;
+		c->i = -0.04 * c->rold + param->spec2 * c->iold + 1.6;
 	}
 }
 
-void		draw_barnsley(t_env *env, t_param *par)
+int			draw_barnsley(t_env *env, t_int_pt pt)
 {
-	int			x;
-	int			y;
 	float		rng;
-	long long	n;
+	long long	px_cnt;
 	t_cnb		c;
+	t_param *param;
 
+	param = env->param;
 	c = (t_cnb){.r = 0, .i = 0};
-	n = par->fr_depth;
-	while (n--)
+	px_cnt = param->depth;
+	while (px_cnt--)
 	{
 		rng = (float)rand() / (float)RAND_MAX;
 		if (rng <= 0.01f)
-			barnsley_part(env, BARNSLEY_PART_BODY, &c);
+			barnsley_part(param, BARNSLEY_PART_BODY, &c);
 		else if (rng <= 0.06f)
-			barnsley_part(env, BARNSLEY_PART_RIGHT, &c);
+			barnsley_part(param, BARNSLEY_PART_RIGHT, &c);
 		else if (rng <= 0.14f)
-			barnsley_part(env, BARNSLEY_PART_LEFT, &c);
+			barnsley_part(param, BARNSLEY_PART_LEFT, &c);
 		else
-			barnsley_part(env, BARNSLEY_PART_CURVE, &c);
-		x = (int)((c.r + 4) * par->actial_zoom - par->offset_x);
-		y = (int)(WIN_HEIGHT - c.i * par->actial_zoom - par->offset_y);
-		px_to_img(env->img->ptr, x, y, 0x007700);
+			barnsley_part(param, BARNSLEY_PART_CURVE, &c);
+		pt.x = (int)((c.r + 4) * param->actial_zoom - param->offset.x);
+		pt.y = (int)(WIN_HEIGHT - c.i * param->actial_zoom - param->offset.y);
+		px_to_img(env->img->ptr, pt, 0x007700);
 	}
-	redraw_fract_or_img(env, 1);
+	redraw_fract_or_img(env, param, 1);
+	return (0);
+}
+
+static void	*draw_threads(void *thread_data)
+{
+	t_int_pt	pt;
+	int			offset;
+	t_env		*env;
+	t_param		*param;
+
+	if (!thread_data)
+		return (NULL);
+	offset = ((t_pth_dt *)thread_data)->offset;
+	env = ((t_pth_dt *)thread_data)->env;
+	param = env->param;
+	pt.y = -1;
+	while (++pt.y < (int)WIN_HEIGHT)
+	{
+		pt.x = 0;
+		while (pt.x < (int)WIN_WIDTH)
+		{
+			pt.x += offset;
+			px_to_img(env->img, pt, env->get_px[param->fr_id](env, pt));
+			//| 0xf0000000);// << | 0xf0000000 //NEW BONUS
+			pt.x -= offset;
+			pt.x += param->threads;
+		}
+	}
+	return (NULL);
+}
+
+void		parallel_draw(t_env *env, int threads)
+{
+	int			id;
+	t_pth_dt	data[threads];
+	pthread_t	threads_arr[threads];
+
+	if (!env)
+		return ;
+	id = -1;
+	while (++id < threads)
+	{
+		data[id].env = env;
+		data[id].offset = id;
+		pthread_create(&threads_arr[id], NULL, draw_threads, &data[id]);
+	}
+	id = -1;
+	while (++id < threads)
+		pthread_join(threads_arr[id], NULL);
+	redraw_fract_or_img(env, env->param, 1);
+	argb_shift(env, &env->param->col_shift);
 }

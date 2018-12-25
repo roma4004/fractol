@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/09/14 01:26:20 by dromanic         ###   ########.fr        #
+#    Updated: 2018/12/25 19:15:16 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,19 @@ CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 [[ $1 = "clang" ]] && CC=CL || CC=GC
 [[ $1 = "cmake" ]] && CC=CM || CC=GC
 
-LIBKEY = -I minilibx -L minilibx -lmlx -framework OpenGL -framework AppKit
+LIBKEY = -L ./libraries/minilibx -lmlx \
+		 -framework OpenGL \
+		 -framework AppKit
 
-SRC_N =	main.c \
+OBJ_PATH   = objectives
+SRC_PATH   = sources
+LIBS_PATH  = libraries
+LIBFT_PATH = ${LIBS_PATH}/libft
+MLX_PATH   = ${LIBS_PATH}/minilibx
+
+INC = -I ${MLX_PATH}/ -I ${LIBFT_PATH}/ -I includes/
+
+SRC_N = main.c \
 		draw.c \
 		keys.c \
 		init.c \
@@ -32,22 +42,25 @@ SRC_N =	main.c \
 		interface.c \
 		init_fract.c
 
-SRC = $(addprefix src/, $(SRC_N))
+SRC = $(addprefix ${SRC_PATH}/, $(SRC_N))
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(addprefix ./$(OBJ_PATH)/, $(SRC_N:.c=.o))
 
-LIBS = libft/libft.a
+LIBS = ${LIBFT_PATH}/libft.a
 
 all: $(NAME)
 
-%.o : %.c
-	$(CC) -c $< -o $@
+./$(OBJ_PATH)/%.o : ./$(SRC_PATH)/%.c
+	$(CC) $(INC) -c $< -o $@
 
-$(NAME): liball $(OBJ)
+$(NAME): objdir liball $(OBJ)
 	$(CC) $(LIBKEY) $(OBJ) $(LIBS) -o $(NAME)
 
+objdir:
+	mkdir -p $(OBJ_PATH)
+
 clean: libclean
-	rm -f $(OBJ)
+	rm -rf $(OBJ_PATH)
 
 fclean: clean libfclean
 	rm -f $(NAME)
@@ -59,13 +72,13 @@ clang: $(NAME)
 cmake: $(NAME)
 
 liball:
-	@make -C libft/ all
+	@make -C ${LIBFT_PATH}/ all
 
 libclean:
-	@make -C libft/ clean
+	@make -C ${LIBFT_PATH}/ clean
 
 libfclean:
-	@make -C libft/ fclean
+	@make -C ${LIBFT_PATH}/ fclean
 
 libre:
-	@make -C libft/ re
+	@make -C ${LIBFT_PATH}/ re

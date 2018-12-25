@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/13 15:16:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/25 17:00:06 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,9 @@ int		deal_mouse(int key, int x, int y, t_env *env)
 
 int		deal_mouse_move(int x, int y, t_env *env)
 {
-	int		mult_x;
-	int		mult_y;
-	t_param	*param;
-	t_flags	*flags;
+	t_int_pt	mult;
+	t_param		*param;
+	t_flags		*flags;
 
 	if (env == NULL)
 		return (1);
@@ -70,14 +69,14 @@ int		deal_mouse_move(int x, int y, t_env *env)
 		return (0);
 	param = env->param;
 	flags = env->flags;
-	mult_x = (param->fr_id == FR_JULIA) ? 10 : 2;
-	mult_y = (param->fr_id == FR_JULIA) ? 10 : 4;
+	mult.x = (param->fr_id == FR_JULIA) ? 10 : 2;
+	mult.y = (param->fr_id == FR_JULIA) ? 10 : 4;
 	if (flags->lock_julia)
 	{
 		param->r_mouse_move_seed =
-				((x - param->center.x) * mult_x) / WIN_HEIGHT + 0.7;
+				((x - param->center.x) * mult.x) / WIN_HEIGHT + 0.7;
 		param->i_mouse_move_seed =
-				((y - param->center.y) * mult_y) / WIN_WIDTH + 0.27015;
+				((y - param->center.y) * mult.y) / WIN_WIDTH + 0.27015;
 		redraw_fract_or_img(env, env->param, 0);
 	}
 	return (0);

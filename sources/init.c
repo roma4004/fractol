@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:00:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/26 20:15:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static t_param	*init_param(void)
 		new_param->actial_zoom = 50;
 		new_param->offset.x = 0;
 		new_param->offset.y = 0;
-		new_param->i_mouse_move_seed = 0;
-		new_param->r_mouse_move_seed = 0;
+		new_param->i_move_seed = 0;
+		new_param->r_move_seed = 0;
 		new_param->col_shift.alpha = 0;
 		new_param->col_shift.red = 0;
 		new_param->col_shift.green = 0;

@@ -102,7 +102,7 @@ int				get_color(t_param *param, t_flags *flags, int i)
 	double	step;
 	t_color	col;
 
-	if (!flags->alt_color)
+	if (!flags->alt_col)
 	{
 		color = (int)(param->col_step * i);
 		return (color);

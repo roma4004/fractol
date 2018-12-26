@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 18:05:39 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/26 20:15:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ typedef struct	s_fractal_parameters
 	double			col_step;
 	double			actial_zoom;
 	t_double_pt		offset;
-	double			r_mouse_move_seed;
-	double			i_mouse_move_seed;
+	double			r_move_seed;
+	double			i_move_seed;
 }				t_param;
 
 typedef struct	s_fractal_state_flags
@@ -118,7 +118,7 @@ typedef struct	s_fractal_state_flags
 	bool	e;
 	bool	range;
 	bool	carioid;
-	bool	alt_color;
+	bool	alt_col;
 	bool	hints;
 	bool	values;
 

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:00:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/26 17:59:45 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void		show_combo(t_env *env, int x, int y)
 								"mirror ver: 7 or num_7 (for Ship, Lohnes)", 0);
 }
 
-static void show_menu2(t_env *e, t_flags *f, int x, int y)
+static void	show_menu2(t_env *e, t_flags *f, int x, int y)
 {
 	text(e, (t_int_pt){x, y += 20}, "calc carioid :", 0);
 	text(e, (t_int_pt){x + 150, y}, "Y", f->carioid);
@@ -79,7 +79,7 @@ static void show_menu2(t_env *e, t_flags *f, int x, int y)
 	text(e, (t_int_pt){x + 150, y}, "W", f->w);
 	text(e, (t_int_pt){x, y += 20}, "color style  :  ,   ", 0);
 	text(e, (t_int_pt){x + 150, y}, "T", f->range);
-	text(e, (t_int_pt){x + 180, y}, "G", f->alt_color);
+	text(e, (t_int_pt){x + 180, y}, "G", f->alt_col);
 	text(e, (t_int_pt){x, y += 20}, "mouse detect : mouse_", 0);
 	text(e, (t_int_pt){x + 210, y}, "R", f->lock_julia);
 	text(e, (t_int_pt){x, y += 20}, "threads num  : (+, -) U, J", 0);
@@ -97,7 +97,7 @@ static void show_menu2(t_env *e, t_flags *f, int x, int y)
 	text(e, (t_int_pt){x, y + 20}, "values       : N", 0);
 }
 
-void show_menu(t_env *env, t_flags *flags, int x, int y)
+void		show_menu(t_env *env, t_flags *flags, int x, int y)
 {
 	text(env, (t_int_pt){x, y}, "MENU         :", 0);
 	text(env, (t_int_pt){x, y += 20}, "zoom         : -, + or mouse scroll", 0);

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:17:24 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/26 18:09:47 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int			zoom(t_env *env, int key, float x, float y)
 	t_param	*param;
 
 	param = env->param;
-	if ((key == PLUS//	&& (param->display_zoom > 200)
+	if ((key == PLUS && (param->display_zoom < 200)
 		&& (param->actial_zoom *= 1.5)
 		&& (param->offset_step /= 1.5))
 	|| (key == MINUS
@@ -107,7 +107,7 @@ int			toggles(t_env *env, int k, t_param *p, t_flags *f)
 	|| (k == Q && ft_switch(&f->q)) || (k == W && ft_switch(&f->w))
 	|| (k == E && ft_switch(&f->e)) || (k == T && ft_switch(&f->range)
 		&& (p->col_step = (f->range ? 0xFFFFFF : 0xFFFFFFFF) / p->depth))
-	|| (k == Y && ft_switch(&f->carioid)) || (k == G && ft_switch(&f->alt_color)))
+	|| (k == Y && ft_switch(&f->carioid)) || (k == G && ft_switch(&f->alt_col)))
 	{
 		redraw_fract_or_img(env, env->param, 0);
 		return (1);

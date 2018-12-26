@@ -82,3 +82,17 @@ libfclean:
 
 libre:
 	@make -C ${LIBFT_PATH}/ re
+
+norm:
+	norminette $(LIBFT_PATH)/*.c
+	norminette $(LIBFT_PATH)/*.h
+	norminette $(SRC_PATH)/*.c
+	norminette $(INC_PATH)/*.h
+
+normf:
+	@norminette $(NORMFLAGS) $(LIBFT_PATH)/*.c  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(LIBFT_PATH)/*.h  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(SRC_PATH)/*.c  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(INC_PATH)/*.h  | grep -E '^(Error|Warning)'
+
+.phony: all clean fclean re

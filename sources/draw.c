@@ -52,7 +52,7 @@ int			draw_barnsley(t_env *env, t_int_pt pt)
 	float		rng;
 	long long	px_cnt;
 	t_cnb		c;
-	t_param *param;
+	t_param		*param;
 
 	param = env->param;
 	c = (t_cnb){.r = 0, .i = 0};

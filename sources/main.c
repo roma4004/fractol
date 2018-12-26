@@ -52,7 +52,7 @@ static int	set_fract(t_env *env, t_param *param, char *name)
 
 	len = ft_strlen(name);
 	param->fr_id = -1;
-	while(++param->fr_id < AMOUNT_FRACTALS)
+	while (++param->fr_id < AMOUNT_FRACTALS)
 	{
 		if ((ft_atoi(name) == param->fr_id + 1)
 		|| !ft_strncmp(name, env->names[param->fr_id], len))

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:00:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/26 20:15:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,22 @@ int		deal_mouse(int key, int x, int y, t_env *env)
 int		deal_mouse_move(int x, int y, t_env *env)
 {
 	t_int_pt	mult;
-	t_param		*param;
+	t_param		*p;
 	t_flags		*flags;
 
 	if (env == NULL)
 		return (1);
 	if (x < 0 || x > (int)WIN_WIDTH || y < 0 || y > (int)WIN_HEIGHT)
 		return (0);
-	param = env->param;
+	p = env->param;
 	flags = env->flags;
-	mult.x = (param->fr_id == FR_JULIA) ? 10 : 2;
-	mult.y = (param->fr_id == FR_JULIA) ? 10 : 4;
+	mult.x = (p->fr_id == FR_JULIA) ? 10 : 2;
+	mult.y = (p->fr_id == FR_JULIA) ? 10 : 4;
 	if (flags->lock_julia)
 	{
-		param->r_mouse_move_seed =
-				((x - param->center.x) * mult.x) / WIN_HEIGHT + 0.7;
-		param->i_mouse_move_seed =
-				((y - param->center.y) * mult.y) / WIN_WIDTH + 0.27015;
-		redraw_fract_or_img(env, env->param, 0);
+		p->r_move_seed = (x - p->center.x) * mult.x / WIN_HEIGHT + 0.7;
+		p->i_move_seed = (y - p->center.y) * mult.y / WIN_WIDTH + 0.27015;
+		redraw_fract_or_img(env, p, 0);
 	}
 	return (0);
 }

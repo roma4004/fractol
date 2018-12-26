@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/21 17:57:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:00:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/26 20:15:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ void	init_mandelbrot(t_param *param)
 	param->spec2 = 1;
 	param->offset.x = 0;
 	param->offset.y = 0;
-	param->i_mouse_move_seed = 0;
-	param->r_mouse_move_seed = 0;
+	param->i_move_seed = 0;
+	param->r_move_seed = 0;
 	param->trim.left = -1.4f;
 	param->trim.up = -0.9f;
 	param->trim.right = 0.7;
@@ -66,8 +66,8 @@ void	init_batman(t_param *param)
 	param->spec2 = 1;
 	param->offset.x = 0;
 	param->offset.y = 0;
-	param->i_mouse_move_seed = 0;
-	param->r_mouse_move_seed = 0;
+	param->i_move_seed = 0;
+	param->r_move_seed = 0;
 	param->trim.left = -1.5f;
 	param->trim.up = -0.8f;
 	param->trim.right = 0.5;
@@ -88,8 +88,8 @@ void	init_mandelbrot_cuboid(t_param *param)
 	param->spec2 = 1;
 	param->offset.x = 0;
 	param->offset.y = 0;
-	param->i_mouse_move_seed = 0;
-	param->r_mouse_move_seed = 0;
+	param->i_move_seed = 0;
+	param->r_move_seed = 0;
 	param->trim.left = -0.8f;
 	param->trim.up = -1.2f;
 	param->trim.right = 0.8;
@@ -110,8 +110,8 @@ void	init_julia(t_param *param)
 	param->spec2 = 1;
 	param->offset.x = -0.5;
 	param->offset.y = 0;
-	param->r_mouse_move_seed = -0.7;
-	param->i_mouse_move_seed = 0.27015;
+	param->r_move_seed = -0.7;
+	param->i_move_seed = 0.27015;
 	param->trim.left = -1.6f;
 	param->trim.up = -1.4f;
 	param->trim.right = 1.6;

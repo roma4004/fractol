@@ -1,9 +1,39 @@
-# fractol
+# fractol. Goal is to create a small fractal exploration program.
+![img](https://github.com/roma4004/fractol/blob/master/images/Screen%20Shot%202018-09-05%20at%207.32.47%20PM.png)
 
-Detailed description of the project coming soon.
+**Mandatory part:**
+
+We cannot use global variables, must follow the [Norm](https://github.com/roma4004/fdf/blob/master/documentation/norme.en.pdf), **this explains many unobvious decisions solutions that I applied, like function in 25 row, or only 4 argument in function**).
+
+We have to handle errors carefully. In no way can quit my program in an unexpected
+manner (Segmentation fault, bus error, double free, etc).
+	
+   We are alowed to use the following functions:
+   
+	• open, read, write, close, malloc, free, perror, strerror, exit	
+	• All the functions defined in the math library
+	• All the functions defined in the miniLibX library
+
+Short summary:
+
+ 	• At least 3 different types of fractals, including the Julia and Mandelbrot set.
+    The third fractal (and the optional additional) can be whatever you want.
+ 	• Parameter of Julia set must vary only with the mouse move. Optional for the other fractal.
+ 	• The mouse wheel zooms in and out, almost infinitely (within the computer limits).
+ 	• At least a few colors to show the depth of each fractal. Better if create psychedelic effects.
+ 	• A parameter is passed on the command line to define what type of fractal will be viewed.
+
+**Bonus part:** (plus = already implemented, minus = decided not to implement)
+	
+	+ The zoom follow the actual mouse position.
+	+ In addition to the zoom: moving with the arrows.
+	+ Make the color range shift.
+	+ Multi-threading implementation.
+	+ Plenty of fun fractals (there are more than a hundred different types of fractals referenced online).
+	+ 3D representation.
+	+ Two valid parameters in the command line, resulting in two fractals in two windows.
 
 fractal Mandelbrot:
-![img](https://github.com/roma4004/fractol/blob/master/images/Screen%20Shot%202018-09-05%20at%207.32.47%20PM.png)
 ![img](https://github.com/roma4004/fractol/blob/master/images/Screen%20Shot%202018-09-05%20at%207.27.31%20PM.png)
 
 mandelbrot with wind effect:

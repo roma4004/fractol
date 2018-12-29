@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:00:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/29 16:59:56 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int		change_hue(int *color, int is_increase, int color_offset)
 	return (*color);
 }
 
-static int		shift_apply(t_env *env, t_img *img, int offset, int chanel)
+static int		shift_apply(t_env *env, int offset, int chanel)
 {
 	int		y;
 	int		x;
@@ -31,11 +31,11 @@ static int		shift_apply(t_env *env, t_img *img, int offset, int chanel)
 	if (offset)
 	{
 		y = -1;
-		while (++y < (int)WIN_HEIGHT)
+		while (++y < W_HEIGHT)
 		{
 			x = -1;
-			while (++x < (int)WIN_WIDTH)
-				change_hue(&img->data[y * (int)WIN_WIDTH + x], offset, chanel);
+			while (++x < W_WIDTH)
+				change_hue(&env->img_data[y * W_WIDTH + x], offset, chanel);
 		}
 		redraw_fract_or_img(env, env->param, 1);
 		return (1);
@@ -63,7 +63,7 @@ int				change_color(t_env *env, t_col_shift *col_shift, int key)
 	else if ((key == F || (key == V)) && !(chanel = BLUE))
 		col_shift->blue += (key == F) ? (offset = 1)
 										: (offset = -1);
-	if (shift_apply(env, env->img, offset, chanel))
+	if (shift_apply(env, offset, chanel))
 		return (1);
 	return (0);
 }
@@ -78,22 +78,22 @@ void			argb_shift(t_env *env, t_col_shift *col_shift)
 	i = (col_shift->alpha >= 0) ? -1 : col_shift->alpha - 1;
 	offset = (col_shift->alpha >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, env->img, offset, ALPHA);
+		shift_apply(env, offset, ALPHA);
 	i_max = (col_shift->red >= 0) ? col_shift->red : 0;
 	i = (col_shift->red >= 0) ? -1 : col_shift->red - 1;
 	offset = (col_shift->red >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, env->img, offset, RED);
+		shift_apply(env, offset, RED);
 	i_max = (col_shift->green >= 0) ? col_shift->green : 0;
 	i = (col_shift->green >= 0) ? -1 : col_shift->green - 1;
 	offset = (col_shift->green >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, env->img, offset, GREEN);
+		shift_apply(env, offset, GREEN);
 	i_max = (col_shift->blue >= 0) ? col_shift->blue : 0;
 	i = (col_shift->blue >= 0) ? -1 : col_shift->blue - 1;
 	offset = (col_shift->blue >= 0) ? 1 : -1;
 	while (++i < i_max)
-		shift_apply(env, env->img, offset, BLUE);
+		shift_apply(env, offset, BLUE);
 }
 
 int				get_color(t_param *param, t_flags *flags, int i)

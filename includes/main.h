@@ -6,16 +6,16 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/26 20:15:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/29 18:13:12 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-# define WIN_WIDTH 1920.0f
-# define WIN_HEIGHT 1080.0f
-# define WIN_NAME "Fractol by dromanic (@Dentair)"
+# define W_WIDTH 1920
+# define W_HEIGHT 1080
+# define W_NAME "Fractol by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define ACTIVE_MENU_COLOR 0x00ff00
 # define AMOUNT_FRACTALS 5
@@ -23,15 +23,8 @@
 
 # include <stdlib.h>
 # include <stdbool.h>
-//todo: # include <complex.h>
 # include "mlx.h"
 # include "libft.h"
-
-typedef struct	s_uint32t_point
-{
-	u_int32_t	x;
-	u_int32_t	y;
-}				t_uint_pt;
 
 typedef struct	s_int32t_point
 {
@@ -61,8 +54,13 @@ typedef struct	s_complex_number
 	double	ic;
 	double	isq;
 	double	iold;
-}				t_cnb;//todo: use build in complex num
+}				t_cnb;
 
+typedef struct	s_fern_fractal
+{
+	double	r;
+	double	i;
+}				t_fern;
 
 typedef struct	s_fractal_triming_side
 {
@@ -82,25 +80,27 @@ typedef struct	s_fractal_color_shift
 
 typedef struct	s_fractal_parameters
 {
-	int				fr_id;
-	int				cores;
-	int				threads;
-	t_col_shift		col_shift;
-	int				depth;
-	int				depth_step;
-	int				display_zoom;
-	float			ratio;
-	t_trim			trim;
-	t_float_pt		center;
-	float			spec1;
-	float			spec2;
-	float			spec_step;
-	float			offset_step;
-	double			col_step;
-	double			actial_zoom;
-	t_double_pt		offset;
-	double			r_move_seed;
-	double			i_move_seed;
+	int			fr_id;
+	int			cores;
+	int			threads;
+	int			depth;
+	int			depth_step;
+	int			display_zoom;
+	int			bits_per_pixel;
+	int			size_line;
+	int			endian;
+	t_col_shift	col_shift;
+	float		hor;
+	float		ver;
+	float		spec_step;
+	float		offset_step;
+	t_float_pt	center;
+	t_trim		trim;
+	double		col_step;
+	double		actial_zoom;
+	double		r_move_seed;
+	double		i_move_seed;
+	t_double_pt	offset;
 }				t_param;
 
 typedef struct	s_fractal_state_flags
@@ -134,30 +134,17 @@ typedef struct	s_color_channels_argb
 	int		b;
 }				t_color;
 
-typedef struct	s_img
-{
-	void	*ptr;
-	int		*data;
-	int		bits_per_pixel;
-	int		size_line;
-	int		endian;
-}				t_img;
-
-typedef struct	s_fract_parse
-{
-	char	*id;
-	char	*name;
-}				t_fractals;
-
 typedef struct	s_environment
 {
 	t_param		*param;
 	t_flags		*flags;
 	void		*mlx_ptr;
 	void		*win_ptr;
-	t_img		*img;
+	void		*img_ptr;
+	int			*img_data;
 	char		*names[AMOUNT_FRACTALS];
-	int			(*get_px[AMOUNT_FRACTALS])(struct s_environment *, t_int_pt);
+	int			(*get_px[AMOUNT_FRACTALS])
+								(struct s_environment *, t_param *, int, int);
 	void		(*init_func[AMOUNT_FRACTALS])(t_param *);
 }				t_env;
 
@@ -207,22 +194,36 @@ enum			e_fractal_type
 	FR_FERN = 2,
 	FR_CUBOID = 3,
 	FR_BATMAN = 4,
-	BARNSLEY_PART_BODY = 1,
-	BARNSLEY_PART_LEFT = 2,
-	BARNSLEY_PART_RIGHT = 3,
-	BARNSLEY_PART_CURVE = 4,
 };
+
+/*
+** color.c
+*/
 
 int				change_color(t_env *env, t_col_shift *col_shift, int key);
 void			argb_shift(t_env *env, t_col_shift *col_shift);
 int				get_color(t_param *param, t_flags *flags, int i);
 
-void			redraw_fract_or_img(t_env *env, t_param *param, int img_only);
-int				draw_barnsley(t_env *env, t_int_pt pt);
-int				get_mandelbrot(t_env *env, t_int_pt pt);
-int				get_julia(t_env *env, t_int_pt pt);
-int				get_batman(t_env *env, t_int_pt pt);
-int				get_mandelbrot_cuboid(t_env *env, t_int_pt pt);
+/*
+** draw.c
+*/
+
+int				redraw_fract_or_img(t_env *env, t_param *param, int img_only);
+int				draw_barnsley(t_env *env, t_param *p, int x, int y);
+void			parallel_draw(t_env *env, int threads);
+
+/*
+** fractals.c
+*/
+
+int				get_mandelbrot(t_env *env, t_param *p, int x, int y);
+int				get_julia(t_env *env, t_param *p, int x, int y);
+int				get_batman(t_env *env, t_param *p, int x, int y);
+int				get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y);
+
+/*
+** keys.c
+*/
 
 int				map_offset(t_env *env, int key, t_param *param);
 int				specific_param(t_env *env, t_param *param, int key);
@@ -230,8 +231,16 @@ int				fr_depth(t_env *env, t_param *param, t_flags *flags, int key);
 int				zoom(t_env *env, int key, float x, float y);
 int				toggles(t_env *env, int k, t_param *p, t_flags *f);
 
-t_img			*init_img(void *mlx_ptr, float width, float height);
+/*
+** init.c
+*/
+
 t_env			*init_env(void);
+int				free_win(t_env *env);
+
+/*
+** init_fractals.c
+*/
 
 void			init_barnsley(t_param *param);
 void			init_mandelbrot(t_param *param);
@@ -239,21 +248,28 @@ void			init_batman(t_param *param);
 void			init_mandelbrot_cuboid(t_param *param);
 void			init_julia(t_param *param);
 
+/*
+** interface.c
+*/
+
 void			show_menu(t_env *env, t_flags *flags, int x, int y);
 void			show_combo(t_env *env, int x, int y);
 void			show_values(t_env *env, t_param *param, int x, int y);
+
+/*
+** hooks.c
+*/
 
 int				deal_keyboard(int key, t_env *env);
 int				deal_mouse(int key, int x, int y, t_env *env);
 int				deal_mouse_move(int x, int y, t_env *env);
 int				exit_x(t_env *env);
 
+/*
+** main.c
+*/
+
 int				is_cardioid(t_param *param, t_flags *flags, t_cnb *z);
 int				mandel_break(t_param *param, t_flags *flags, t_cnb *z);
-
-int				free_win(t_env *env);
-t_env			*clear_img(t_env *env);
-
-void			parallel_draw(t_env *env, int threads);
 
 #endif

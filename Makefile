@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/12/25 19:15:16 by dromanic         ###   ########.fr        #
+#    Updated: 2018/12/29 17:56:51 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ LIBKEY = -L ./libraries/minilibx -lmlx \
 
 OBJ_PATH   = objectives
 SRC_PATH   = sources
+INC_PATH   = includes
 LIBS_PATH  = libraries
 LIBFT_PATH = ${LIBS_PATH}/libft
 MLX_PATH   = ${LIBS_PATH}/minilibx
@@ -37,7 +38,6 @@ SRC_N = main.c \
 		init.c \
 		hooks.c \
 		color.c \
-		ram_man.c \
 		fractals.c \
 		interface.c \
 		init_fract.c

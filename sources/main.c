@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/25 19:00:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/29 17:55:46 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ int			mandel_break(t_param *param, t_flags *flags, t_cnb *z)
 {
 	z->rsq = ft_pow(z->r, 2);
 	z->isq = ft_pow(z->i, 2);
-	if (flags->n8 && z->rsq * z->isq > param->spec1)
+	if (flags->n8 && z->rsq * z->isq > param->hor)
 		return (1);
-	if (flags->n4 && z->rsq - z->isq > param->spec1)
+	if (flags->n4 && z->rsq - z->isq > param->hor)
 		return (1);
-	if (!flags->n8 && !flags->n4 && z->rsq + z->isq > param->spec1)
+	if (!flags->n8 && !flags->n4 && z->rsq + z->isq > param->hor)
 		return (1);
-	if (flags->n5 && (z->r > param->trim.right * param->spec2
-					|| z->r < param->trim.left * param->spec2))
+	if (flags->n5 && (z->r > param->trim.right * param->ver
+					|| z->r < param->trim.left * param->ver))
 		return (1);
-	if (flags->n5 && (z->i > param->trim.down * param->spec2
-					|| z->i < param->trim.up * param->spec2))
+	if (flags->n5 && (z->i > param->trim.down * param->ver
+					|| z->i < param->trim.up * param->ver))
 		return (1);
 	return (0);
 }
@@ -64,10 +64,13 @@ static int	set_fract(t_env *env, t_param *param, char *name)
 	return (0);
 }
 
-void		redraw_fract_or_img(t_env *env, t_param *param, int img_only)
+int			redraw_fract_or_img(t_env *env, t_param *param, int img_only)
 {
+	int		y;
+	int		x;
+
 	mlx_clear_window(env->mlx_ptr, env->win_ptr);
-	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr, env->img->ptr, 0, 0);
+	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr, env->img_ptr, 0, 0);
 	if (!env->flags->menu)
 		show_menu(env, env->flags, 20, 10);
 	if (!env->flags->hints)
@@ -75,11 +78,17 @@ void		redraw_fract_or_img(t_env *env, t_param *param, int img_only)
 	if (!env->flags->values)
 		show_values(env, param, 0, 20);
 	if (img_only)
-		return ;
-	if (param->fr_id == FR_FERN && clear_img(env))
-		draw_barnsley(env, (t_int_pt){0, 0});
+		return (0);
+	if (param->fr_id == FR_FERN && (y = -1))
+	{
+		while (++y < W_HEIGHT && (x = -1))
+			while (++x < W_WIDTH)
+				env->img_data[y * W_WIDTH + x] = 0;
+		draw_barnsley(env, param, 0, 0);
+	}
 	else
 		parallel_draw(env, param->threads);
+	return (0);
 }
 
 int			main(int argc, char **argv)

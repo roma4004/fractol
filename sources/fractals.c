@@ -6,25 +6,23 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/26 20:15:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/29 16:44:10 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "main.h"
 
-int		get_mandelbrot(t_env *env, t_int_pt pt)
+int		get_mandelbrot(t_env *env, t_param *p, int x, int y)
 {
 	int		i;
 	t_cnb	z;
-	t_param *p;
 	t_flags *f;
 
-	p = env->param;
 	f = env->flags;
-	z.rc = (pt.x - p->center.x) / p->actial_zoom + p->offset.x;
+	z.rc = (x - p->center.x) / p->actial_zoom + p->offset.x;
 	(f->n6) ? z.rc *= -1 : 0;
-	z.ic = (pt.y + p->i_move_seed - p->center.y) / p->actial_zoom + p->offset.y;
+	z.ic = (y + p->i_move_seed - p->center.y) / p->actial_zoom + p->offset.y;
 	if (!f->carioid && is_cardioid(p, f, &z))
 		return (f->w ? 0xffffff : 0x0);
 	z.r = f->q ? z.rc : p->i_move_seed;
@@ -42,19 +40,17 @@ int		get_mandelbrot(t_env *env, t_int_pt pt)
 	return (get_color(p, f, i));
 }
 
-int		get_julia(t_env *env, t_int_pt pt)
+int		get_julia(t_env *env, t_param *p, int x, int y)
 {
 	int		i;
 	int		i_max;
 	t_cnb	z;
-	t_param *p;
 	t_flags *f;
 
-	p = env->param;
 	f = env->flags;
-	z.rc = (pt.x - p->center.x) / p->actial_zoom + p->offset.x;
+	z.rc = (x - p->center.x) / p->actial_zoom + p->offset.x;
 	(f->n6) ? z.rc *= -1 : 0;
-	z.ic = (pt.y - p->center.y) / p->actial_zoom + p->offset.y;
+	z.ic = (y - p->center.y) / p->actial_zoom + p->offset.y;
 	z.r = f->q ? ft_pow(z.rc, 2) : z.rc;
 	z.i = f->e ? ft_pow(z.ic, 2) : z.ic;
 	i = -1;
@@ -71,18 +67,16 @@ int		get_julia(t_env *env, t_int_pt pt)
 	return (get_color(p, f, i));
 }
 
-int		get_batman(t_env *env, t_int_pt pt)
+int		get_batman(t_env *env, t_param *p, int x, int y)
 {
 	int		i;
 	t_cnb	z;
-	t_param *p;
 	t_flags *f;
 
-	p = env->param;
 	f = env->flags;
-	z.rc = (pt.y - p->center.y) / p->actial_zoom + p->offset.y;
+	z.rc = (y - p->center.y) / p->actial_zoom + p->offset.y;
 	(f->n6) ? z.rc *= -1 : 0;
-	z.ic = (pt.x - p->center.x) / p->actial_zoom + p->offset.x;
+	z.ic = (x - p->center.x) / p->actial_zoom + p->offset.x;
 	if (!f->carioid && is_cardioid(p, f, &z))
 		return (f->w ? 0xffffff : 0x0);
 	z.r = f->q ? z.rc : p->r_move_seed;
@@ -100,19 +94,17 @@ int		get_batman(t_env *env, t_int_pt pt)
 	return (get_color(p, f, i));
 }
 
-int		get_mandelbrot_cuboid(t_env *env, t_int_pt pt)
+int		get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y)
 {
 	int		i;
 	int		i_max;
 	t_cnb	z;
-	t_param *p;
 	t_flags *f;
 
-	p = env->param;
 	f = env->flags;
-	z.rc = (pt.x - p->center.x) / p->actial_zoom + p->offset.x;
+	z.rc = (x - p->center.x) / p->actial_zoom + p->offset.x;
 	(f->n6) ? z.rc *= -1 : 0;
-	z.ic = (pt.y - p->center.y) / p->actial_zoom + p->offset.y;
+	z.ic = (y - p->center.y) / p->actial_zoom + p->offset.y;
 	z.r = f->q ? z.rc : p->r_move_seed;
 	z.i = f->e ? z.ic : p->i_move_seed;
 	i = -1;

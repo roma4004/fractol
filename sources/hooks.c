@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:18:37 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/26 18:09:47 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/12/29 17:06:10 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ int			specific_param(t_env *env, t_param *param, int key)
 {
 	if (!env || !param)
 		return (0);
-	if ((key == PAGE_UP && (param->spec2 += param->spec_step))
-	|| (key == PAGE_DOWN && (param->spec2 -= param->spec_step))
-	|| (key == HOME && (param->spec1 -= param->spec_step))
-	|| (key == END && (param->spec1 += param->spec_step)))
+	if ((key == PAGE_UP && (param->ver += param->spec_step))
+	|| (key == PAGE_DOWN && (param->ver -= param->spec_step))
+	|| (key == HOME && (param->hor -= param->spec_step))
+	|| (key == END && (param->hor += param->spec_step)))
 	{
 		redraw_fract_or_img(env, env->param, 0);
 		return (1);
@@ -85,9 +85,9 @@ int			zoom(t_env *env, int key, float x, float y)
 	{
 		(key == PLUS) ? param->display_zoom++ : param->display_zoom--;
 		param->offset.x += (x - param->center.x) * param->center.x
-							/ (param->actial_zoom * WIN_WIDTH);
+							/ (param->actial_zoom * W_WIDTH);
 		param->offset.y += (y - param->center.y) * param->center.y
-							/ (param->actial_zoom * WIN_HEIGHT);
+							/ (param->actial_zoom * W_HEIGHT);
 		redraw_fract_or_img(env, env->param, 0);
 		return (1);
 	}

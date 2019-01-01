@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/29 18:04:21 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/01/01 18:15:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int		deal_mouse(int key, int x, int y, t_env *env)
 		zoom(env, MINUS, x, y);
 	else if (key == MOUSE_RBT)
 	{
-		env->flags->lock_julia = ~env->flags->lock_julia;
+		ft_switch(&env->flags->lock_julia);
 		redraw_fract_or_img(env, env->param, 0);
 	}
 	return (0);

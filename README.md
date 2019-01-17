@@ -30,8 +30,8 @@ Short summary:
 	+ Make the color range shift.
 	+ Multi-threading implementation.
 	+ Plenty of fun fractals (there are more than a hundred different types of fractals referenced online).
-	+ 3D representation.
-	+ Two valid parameters in the command line, resulting in two fractals in two windows.
+	- 3D representation.
+	- Two valid parameters in the command line, resulting in two fractals in two windows.
 
 fractal Mandelbrot:
 ![img](https://github.com/roma4004/fractol/blob/master/images/Screen%20Shot%202018-09-05%20at%207.27.31%20PM.png)

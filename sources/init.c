@@ -70,7 +70,7 @@ t_env			*init_env(void)
 	|| !(env->mlx_ptr = mlx_init())
 	|| !(env->win_ptr = mlx_new_window(env->mlx_ptr, W_WIDTH, W_HEIGHT, W_NAME))
 	|| !(env->img_ptr = mlx_new_image(env->mlx_ptr, W_WIDTH, W_HEIGHT))
-	|| !(env->img_data = (int *)mlx_get_data_addr(env->img_ptr,
+	|| !(env->surface = (unsigned int *)mlx_get_data_addr(env->img_ptr,
 												&env->param->bits_per_pixel,
 												&env->param->size_line,
 												&env->param->endian))

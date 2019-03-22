@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/29 17:55:46 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/03/22 18:19:17 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ int			mandel_break(t_param *param, t_flags *flags, t_cnb *z)
 {
 	z->rsq = ft_pow(z->r, 2);
 	z->isq = ft_pow(z->i, 2);
+////new bonus need separated key to enable/disable
+//	if (((int)(z->isq) & (int)(z->rsq)) > 4)
+//		return (1);
+///
 	if (flags->n8 && z->rsq * z->isq > param->hor)
 		return (1);
 	if (flags->n4 && z->rsq - z->isq > param->hor)
@@ -51,10 +55,10 @@ static int	set_fract(t_env *env, t_param *param, char *name)
 	size_t	len;
 
 	len = ft_strlen(name);
-	param->fr_id = -1;
+	param->fr_id = UINT32_MAX;
 	while (++param->fr_id < AMOUNT_FRACTALS)
 	{
-		if ((ft_atoi(name) == param->fr_id + 1)
+		if (((unsigned int)ft_atoi(name) == param->fr_id + 1)
 		|| !ft_strncmp(name, env->names[param->fr_id], len))
 		{
 			env->init_func[param->fr_id](param);
@@ -64,10 +68,9 @@ static int	set_fract(t_env *env, t_param *param, char *name)
 	return (0);
 }
 
-int			redraw_fract_or_img(t_env *env, t_param *param, int img_only)
+unsigned int	redraw_fract_or_img(t_env *env, t_param *param, int img_only)
 {
-	int		y;
-	int		x;
+	t_uint_pt	pt;
 
 	mlx_clear_window(env->mlx_ptr, env->win_ptr);
 	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr, env->img_ptr, 0, 0);
@@ -79,15 +82,18 @@ int			redraw_fract_or_img(t_env *env, t_param *param, int img_only)
 		show_values(env, param, 0, 20);
 	if (img_only)
 		return (0);
-	if (param->fr_id == FR_FERN && (y = -1))
+	if (param->fr_id == FR_FERN)
 	{
-		while (++y < W_HEIGHT && (x = -1))
-			while (++x < W_WIDTH)
-				env->img_data[y * W_WIDTH + x] = 0;
-		draw_barnsley(env, param, 0, 0);
+		pt.y = UINT32_MAX;
+		while (++pt.y < W_HEIGHT)
+		{
+			pt.x = UINT32_MAX;
+			while (++pt.x < W_WIDTH)
+				env->surface[pt.y * W_WIDTH + pt.x] = 0;
+		}
+		return (draw_barnsley(env, param, 0, 0));
 	}
-	else
-		parallel_draw(env, param->threads);
+	parallel_draw(env, param->threads);
 	return (0);
 }
 
@@ -98,7 +104,7 @@ int			main(int argc, char **argv)
 	if (argc == 2 && (env = init_env()) && set_fract(env, env->param, argv[1]))
 	{
 		redraw_fract_or_img(env, env->param, 0);
-		mlx_hook(env->win_ptr, 17, 1L << 17, exit_x, env);
+		mlx_hook(env->win_ptr, 17, 1, exit_x, env);
 		mlx_hook(env->win_ptr, 2, 5, deal_keyboard, env);
 		mlx_hook(env->win_ptr, 6, 8, deal_mouse_move, env);
 		mlx_mouse_hook(env->win_ptr, deal_mouse, env);

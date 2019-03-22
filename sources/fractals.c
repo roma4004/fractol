@@ -6,18 +6,18 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/29 16:44:10 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/03/22 18:39:45 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "main.h"
 
-int		get_mandelbrot(t_env *env, t_param *p, int x, int y)
+unsigned int	get_mandelbrot(t_env *env, t_param *p, int x, int y)
 {
-	int		i;
-	t_cnb	z;
-	t_flags *f;
+	unsigned int	i;
+	t_cnb			z;
+	t_flags			*f;
 
 	f = env->flags;
 	z.rc = (x - p->center.x) / p->actial_zoom + p->offset.x;
@@ -27,7 +27,7 @@ int		get_mandelbrot(t_env *env, t_param *p, int x, int y)
 		return (f->w ? 0xffffff : 0x0);
 	z.r = f->q ? z.rc : p->i_move_seed;
 	z.i = f->e ? z.ic : p->r_move_seed;
-	i = -1;
+	i = UINT32_MAX;
 	while (++i < p->depth && !mandel_break(p, f, &z))
 	{
 		z.i = (ft_pow(z.r + z.i, 2) - z.rsq - z.isq + z.ic);
@@ -40,12 +40,12 @@ int		get_mandelbrot(t_env *env, t_param *p, int x, int y)
 	return (get_color(p, f, i));
 }
 
-int		get_julia(t_env *env, t_param *p, int x, int y)
+unsigned int	get_julia(t_env *env, t_param *p, int x, int y)
 {
-	int		i;
-	int		i_max;
-	t_cnb	z;
-	t_flags *f;
+	unsigned int	i;
+	unsigned int	i_max;
+	t_cnb			z;
+	t_flags			*f;
 
 	f = env->flags;
 	z.rc = (x - p->center.x) / p->actial_zoom + p->offset.x;
@@ -53,7 +53,7 @@ int		get_julia(t_env *env, t_param *p, int x, int y)
 	z.ic = (y - p->center.y) / p->actial_zoom + p->offset.y;
 	z.r = f->q ? ft_pow(z.rc, 2) : z.rc;
 	z.i = f->e ? ft_pow(z.ic, 2) : z.ic;
-	i = -1;
+	i = UINT32_MAX;
 	i_max = p->depth;
 	while (++i < i_max && !mandel_break(p, f, &z))
 	{
@@ -67,11 +67,11 @@ int		get_julia(t_env *env, t_param *p, int x, int y)
 	return (get_color(p, f, i));
 }
 
-int		get_batman(t_env *env, t_param *p, int x, int y)
+unsigned int	get_batman(t_env *env, t_param *p, int x, int y)
 {
-	int		i;
-	t_cnb	z;
-	t_flags *f;
+	unsigned int	i;
+	t_cnb			z;
+	t_flags			*f;
 
 	f = env->flags;
 	z.rc = (y - p->center.y) / p->actial_zoom + p->offset.y;
@@ -81,7 +81,7 @@ int		get_batman(t_env *env, t_param *p, int x, int y)
 		return (f->w ? 0xffffff : 0x0);
 	z.r = f->q ? z.rc : p->r_move_seed;
 	z.i = f->e ? z.ic : p->i_move_seed;
-	i = -1;
+	i = UINT32_MAX;
 	while (++i < p->depth && !mandel_break(p, f, &z))
 	{
 		z.i = (ft_pow(z.r + z.i, 2) - z.rsq - z.isq + z.ic);
@@ -94,12 +94,12 @@ int		get_batman(t_env *env, t_param *p, int x, int y)
 	return (get_color(p, f, i));
 }
 
-int		get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y)
+unsigned int	get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y)
 {
-	int		i;
-	int		i_max;
-	t_cnb	z;
-	t_flags *f;
+	unsigned int	i;
+	unsigned int	i_max;
+	t_cnb			z;
+	t_flags			*f;
 
 	f = env->flags;
 	z.rc = (x - p->center.x) / p->actial_zoom + p->offset.x;
@@ -107,7 +107,7 @@ int		get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y)
 	z.ic = (y - p->center.y) / p->actial_zoom + p->offset.y;
 	z.r = f->q ? z.rc : p->r_move_seed;
 	z.i = f->e ? z.ic : p->i_move_seed;
-	i = -1;
+	i = UINT32_MAX;
 	i_max = p->depth;
 	while (++i < i_max && !mandel_break(p, f, &z))
 	{

@@ -6,69 +6,67 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/29 16:59:56 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/03/22 19:16:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static int		change_hue(int *color, int is_increase, int color_offset)
+static unsigned int		change_hue(unsigned *color, int is_increase,
+									unsigned int color_bit_shift)
 {
-	int		mask;
-	int		increment;
+	unsigned int	mask;
+	unsigned int	increment;
 
-	mask = 0x000000FF << color_offset;
-	increment = mask & 0x01010101;
+	mask = 0x000000FFU << color_bit_shift;
+	increment = mask & 0x01010101U;
 	*color += (is_increase == 1) ? increment : -increment;
 	return (*color);
 }
 
-static int		shift_apply(t_env *env, int offset, int chanel)
+static unsigned int		shift_apply(t_env *env, int offset, unsigned int chanel)
 {
 	int		y;
 	int		x;
 
-	if (offset)
+	y = -1;
+	while (++y < W_HEIGHT)
 	{
-		y = -1;
-		while (++y < W_HEIGHT)
-		{
-			x = -1;
-			while (++x < W_WIDTH)
-				change_hue(&env->img_data[y * W_WIDTH + x], offset, chanel);
-		}
-		redraw_fract_or_img(env, env->param, 1);
-		return (1);
+		x = -1;
+		while (++x < W_WIDTH)
+			change_hue(&env->surface[y * W_WIDTH + x], offset, chanel);
 	}
-	return (0);
+	redraw_fract_or_img(env, env->param, 1);
+	return (1);
 }
 
-int				change_color(t_env *env, t_col_shift *col_shift, int key)
+unsigned int			change_color(t_env *env, t_col_shift *col_shift,
+										int key)
 {
-	int		offset;
-	int		chanel;
+	int				offset;
+	unsigned int	chanel;
 
 	if (!env)
 		return (0);
 	offset = 0;
 	if ((key == A || (key == Z)) && (chanel = ALPHA))
-		col_shift->alpha += (key == A) ? (offset = 1)
-										: (offset = -1);
+		col_shift->alpha +=
+			(offset = (key == A) ? 1 : -1);
 	else if ((key == S || (key == X)) && (chanel = RED))
-		col_shift->red += (key == S) ? (offset = 1)
-										: (offset = -1);
+		col_shift->red +=
+			(offset = (key == S) ? 1 : -1);
 	else if ((key == D || (key == C)) && (chanel = GREEN))
-		col_shift->green += (key == D) ? (offset = 1)
-										: (offset = -1);
+		col_shift->green +=
+			(offset = (key == D) ? 1 : -1);
 	else if ((key == F || (key == V)) && !(chanel = BLUE))
-		col_shift->blue += (key == F) ? (offset = 1)
-										: (offset = -1);
+		col_shift->blue +=
+			(offset = (key == F) ? 1 : -1);
 	if (shift_apply(env, offset, chanel))
 		return (1);
 	return (0);
 }
 
-void			argb_shift(t_env *env, t_col_shift *col_shift)
+void					argb_shift(t_env *env, t_col_shift *col_shift)
 {
 	int		i;
 	int		i_max;
@@ -96,21 +94,22 @@ void			argb_shift(t_env *env, t_col_shift *col_shift)
 		shift_apply(env, offset, BLUE);
 }
 
-int				get_color(t_param *param, t_flags *flags, int i)
+unsigned int			get_color(t_param *param, t_flags *flags,
+									unsigned int i)
 {
-	int		color;
-	double	step;
-	t_color	col;
+	unsigned int	color;
+	double			step;
+	t_color			col;
 
 	if (!flags->alt_col)
 	{
-		color = (int)(param->col_step * i);
+		color = (unsigned int)(param->col_step * i);
 		return (color);
 	}
 	step = (double)i / (double)param->depth;
 	col.a = 0;
-	col.r = (int)(9 * (1 - step) * step * step * 255);
-	col.g = (int)(15 * (1 - step) * (1 - step) * step * 255);
-	col.b = (int)(8.5 * (1 - step) * (1 - step) * (1 - step) * 255);
-	return ((col.a << 24) | ((col.r) << 16) | ((col.g) << 8) | (col.b));
+	col.r = (unsigned int)(9 * (1 - step) * step * step * 255);
+	col.g = (unsigned int)(15 * (1 - step) * (1 - step) * step * 255);
+	col.b = (unsigned int)(8.5 * (1 - step) * (1 - step) * (1 - step) * 255);
+	return ((col.a << 24U) | ((col.r) << 16U) | ((col.g) << 8U) | (col.b));
 }

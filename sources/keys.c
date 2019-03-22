@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2019/01/01 18:15:30 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/03/22 17:53:41 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,15 @@ int		deal_keyboard(int key, t_env *env)
 				if (!toggles(env, key, env->param, env->flags))
 					if (specific_param(env, env->param, key))
 						return (0);
-	(key == ESC) && exit_x(env);
+	if (key == ESC)
+		exit_x(env);
 	if (key == R || key == ENTER)
 	{
 		ft_bzero(env->flags, sizeof(t_flags));
 		if (key == ENTER && ++env->param->fr_id == AMOUNT_FRACTALS)
 			env->param->fr_id = 0;
 		env->init_func[env->param->fr_id](env->param);
-		env->param->col_shift.alpha = 0;
-		env->param->col_shift.red = 0;
-		env->param->col_shift.green = 0;
-		env->param->col_shift.blue = 0;
+		env->param->col_shift = (t_col_shift){ 0, 0, 0, 0 };
 		env->param->threads = env->param->cores;
 		env->param->hor = (env->param->fr_id == FR_FERN) ? 0.04f : 4;
 		env->param->ver = (env->param->fr_id == FR_FERN) ? 0.85f : 1;
@@ -70,9 +68,10 @@ int		deal_mouse_move(int x, int y, t_env *env)
 	t_param		*p;
 	t_flags		*flags;
 
-	if (env == NULL)
+	if (!env)
 		return (1);
-	if (x < 0 || x > (int)W_WIDTH || y < 0 || y > (int)W_HEIGHT)
+	if (x < 0 || x > W_WIDTH
+	|| y < 0 || y > W_HEIGHT)
 		return (0);
 	p = env->param;
 	flags = env->flags;

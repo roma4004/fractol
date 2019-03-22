@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/12/29 18:13:12 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/03/22 18:44:45 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ typedef struct	s_int32t_point
 	int32_t		x;
 	int32_t		y;
 }				t_int_pt;
+
+typedef struct	s_uint32t_point
+{
+	uint32_t	x;
+	uint32_t	y;
+}				t_uint_pt;
 
 typedef struct	s_float_point
 {
@@ -80,27 +86,27 @@ typedef struct	s_fractal_color_shift
 
 typedef struct	s_fractal_parameters
 {
-	int			fr_id;
-	int			cores;
-	int			threads;
-	int			depth;
-	int			depth_step;
-	int			display_zoom;
-	int			bits_per_pixel;
-	int			size_line;
-	int			endian;
-	t_col_shift	col_shift;
-	float		hor;
-	float		ver;
-	float		spec_step;
-	float		offset_step;
-	t_float_pt	center;
-	t_trim		trim;
-	double		col_step;
-	double		actial_zoom;
-	double		r_move_seed;
-	double		i_move_seed;
-	t_double_pt	offset;
+	unsigned int	fr_id;
+	unsigned int	cores;
+	unsigned int	threads;
+	unsigned int	depth;
+	int				depth_step;
+	int				display_zoom;
+	int				bits_per_pixel;
+	int				size_line;
+	int				endian;
+	t_col_shift		col_shift;
+	float			hor;
+	float			ver;
+	float			spec_step;
+	float			offset_step;
+	t_float_pt		center;
+	t_trim			trim;
+	double			col_step;
+	double			actial_zoom;
+	double			r_move_seed;
+	double			i_move_seed;
+	t_double_pt		offset;
 }				t_param;
 
 typedef struct	s_fractal_state_flags
@@ -128,24 +134,24 @@ typedef struct	s_fractal_state_flags
 
 typedef struct	s_color_channels_argb
 {
-	int		a;
-	int		r;
-	int		g;
-	int		b;
+	unsigned int	a;
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
 }				t_color;
 
 typedef struct	s_environment
 {
-	t_param		*param;
-	t_flags		*flags;
-	void		*mlx_ptr;
-	void		*win_ptr;
-	void		*img_ptr;
-	int			*img_data;
-	char		*names[AMOUNT_FRACTALS];
-	int			(*get_px[AMOUNT_FRACTALS])
+	t_param			*param;
+	t_flags			*flags;
+	void			*mlx_ptr;
+	void			*win_ptr;
+	void			*img_ptr;
+	unsigned int	*surface;
+	char			*names[AMOUNT_FRACTALS];
+	unsigned int	(*get_px[AMOUNT_FRACTALS])
 								(struct s_environment *, t_param *, int, int);
-	void		(*init_func[AMOUNT_FRACTALS])(t_param *);
+	void			(*init_func[AMOUNT_FRACTALS])(t_param *);
 }				t_env;
 
 typedef struct	s_pthread_data
@@ -200,26 +206,26 @@ enum			e_fractal_type
 ** color.c
 */
 
-int				change_color(t_env *env, t_col_shift *col_shift, int key);
+unsigned int	change_color(t_env *env, t_col_shift *col_shift, int key);
 void			argb_shift(t_env *env, t_col_shift *col_shift);
-int				get_color(t_param *param, t_flags *flags, int i);
+unsigned int	get_color(t_param *param, t_flags *flags, unsigned int i);
 
 /*
 ** draw.c
 */
 
-int				redraw_fract_or_img(t_env *env, t_param *param, int img_only);
-int				draw_barnsley(t_env *env, t_param *p, int x, int y);
-void			parallel_draw(t_env *env, int threads);
+unsigned int	redraw_fract_or_img(t_env *env, t_param *param, int img_only);
+unsigned int	draw_barnsley(t_env *env, t_param *p, int x, int y);
+void			parallel_draw(t_env *env, unsigned int threads);
 
 /*
 ** fractals.c
 */
 
-int				get_mandelbrot(t_env *env, t_param *p, int x, int y);
-int				get_julia(t_env *env, t_param *p, int x, int y);
-int				get_batman(t_env *env, t_param *p, int x, int y);
-int				get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y);
+unsigned int	get_mandelbrot(t_env *env, t_param *p, int x, int y);
+unsigned int	get_julia(t_env *env, t_param *p, int x, int y);
+unsigned int	get_batman(t_env *env, t_param *p, int x, int y);
+unsigned int	get_mandelbrot_cuboid(t_env *env, t_param *p, int x, int y);
 
 /*
 ** keys.c

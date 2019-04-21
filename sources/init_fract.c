@@ -18,7 +18,7 @@ void	init_barnsley(t_param *param)
 	param->depth = 4200000;
 	param->actial_zoom = 50;
 	param->display_zoom = 0;
-	param->col_step = 0xFFFFFFFF / (double)param->depth;
+	param->color_step = 0xFFFFFFFF / (double)param->depth;
 	param->spec_step = 0.01;
 	param->offset_step = 10;
 	param->depth_step = 1000;
@@ -37,7 +37,7 @@ void	init_mandelbrot(t_param *param)
 	param->depth = 127;
 	param->actial_zoom = 150;
 	param->display_zoom = 0;
-	param->col_step = 0xFFFFFFFF / (double)param->depth;
+	param->color_step = 0xFFFFFFFF / (double)param->depth;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
 	param->depth_step = 1;
@@ -58,7 +58,7 @@ void	init_batman(t_param *param)
 	param->fr_id = FR_BATMAN;
 	param->depth = 10;
 	param->actial_zoom = 50;
-	param->col_step = 0xFFFFFFFF / (double)param->depth;
+	param->color_step = 0xFFFFFFFF / (double)param->depth;
 	param->spec_step = 1;
 	param->offset_step = 0.04;
 	param->depth_step = 10;
@@ -80,7 +80,7 @@ void	init_mandelbrot_cuboid(t_param *param)
 	param->depth = 127;
 	param->actial_zoom = 100;
 	param->display_zoom = 0;
-	param->col_step = 0xFFFFFFFF / (double)param->depth;
+	param->color_step = 0xFFFFFFFF / (double)param->depth;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
 	param->depth_step = 1;
@@ -102,7 +102,7 @@ void	init_julia(t_param *param)
 	param->depth = 127;
 	param->actial_zoom = 100;
 	param->display_zoom = 0;
-	param->col_step = 0xFFFFFFFF / (double)param->depth;
+	param->color_step = 0xFFFFFFFF / (double)param->depth;
 	param->spec_step = 0.1;
 	param->offset_step = 0.04;
 	param->depth_step = 1;

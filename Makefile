@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/12/29 17:56:51 by dromanic         ###   ########.fr        #
+#    Updated: 2019/03/22 20:56:37 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,16 +19,17 @@ CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 [[ $1 = "clang" ]] && CC=CL || CC=GC
 [[ $1 = "cmake" ]] && CC=CM || CC=GC
 
-LIBKEY = -L ./libraries/minilibx -lmlx \
-		 -framework OpenGL \
-		 -framework AppKit
+LIBKEY = -L ./libraries/minilibx \
+		-lmlx \
+		-framework OpenGL \
+		-framework AppKit
 
-OBJ_PATH   = objectives
-SRC_PATH   = sources
-INC_PATH   = includes
-LIBS_PATH  = libraries
-LIBFT_PATH = ${LIBS_PATH}/libft
-MLX_PATH   = ${LIBS_PATH}/minilibx
+OBJ_PATH	= objectives
+SRC_PATH	= sources
+INC_PATH	= includes
+LIBS_PATH	= libraries
+LIBFT_PATH	= ${LIBS_PATH}/libft
+MLX_PATH	= ${LIBS_PATH}/minilibx
 
 INC = -I ${MLX_PATH}/ -I ${LIBFT_PATH}/ -I includes/
 
@@ -90,9 +91,9 @@ norm:
 	norminette $(INC_PATH)/*.h
 
 normf:
-	@norminette $(NORMFLAGS) $(LIBFT_PATH)/*.c  | grep -E '^(Error|Warning)'
-	@norminette $(NORMFLAGS) $(LIBFT_PATH)/*.h  | grep -E '^(Error|Warning)'
-	@norminette $(NORMFLAGS) $(SRC_PATH)/*.c  | grep -E '^(Error|Warning)'
-	@norminette $(NORMFLAGS) $(INC_PATH)/*.h  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(LIBFT_PATH)/*.c | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(LIBFT_PATH)/*.h | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(SRC_PATH)/*.c | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(INC_PATH)/*.h | grep -E '^(Error|Warning)'
 
 .phony: all clean fclean re

@@ -6,83 +6,77 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2019/03/22 18:19:17 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/04/21 22:38:43 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int			is_cardioid(t_param *param, t_flags *flags, t_cnb *z)
+int				is_cardioid(t_flags const flags, t_cnb *z)
 {
 	double		q;
 
-	if (!param || !flags || flags->n1 || flags->n2 || flags->n3 || flags->n7)
+	if (flags.n1 || flags.n2 || flags.n3 || flags.n7)
 		return (0);
-	z->rsq = ((z->rc - 0.25) * (z->rc - 0.25));
+	z->rsq = (z->rc - 0.25) * (z->rc - 0.25);
 	z->isq = z->ic * z->ic;
 	q = z->rsq + z->isq;
 	if ((z->rc + 1) * (z->rc + 1) + z->isq < 0.0625
-	|| (q * (q + (z->rc - 0.25)) < 0.25 * z->isq))
+	|| (q * (q + z->rc - 0.25) < 0.25 * z->isq))
 		return (1);
 	return (0);
 }
 
-int			mandel_break(t_param *param, t_flags *flags, t_cnb *z)
+int				mandel_break(t_param p, t_flags flags, t_cnb *z)
 {
 	z->rsq = ft_pow(z->r, 2);
 	z->isq = ft_pow(z->i, 2);
-////new bonus need separated key to enable/disable
-//	if (((int)(z->isq) & (int)(z->rsq)) > 4)
-//		return (1);
-///
-	if (flags->n8 && z->rsq * z->isq > param->hor)
-		return (1);
-	if (flags->n4 && z->rsq - z->isq > param->hor)
-		return (1);
-	if (!flags->n8 && !flags->n4 && z->rsq + z->isq > param->hor)
-		return (1);
-	if (flags->n5 && (z->r > param->trim.right * param->ver
-					|| z->r < param->trim.left * param->ver))
-		return (1);
-	if (flags->n5 && (z->i > param->trim.down * param->ver
-					|| z->i < param->trim.up * param->ver))
+	if ((flags.n9 && ((unsigned int)(z->isq) & (unsigned int)(z->rsq)) > p.hor)
+	|| (flags.n8 && z->rsq * z->isq > p.hor)
+	|| (!flags.n9 && flags.n4 && z->rsq - z->isq > p.hor)
+	|| (flags.n9 && flags.n4 && z->rsq - z->isq > p.hor)
+	|| (!flags.n9 && !flags.n8 && !flags.n4 && z->rsq + z->isq > p.hor)
+	|| (flags.n5 && (z->r > p.trim.right * p.ver || z->r < p.trim.left * p.ver
+					|| z->i > p.trim.down * p.ver || z->i < p.trim.up * p.ver)))
 		return (1);
 	return (0);
 }
 
-static int	set_fract(t_env *env, t_param *param, char *name)
+static int		set_fract(t_env *env, t_param *param, char *name)
 {
-	size_t	len;
+	const size_t	len = ft_strlen(name);
+	unsigned int	id;
 
-	len = ft_strlen(name);
-	param->fr_id = UINT32_MAX;
-	while (++param->fr_id < AMOUNT_FRACTALS)
+	id = UINT32_MAX;
+	while (++id < AMOUNT_FRACTALS)
 	{
-		if (((unsigned int)ft_atoi(name) == param->fr_id + 1)
-		|| !ft_strncmp(name, env->names[param->fr_id], len))
+		if (((unsigned int)ft_atoi(name) == id + 1)
+		|| !ft_strncmp(name, env->fract_names[id], len))
 		{
-			env->init_func[param->fr_id](param);
+			param->fr_id = id;
+			env->init_func[id](&env->param);
 			return (1);
 		}
 	}
 	return (0);
 }
 
-unsigned int	redraw_fract_or_img(t_env *env, t_param *param, int img_only)
+unsigned int	redraw_fract_or_img(t_env *env, t_param param,
+									t_flags flags, int img_only)
 {
-	t_uint_pt	pt;
+	t_ui_pt		pt;
 
 	mlx_clear_window(env->mlx_ptr, env->win_ptr);
 	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr, env->img_ptr, 0, 0);
-	if (!env->flags->menu)
-		show_menu(env, env->flags, 20, 10);
-	if (!env->flags->hints)
-		show_combo(env, 20, 10);
-	if (!env->flags->values)
-		show_values(env, param, 0, 20);
+	if (!flags.menu)
+		show_menu(env, flags, 20, 10);
+	if (!flags.hints)
+		show_combo(env, flags.menu, 20, 10);
+	if (!flags.values)
+		show_values(env, param, 20, 10);
 	if (img_only)
-		return (0);
-	if (param->fr_id == FR_FERN)
+		return (1);
+	if (param.fr_id == FR_FERN)
 	{
 		pt.y = UINT32_MAX;
 		while (++pt.y < W_HEIGHT)
@@ -93,22 +87,22 @@ unsigned int	redraw_fract_or_img(t_env *env, t_param *param, int img_only)
 		}
 		return (draw_barnsley(env, param, 0, 0));
 	}
-	parallel_draw(env, param->threads);
-	return (0);
+	parallel_draw(env, param.threads);
+	return (1);
 }
 
-int			main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
-	t_env	*env;
+	t_env	env;
 
-	if (argc == 2 && (env = init_env()) && set_fract(env, env->param, argv[1]))
+	if (argc == 2 && (init_env(&env)) && set_fract(&env, &env.param, argv[1]))
 	{
-		redraw_fract_or_img(env, env->param, 0);
-		mlx_hook(env->win_ptr, 17, 1, exit_x, env);
-		mlx_hook(env->win_ptr, 2, 5, deal_keyboard, env);
-		mlx_hook(env->win_ptr, 6, 8, deal_mouse_move, env);
-		mlx_mouse_hook(env->win_ptr, deal_mouse, env);
-		mlx_loop(env->mlx_ptr);
+		redraw_fract_or_img(&env, env.param, env.flags, 0);
+		mlx_hook(env.win_ptr, 17, 1, exit_x, &env);
+		mlx_hook(env.win_ptr, 2, 5, deal_keyboard, &env);
+		mlx_hook(env.win_ptr, 6, 8, deal_mouse_move, &env);
+		mlx_mouse_hook(env.win_ptr, deal_mouse, &env);
+		mlx_loop(env.mlx_ptr);
 	}
 	else
 	{

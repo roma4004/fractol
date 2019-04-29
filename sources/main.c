@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-int				is_cardioid(t_flags const flags, t_cnb *z)
+int				is_cardioid(t_flags flags, t_cnb *restrict z)
 {
 	double		q;
 
@@ -21,13 +21,13 @@ int				is_cardioid(t_flags const flags, t_cnb *z)
 	z->rsq = (z->rc - 0.25) * (z->rc - 0.25);
 	z->isq = z->ic * z->ic;
 	q = z->rsq + z->isq;
-	if ((z->rc + 1) * (z->rc + 1) + z->isq < 0.0625
+	if ((((z->rc + 1) * (z->rc + 1) + z->isq) < 0.0625)
 	|| (q * (q + z->rc - 0.25) < 0.25 * z->isq))
 		return (1);
 	return (0);
 }
 
-int				mandel_break(t_param p, t_flags flags, t_cnb *z)
+int				mandel_break(t_param p, t_flags flags, t_cnb *restrict z)
 {
 	z->rsq = ft_pow(z->r, 2);
 	z->isq = ft_pow(z->i, 2);
@@ -42,13 +42,14 @@ int				mandel_break(t_param p, t_flags flags, t_cnb *z)
 	return (0);
 }
 
-static int		set_fract(t_env *env, t_param *param, char *name)
+static int		set_fract(t_env *restrict env, t_param *restrict param,
+							char *name)
 {
 	const size_t	len = ft_strlen(name);
 	unsigned int	id;
 
 	id = UINT32_MAX;
-	while (++id < AMOUNT_FRACTALS)
+	while (AMOUNT_FRACTALS > ++id)
 	{
 		if (((unsigned int)ft_atoi(name) == id + 1)
 		|| !ft_strncmp(name, env->fract_names[id], len))
@@ -61,7 +62,7 @@ static int		set_fract(t_env *env, t_param *param, char *name)
 	return (0);
 }
 
-unsigned int	redraw_fract_or_img(t_env *env, t_param param,
+unsigned int	redraw_fract_or_img(t_env *restrict env, t_param param,
 									t_flags flags, int img_only)
 {
 	t_ui_pt		pt;
@@ -79,10 +80,10 @@ unsigned int	redraw_fract_or_img(t_env *env, t_param param,
 	if (param.fr_id == FR_FERN)
 	{
 		pt.y = UINT32_MAX;
-		while (++pt.y < W_HEIGHT)
+		while (W_HEIGHT > ++(pt.y))
 		{
 			pt.x = UINT32_MAX;
-			while (++pt.x < W_WIDTH)
+			while (W_WIDTH > ++(pt.x))
 				env->surface[pt.y * W_WIDTH + pt.x] = 0;
 		}
 		return (draw_barnsley(env, param, 0, 0));

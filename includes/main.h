@@ -121,20 +121,20 @@ typedef struct	s_double_point
 
 typedef struct	s_complex_number
 {
-	double	r;
-	double	rc;
-	double	rsq;
-	double	rold;
-	double	i;
-	double	ic;
-	double	isq;
-	double	iold;
+	double		r;
+	double		rc;
+	double		rsq;
+	double		rold;
+	double		i;
+	double		ic;
+	double		isq;
+	double		iold;
 }				t_cnb;
 
 typedef struct	s_fern_fractal
 {
-	double	r;
-	double	i;
+	double		r;
+	double		i;
 }				t_fern;
 
 typedef struct	s_fractal_triming_side
@@ -147,10 +147,10 @@ typedef struct	s_fractal_triming_side
 
 typedef struct	s_fractal_color_shift
 {
-	int			alpha;
-	int			red;
-	int			green;
-	int			blue;
+	int		alpha;
+	int		red;
+	int		green;
+	int		blue;
 }				t_col_shift;
 
 typedef struct	s_fractal_parameters
@@ -198,7 +198,6 @@ typedef struct	s_fractal_state_flags
 	bool	alt_col;
 	bool	hints;
 	bool	values;
-
 	bool	menu;
 	bool	lock_julia;
 }				t_flags;
@@ -221,7 +220,7 @@ typedef struct	s_environment
 	unsigned int	*surface;
 	char			*fract_names[AMOUNT_FRACTALS];
 	unsigned int	(*get_px_func[AMOUNT_FRACTALS])
-								(struct s_environment *, t_param, int, int);
+						(struct s_environment *restrict, t_param, int, int);
 	void			(*init_func[AMOUNT_FRACTALS])(t_param *);
 }				t_env;
 
@@ -277,8 +276,9 @@ enum			e_fractal_type
 ** color.c
 */
 
-unsigned int	change_color(t_env *env, t_col_shift *col_shift, int key);
-void			argb_shift(t_env *env, t_col_shift shift);
+unsigned int	change_color(t_env *restrict env,
+								t_col_shift *restrict col_shift, int key);
+void			argb_shift(t_env *restrict env, t_col_shift shift);
 unsigned int	get_color(bool alt_col, double col_step,
 							unsigned int depth, unsigned int i);
 
@@ -286,68 +286,73 @@ unsigned int	get_color(bool alt_col, double col_step,
 ** draw.c
 */
 
-unsigned int	redraw_fract_or_img(t_env *env, t_param param,
+unsigned int	redraw_fract_or_img(t_env *restrict env, t_param param,
 									t_flags flags, int img_only);
-unsigned int	draw_barnsley(t_env *env, t_param p, int x, int y);
-void			parallel_draw(t_env *env, unsigned int threads);
+unsigned int	draw_barnsley(t_env *restrict env, t_param p, int x, int y);
+void			parallel_draw(t_env *restrict env, unsigned int threads);
 
 /*
 ** fractals.c
 */
 
-unsigned int	get_mandelbrot(t_env *env, t_param p, int x, int y);
-unsigned int	get_julia(t_env *env, t_param p, int x, int y);
-unsigned int	get_batman(t_env *env, t_param p, int x, int y);
-unsigned int	get_mandelbrot_cuboid(t_env *env, t_param p, int x, int y);
+unsigned int	get_mandelbrot(t_env *restrict env, t_param p, int x, int y);
+unsigned int	get_julia(t_env *restrict env, t_param p, int x, int y);
+unsigned int	get_batman(t_env *restrict env, t_param p, int x, int y);
+unsigned int	get_mandelbrot_cuboid(t_env *restrict env,
+										t_param p, int x, int y);
 
 /*
 ** keys.c
 */
 
-int				map_offset(t_env *env, int key, t_param param, t_db_pt *offset);
-int				specific_param(t_env *env, t_param *param, int key);
-int				fr_depth(t_env *env, t_param *param, bool range, int k);
-int				zoom(t_env *env, int key, t_fl_pt pt);
-int				toggles(t_env *env, int k, t_param *p, t_flags *f);
+int				map_offset(t_env *restrict env, int key,
+							t_param param, t_db_pt *restrict offset);
+int				specific_param(t_env *restrict env, t_param *restrict param,
+								int key);
+int				fr_depth(t_env *restrict env, t_param *restrict param,
+							bool range, int key);
+int				zoom(t_env *restrict env, int key, t_fl_pt pt);
+int				toggles(t_env *restrict env, int key,
+						t_param *restrict p, t_flags *restrict f);
 
 /*
 ** init.c
 */
 
-t_env			*init_env(t_env *env);
+t_env			*init_env(t_env *restrict env);
 
 /*
 ** init_fractals.c
 */
 
-void			init_barnsley(t_param *param);
-void			init_mandelbrot(t_param *param);
-void			init_batman(t_param *param);
-void			init_mandelbrot_cuboid(t_param *param);
-void			init_julia(t_param *param);
+void			init_barnsley(t_param *restrict param);
+void			init_mandelbrot(t_param *restrict param);
+void			init_batman(t_param *restrict param);
+void			init_mandelbrot_cuboid(t_param *restrict param);
+void			init_julia(t_param *restrict param);
 
 /*
 ** interface.c
 */
 
-void			show_menu(t_env *env, t_flags flags, int x, int y);
-void			show_combo(t_env *env, bool menu, int x, int y);
-void			show_values(t_env *env, t_param p, int x, int y);
+void			show_menu(t_env *restrict env, t_flags flags, int x, int y);
+void			show_combo(t_env *restrict env, bool menu, int x, int y);
+void			show_values(t_env *restrict env, t_param p, int x, int y);
 
 /*
 ** hooks.c
 */
 
-int				deal_keyboard(int key, t_env *env);
-int				deal_mouse(int key, int x, int y, t_env *env);
-int				deal_mouse_move(int x, int y, t_env *env);
-int				exit_x(t_env *env);
+int				deal_keyboard(int key, t_env *restrict env);
+int				deal_mouse(int key, int x, int y, t_env *restrict env);
+int				deal_mouse_move(int x, int y, t_env *restrict env);
+int				exit_x(t_env *restrict env);
 
 /*
 ** main.c
 */
 
-int				is_cardioid(t_flags flags, t_cnb *z);
-int				mandel_break(t_param p, t_flags flags, t_cnb *z);
+int				is_cardioid(t_flags flags, t_cnb *restrict z);
+int				mandel_break(t_param p, t_flags flags, t_cnb *restrict z);
 
 #endif

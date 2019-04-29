@@ -12,42 +12,45 @@
 
 #include "main.h"
 
-int			map_offset(t_env *env, int key, t_param param, t_db_pt *offset)
+int			map_offset(t_env *restrict env, int key,
+						t_param param, t_db_pt *restrict offset)
 {
 	if (!env)
 		return (0);
-	if ((key == ARROW_LEFT && (offset->x += param.offset_step))
-	|| (key == ARROW_UP && (offset->y += param.offset_step))
-	|| (key == ARROW_DOWN && (offset->y -= param.offset_step))
-	|| (key == ARROW_RIGHT && (offset->x -= param.offset_step)))
+	if ((ARROW_LEFT == key && (offset->x += param.offset_step))
+	|| (ARROW_UP == key && (offset->y += param.offset_step))
+	|| (ARROW_DOWN == key && (offset->y -= param.offset_step))
+	|| (ARROW_RIGHT == key && (offset->x -= param.offset_step)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));
 	return (0);
 }
 
-int			specific_param(t_env *env, t_param *param, int key)
+int			specific_param(t_env *restrict env, t_param *restrict param,
+							int key)
 {
 	if (!env || !param)
 		return (0);
-	if ((key == PAGE_UP && (param->ver += param->spec_step))
-	|| (key == PAGE_DOWN && (param->ver -= param->spec_step))
-	|| (key == HOME && (param->hor -= param->spec_step))
-	|| (key == END && (param->hor += param->spec_step)))
+	if ((PAGE_UP == key && (param->ver += param->spec_step))
+	|| (PAGE_DOWN == key && (param->ver -= param->spec_step))
+	|| (HOME == key && (param->hor -= param->spec_step))
+	|| (END == key && (param->hor += param->spec_step)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));
 	return (0);
 }
 
-int			fr_depth(t_env *env, t_param *param, bool range, int k)
+int			fr_depth(t_env *restrict env, t_param *restrict param,
+						bool range, int key)
 {
 	int		offset;
 
 	if (!env)
 		return (0);
 	offset = 0;
-	if ((k == NUM_MUL && ++param->depth_step)
-	|| (k == NUM_DIV && --param->depth_step))
+	if ((NUM_MUL == key && ++(param->depth_step))
+	|| (NUM_DIV == key && --(param->depth_step)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 1));
-	if ((((k == NUM_MINUS || k == I) && (offset = -param->depth_step))
-		|| ((k == NUM_PLUS || k == O) && (offset = param->depth_step)))
+	if ((((NUM_MINUS == key || I == key) && (offset = -param->depth_step))
+		|| ((NUM_PLUS == key || O == key) && (offset = param->depth_step)))
 	&& offset && (param->depth + offset > 0))
 	{
 		param->depth += offset;
@@ -57,21 +60,21 @@ int			fr_depth(t_env *env, t_param *param, bool range, int k)
 	return (0);
 }
 
-int			zoom(t_env *env, int key, t_fl_pt pt)
+int			zoom(t_env *restrict env, int key, t_fl_pt pt)
 {
 	t_param		*param;
 
 	param = &env->param;
-	if ((key == PLUS
+	if ((PLUS == key
 		&& param->display_zoom < 200
 		&& (param->actial_zoom *= 1.5)
-		&& (param->offset_step /= 1.5))
-	|| (key == MINUS
+		&& (param->offset_step *= 0.5))
+	|| (MINUS == key
 		&& param->display_zoom > -10
-		&& (param->actial_zoom /= 1.5)
+		&& (param->actial_zoom *= 0.5)
 		&& (param->offset_step *= 1.5)))
 	{
-		(key == PLUS) ? param->display_zoom++ : param->display_zoom--;
+		(PLUS == key) ? param->display_zoom++ : param->display_zoom--;
 		param->offset.x += (pt.x - param->center.x) * param->center.x
 							/ (param->actial_zoom * W_WIDTH);
 		param->offset.y += (pt.y - param->center.y) * param->center.y
@@ -81,31 +84,32 @@ int			zoom(t_env *env, int key, t_fl_pt pt)
 	return (0);
 }
 
-int			toggles(t_env *env, int k, t_param *p, t_flags *f)
+int			toggles(t_env *restrict env, int key,
+					t_param *restrict p, t_flags *restrict f)
 {
-	if (((k == NUM_1 || k == ONE) && ft_switch(&f->n1))
-	|| ((k == NUM_2 || k == TWO) && ft_switch(&f->n2))
-	|| ((k == NUM_3 || k == THREE) && ft_switch(&f->n3))
-	|| ((k == NUM_4 || k == FOUR) && ft_switch(&f->n4))
-	|| ((k == NUM_5 || k == FIVE) && ft_switch(&f->n5))
-	|| ((k == NUM_6 || k == SIX) && ft_switch(&f->n6))
-	|| ((k == NUM_7 || k == SEVEN) && ft_switch(&f->n7))
-	|| ((k == NUM_8 || k == EIGHT) && ft_switch(&f->n8))
-	|| ((k == NUM_9 || k == NINE) && ft_switch(&f->n9))
-	|| ((k == NUM_0 || k == ZERO) && ft_switch(&f->n0))
-	|| (k == Q && ft_switch(&f->q))
-	|| (k == W && ft_switch(&f->w))
-	|| (k == E && ft_switch(&f->e))
-	|| (k == T && ft_switch(&f->range)
+	if (((NUM_1 == key || ONE == key) && ft_switch(&f->n1))
+	|| ((NUM_2 == key || TWO == key) && ft_switch(&f->n2))
+	|| ((NUM_3 == key || THREE == key) && ft_switch(&f->n3))
+	|| ((NUM_4 == key || FOUR == key) && ft_switch(&f->n4))
+	|| ((NUM_5 == key || FIVE == key) && ft_switch(&f->n5))
+	|| ((NUM_6 == key || SIX == key) && ft_switch(&f->n6))
+	|| ((NUM_7 == key || SEVEN == key) && ft_switch(&f->n7))
+	|| ((NUM_8 == key || EIGHT == key) && ft_switch(&f->n8))
+	|| ((NUM_9 == key || NINE == key) && ft_switch(&f->n9))
+	|| ((NUM_0 == key || ZERO == key) && ft_switch(&f->n0))
+	|| (Q == key && ft_switch(&f->q))
+	|| (W == key && ft_switch(&f->w))
+	|| (E == key && ft_switch(&f->e))
+	|| (T == key && ft_switch(&f->range)
 		&& (p->color_step = (f->range ? 0xFFFFFF : 0xFFFFFFFF) / p->depth))
-	|| (k == Y && ft_switch(&f->carioid))
-	|| (k == G && ft_switch(&f->alt_col)))
+	|| (Y == key && ft_switch(&f->carioid))
+	|| (G == key && ft_switch(&f->alt_col)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));
-	if ((k == U && (p->threads < MAX_THREADS ? ++p->threads : 0))
-	|| (k == J && (p->threads > 1 ? p->threads-- : 0))
-	|| (k == H && ft_switch(&f->hints))
-	|| (k == N && ft_switch(&f->values))
-	|| (k == M && ft_switch(&f->menu)))
+	if ((U == key && (MAX_THREADS > p->threads ? ++(p->threads) : 0))
+	|| (J == key && (1 < p->threads ? --(p->threads) : 0))
+	|| (H == key && ft_switch(&f->hints))
+	|| (N == key && ft_switch(&f->values))
+	|| (M == key && ft_switch(&f->menu)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 1));
 	return (0);
 }

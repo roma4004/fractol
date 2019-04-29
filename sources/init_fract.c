@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-void	init_barnsley(t_param *param)
+void	init_barnsley(t_param *restrict param)
 {
 	param->fr_id = FR_FERN;
 	param->depth = 4200000;
@@ -31,7 +31,7 @@ void	init_barnsley(t_param *param)
 	param->trim.down = 0.8;
 }
 
-void	init_mandelbrot(t_param *param)
+void	init_mandelbrot(t_param *restrict param)
 {
 	param->fr_id = FR_MANDELBROT;
 	param->depth = 127;
@@ -53,7 +53,7 @@ void	init_mandelbrot(t_param *param)
 	param->trim.down = 0.9;
 }
 
-void	init_batman(t_param *param)
+void	init_batman(t_param *restrict param)
 {
 	param->fr_id = FR_BATMAN;
 	param->depth = 10;
@@ -74,7 +74,7 @@ void	init_batman(t_param *param)
 	param->trim.down = 0.8;
 }
 
-void	init_mandelbrot_cuboid(t_param *param)
+void	init_mandelbrot_cuboid(t_param *restrict param)
 {
 	param->fr_id = FR_CUBOID;
 	param->depth = 127;
@@ -96,7 +96,7 @@ void	init_mandelbrot_cuboid(t_param *param)
 	param->trim.down = 1.2;
 }
 
-void	init_julia(t_param *param)
+void	init_julia(t_param *restrict param)
 {
 	param->fr_id = FR_JULIA;
 	param->depth = 127;

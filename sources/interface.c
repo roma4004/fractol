@@ -12,7 +12,8 @@
 
 #include "main.h"
 
-static char	*text(t_env *env, t_si_pt pt, char *str, int is_active)
+static char	*text(t_env *restrict env, t_si_pt pt,
+					char *restrict str, int is_active)
 {
 	if (!env || !str)
 		return (NULL);
@@ -21,7 +22,7 @@ static char	*text(t_env *env, t_si_pt pt, char *str, int is_active)
 	return (str);
 }
 
-void		show_values(t_env *env, t_param p, int x, int y)
+void		show_values(t_env *restrict env, t_param p, int x, int y)
 {
 	x += (!env->flags.menu ? 550 : 0) + (!env->flags.hints ? 450 : 0);
 	text(env, (t_si_pt){ x, y }, MSG_VAL_SEC, 0);
@@ -45,7 +46,7 @@ void		show_values(t_env *env, t_param p, int x, int y)
 	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.color_shift.blue), 0));
 }
 
-void		show_combo(t_env *env, bool menu, int x, int y)
+void		show_combo(t_env *restrict env, bool menu, int x, int y)
 {
 	x += ((!menu) ? 550 : 0);
 	text(env, (t_si_pt){ x, y }, MSG_HINTS, 0);
@@ -63,7 +64,7 @@ void		show_combo(t_env *env, bool menu, int x, int y)
 	text(env, (t_si_pt){ x, y + 20 }, MSG_MIR_VER, 0);
 }
 
-static void	show_menu2(t_env *e, t_flags f, int x, int y)
+static void	show_menu2(t_env *restrict e, t_flags f, int x, int y)
 {
 	text(e, (t_si_pt){ x, y += 20 }, MSG_CARIOID, 0);
 	text(e, (t_si_pt){ x + 150, y }, MSG_CARIOID_Y, f.carioid);
@@ -85,7 +86,7 @@ static void	show_menu2(t_env *e, t_flags f, int x, int y)
 	text(e, (t_si_pt){ x, y + 20 }, MSG_VALUE_SW, 0);
 }
 
-void		show_menu(t_env *env, t_flags flags, int x, int y)
+void		show_menu(t_env *restrict env, t_flags flags, int x, int y)
 {
 	text(env, (t_si_pt){ x, y }, MSG_MENU_SEC, 0);
 	text(env, (t_si_pt){ x, y += 20 }, MSG_ZOOM_M, 0);

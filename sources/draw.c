@@ -13,42 +13,44 @@
 #include <pthread.h>
 #include "main.h"
 
-static void		set_px(unsigned int *surface, int x, int y, unsigned int color)
+static void		set_px(unsigned int *restrict surface, unsigned int color,
+						int x, int y)
 {
-	if (x >= 0 && x < W_WIDTH && y >= 0 && y < W_HEIGHT)
+	if (0 <= x && W_WIDTH > x
+	&& 0 <= y && W_HEIGHT > y)
 		surface[y * W_WIDTH + x] = color;
 }
 
-unsigned int	draw_barnsley(t_env *env, t_param p, int x, int y)
+unsigned int	draw_barnsley(t_env *restrict env, t_param p, int x, int y)
 {
-	float		random_num;
-	long long	px_cnt;
 	t_fern		fern;
 	t_fern		tmp;
+	long long	px_cnt;
+	float		random_num;
 
 	fern = (t_fern){ .r = x, .i = y };
 	px_cnt = p.depth;
 	while (--px_cnt && (random_num = (float)rand() / RAND_MAX))
 	{
 		tmp = fern;
-		if (random_num <= 0.01f)
+		if (0.01f >= random_num)
 			fern = (t_fern){ .r = 0, .i = 0.16f * tmp.i };
-		else if (random_num <= 0.06f)
+		else if (0.06f >= random_num)
 			fern = (t_fern){ .r = -0.15f * tmp.r + 0.28f * tmp.i,
 							.i = 0.26f * tmp.r + 0.24f * tmp.i + 0.44f };
-		else if (random_num <= 0.14f)
+		else if (0.14f >= random_num)
 			fern = (t_fern){ .r = 0.2f * tmp.r + -0.26f * tmp.i,
 							.i = 0.23f * tmp.r + 0.22f * tmp.i + 1.6f };
 		else
 			fern = (t_fern){ .r = 0.85 * tmp.r + p.hor * tmp.i,
 							.i = -0.04 * tmp.r + p.ver * tmp.i + 1.6 };
-		set_px(env->surface, (int)(fern.r * p.actial_zoom - p.offset.x),
-			(int)(W_HEIGHT - fern.i * p.actial_zoom - p.offset.y), 0x007700);
+		set_px(env->surface, 0x7700, (int)(fern.r * p.actial_zoom - p.offset.x),
+				(int)(W_HEIGHT - fern.i * p.actial_zoom - p.offset.y));
 	}
 	return (redraw_fract_or_img(env, p, env->flags, 1));
 }
 
-static void		*draw_threads(void *thread_data)
+static void		*draw_threads(void *restrict thread_data)
 {
 	t_env		*env;
 	t_param		p;
@@ -62,13 +64,13 @@ static void		*draw_threads(void *thread_data)
 	env = ((t_pth_dt *)thread_data)->env;
 	p = env->param;
 	y = UINT64_MAX;
-	while (++y < W_HEIGHT)
+	while (W_HEIGHT > ++y)
 	{
 		x = UINT64_MAX + 1;
-		while (x < W_WIDTH)
+		while (W_WIDTH > x)
 		{
 			x += offset;
-			set_px(env->surface, x, y, env->get_px_func[p.fr_id](env, p, x, y));
+			set_px(env->surface, env->get_px_func[p.fr_id](env, p, x, y), x, y);
 			x -= offset;
 			x += p.threads;
 		}
@@ -76,7 +78,7 @@ static void		*draw_threads(void *thread_data)
 	return (NULL);
 }
 
-void			parallel_draw(t_env *env, unsigned int threads)
+void			parallel_draw(t_env *restrict env, unsigned int threads)
 {
 	unsigned int	id;
 	t_pth_dt		*data;
@@ -90,14 +92,14 @@ void			parallel_draw(t_env *env, unsigned int threads)
 		return ;
 	}
 	id = UINT32_MAX;
-	while (++id < threads)
+	while (threads > ++id)
 	{
 		data[id].env = env;
 		data[id].offset = id;
 		pthread_create(&threads_arr[id], NULL, draw_threads, &data[id]);
 	}
 	id = UINT32_MAX;
-	while (++id < threads)
+	while (threads > ++id)
 		pthread_join(threads_arr[id], NULL);
 	argb_shift(env, env->param.color_shift);
 	redraw_fract_or_img(env, env->param, env->flags, 1);

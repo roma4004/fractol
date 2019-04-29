@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-static unsigned int		change_hue(unsigned *color, int is_increase,
+static void				change_hue(unsigned *restrict color, int is_increase,
 									unsigned char color_bit_shift)
 {
 	unsigned int	mask;
@@ -20,11 +20,10 @@ static unsigned int		change_hue(unsigned *color, int is_increase,
 
 	mask = 0x000000FFU << color_bit_shift;
 	increment = mask & 0x01010101U;
-	*color += (is_increase == 1) ? increment : -increment;
-	return (*color);
+	*color += (1 == is_increase) ? increment : -increment;
 }
 
-static unsigned int		shift_apply(t_env *env, int is_increase,
+static unsigned int		shift_apply(t_env *restrict env, int is_increase,
 									unsigned char chanel)
 {
 	size_t		y;
@@ -40,8 +39,8 @@ static unsigned int		shift_apply(t_env *env, int is_increase,
 	return (redraw_fract_or_img(env, env->param, env->flags, 1));
 }
 
-unsigned int			change_color(t_env *env, t_col_shift *col_shift,
-										int key)
+unsigned int			change_color(t_env *restrict env,
+									t_col_shift *restrict col_shift, int key)
 {
 	int				is_increase;
 	unsigned char	chanel;
@@ -49,67 +48,63 @@ unsigned int			change_color(t_env *env, t_col_shift *col_shift,
 	if (!env)
 		return (0);
 	is_increase = 0;
-	if ((key == A || key == Z)
+	if ((A == key || Z == key)
 	&& (chanel = ALPHA))
 		col_shift->alpha +=
-			(is_increase = (key == A) ? 1 : -1);
-	else if ((key == S || key == X)
+			(is_increase = (A == key) ? 1 : -1);
+	else if ((S == key || X == key)
 	&& (chanel = RED))
 		col_shift->red +=
-			(is_increase = (key == S) ? 1 : -1);
-	else if ((key == D || key == C)
+			(is_increase = (S == key) ? 1 : -1);
+	else if ((D == key || C == key)
 	&& (chanel = GREEN))
 		col_shift->green +=
-			(is_increase = (key == D) ? 1 : -1);
-	else if ((key == F || key == V)
+			(is_increase = (D == key) ? 1 : -1);
+	else if ((F == key || V == key)
 	&& !(chanel = BLUE))
 		col_shift->blue +=
-			(is_increase = (key == F) ? 1 : -1);
+			(is_increase = (F == key) ? 1 : -1);
 	if (is_increase != 0 && shift_apply(env, is_increase, chanel))
 		return (1);
 	return (0);
 }
 
-void					argb_shift(t_env *env, t_col_shift shift)
+void					argb_shift(t_env *restrict env, t_col_shift shift)
 {
 	int		i_cur;
 	int		i_max;
 	int		is_increase;
 
-	i_max = (shift.alpha >= 0) ? shift.alpha : 0;
-	i_cur = (shift.alpha >= 0) ? -1 : shift.alpha - 1;
-	is_increase = (shift.alpha >= 0) ? 1 : -1;
-	while (++i_cur < i_max)
+	i_max = (0 <= shift.alpha) ? shift.alpha : 0;
+	i_cur = (0 <= shift.alpha) ? -1 : shift.alpha - 1;
+	is_increase = (0 <= shift.alpha) ? 1 : -1;
+	while (i_max > ++i_cur)
 		shift_apply(env, is_increase, ALPHA);
-	i_max = (shift.red >= 0) ? shift.red : 0;
-	i_cur = (shift.red >= 0) ? -1 : shift.red - 1;
-	is_increase = (shift.red >= 0) ? 1 : -1;
-	while (++i_cur < i_max)
+	i_max = (0 <= shift.red) ? shift.red : 0;
+	i_cur = (0 <= shift.red) ? -1 : shift.red - 1;
+	is_increase = (0 <= shift.red) ? 1 : -1;
+	while (i_max > ++i_cur)
 		shift_apply(env, is_increase, RED);
-	i_max = (shift.green >= 0) ? shift.green : 0;
-	i_cur = (shift.green >= 0) ? -1 : shift.green - 1;
-	is_increase = (shift.green >= 0) ? 1 : -1;
-	while (++i_cur < i_max)
+	i_max = (0 <= shift.green) ? shift.green : 0;
+	i_cur = (0 <= shift.green) ? -1 : shift.green - 1;
+	is_increase = (0 <= shift.green) ? 1 : -1;
+	while (i_max > ++i_cur)
 		shift_apply(env, is_increase, GREEN);
-	i_max = (shift.blue >= 0) ? shift.blue : 0;
-	i_cur = (shift.blue >= 0) ? -1 : shift.blue - 1;
-	is_increase = (shift.blue >= 0) ? 1 : -1;
-	while (++i_cur < i_max)
+	i_max = (0 <= shift.blue) ? shift.blue : 0;
+	i_cur = (0 <= shift.blue) ? -1 : shift.blue - 1;
+	is_increase = (0 <= shift.blue) ? 1 : -1;
+	while (i_max > ++i_cur)
 		shift_apply(env, is_increase, BLUE);
 }
 
 unsigned int			get_color(bool alt_col, double col_step,
 									unsigned int depth, unsigned int i)
 {
-	unsigned int	color;
 	double			step;
 	t_color			col;
 
 	if (!alt_col)
-	{
-		color = (unsigned int)(col_step * i);
-		return (color);
-	}
+		return ((unsigned int)(col_step * i));
 	step = (double)i / (double)depth;
 	col = (t_color){ 0,
 			(unsigned int)(9 * (1 - step) * step * step * 255),

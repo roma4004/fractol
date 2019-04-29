@@ -27,7 +27,7 @@ static t_param	init_param(void)
 	return (param);
 }
 
-int				init_fractal_arr(t_env *env)
+static int		init_fractal_arr(t_env *restrict env)
 {
 	env->fract_names[0] = MSG_FRACT_MANDEL;
 	env->get_px_func[0] = get_mandelbrot;
@@ -47,7 +47,7 @@ int				init_fractal_arr(t_env *env)
 	return (0);
 }
 
-t_env			*init_env(t_env *env)
+t_env			*init_env(t_env *restrict env)
 {
 	env->param = init_param();
 	ft_bzero(&env->flags, sizeof(t_flags));

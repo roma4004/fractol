@@ -25,8 +25,8 @@ void	init_barnsley(t_param *restrict param)
 	param->hor = 0.04;
 	param->ver = 0.85;
 	param->offset.x = -param->center.x;
-	param->trim.left = -2.0f;
-	param->trim.up = -0.8f;
+	param->trim.left = -2.0;
+	param->trim.up = -0.8;
 	param->trim.right = 0.5;
 	param->trim.down = 0.8;
 }
@@ -47,8 +47,8 @@ void	init_mandelbrot(t_param *restrict param)
 	param->offset.y = 0;
 	param->i_move_seed = 0;
 	param->r_move_seed = 0;
-	param->trim.left = -1.4f;
-	param->trim.up = -0.9f;
+	param->trim.left = -1.4;
+	param->trim.up = -0.9;
 	param->trim.right = 0.7;
 	param->trim.down = 0.9;
 }
@@ -68,8 +68,8 @@ void	init_batman(t_param *restrict param)
 	param->offset.y = 0;
 	param->i_move_seed = 0;
 	param->r_move_seed = 0;
-	param->trim.left = -1.5f;
-	param->trim.up = -0.8f;
+	param->trim.left = -1.5;
+	param->trim.up = -0.8;
 	param->trim.right = 0.5;
 	param->trim.down = 0.8;
 }
@@ -90,8 +90,8 @@ void	init_mandelbrot_cuboid(t_param *restrict param)
 	param->offset.y = 0;
 	param->i_move_seed = 0;
 	param->r_move_seed = 0;
-	param->trim.left = -0.8f;
-	param->trim.up = -1.2f;
+	param->trim.left = -0.8;
+	param->trim.up = -1.2;
 	param->trim.right = 0.8;
 	param->trim.down = 1.2;
 }
@@ -112,8 +112,8 @@ void	init_julia(t_param *restrict param)
 	param->offset.y = 0;
 	param->r_move_seed = -0.7;
 	param->i_move_seed = 0.27015;
-	param->trim.left = -1.6f;
-	param->trim.up = -1.4f;
+	param->trim.left = -1.6;
+	param->trim.up = -1.4;
 	param->trim.right = 1.6;
 	param->trim.down = 1.4;
 }

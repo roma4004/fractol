@@ -29,13 +29,13 @@ void		show_values(t_env *restrict env, t_param p, int x, int y)
 	text(env, (t_si_pt){ x, y += 20 }, MSG_CUR_FRA, 0);
 	text(env, (t_si_pt){ x + 170, y }, env->fract_names[p.fr_id], 0);
 	text(env, (t_si_pt){ x, y += 20 }, MSG_ITER_LIM, 0);
-	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.depth), 0));
+	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa((int)p.depth), 0));
 	text(env, (t_si_pt){ x, y += 20 }, MSG_ITER_STE, 0);
 	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.depth_step), 0));
 	text(env, (t_si_pt){ x, y += 20 }, MSG_ZOOM, 0);
 	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.display_zoom), 0));
 	text(env, (t_si_pt){ x, y += 20 }, MSG_THREADS, 0);
-	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.threads), 0));
+	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa((int)p.threads), 0));
 	text(env, (t_si_pt){ x, y += 20 }, MSG_SHI_ALF, 0);
 	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.color_shift.alpha), 0));
 	text(env, (t_si_pt){ x, y += 20 }, MSG_SHI_RED, 0);

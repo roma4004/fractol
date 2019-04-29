@@ -17,7 +17,7 @@ static t_param	init_param(void)
 	t_param		param;
 
 	ft_bzero(&param, sizeof(t_param));
-	param.center = (t_fl_pt){ W_WIDTH / 2.0f, W_HEIGHT / 2.0f };
+	param.center = (t_db_pt){ W_WIDTH / 2.0, W_HEIGHT / 2.0 };
 	param.cores = ft_get_processors_num();
 	param.threads = param.cores;
 	param.spec_step = 1;
@@ -54,7 +54,7 @@ t_env			*init_env(t_env *restrict env)
 	if (!(env->mlx_ptr = mlx_init())
 	|| !(env->win_ptr = mlx_new_window(env->mlx_ptr, W_WIDTH, W_HEIGHT, W_NAME))
 	|| !(env->img_ptr = mlx_new_image(env->mlx_ptr, W_WIDTH, W_HEIGHT))
-	|| !(env->surface = (unsigned int *)mlx_get_data_addr(env->img_ptr,
+	|| !(env->surf = (t_uint32_unalign *)mlx_get_data_addr(env->img_ptr,
 												&env->param.bits_per_pixel,
 												&env->param.size_line,
 												&env->param.endian))

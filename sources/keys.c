@@ -24,12 +24,12 @@ int		exit_x(t_env *restrict env)
 
 int		deal_keyboard(int key, t_env *restrict env)
 {
-	if (!env || !zoom(env, key, env->param.center))
-		if (!map_offset(env, key, env->param, &env->param.offset))
-			if (!fr_depth(env, &env->param, env->flags.range, key))
-				if (!toggles(env, key, &env->param, &env->flags))
-					if (specific_param(env, &env->param, key))
-						return (0);
+	if ((!env || !zoom(env, key, env->param.center))
+	&& (!map_offset(env, key, env->param, &env->param.offset))
+	&& (!fr_depth(env, &env->param, env->flags.range, key))
+	&& (!toggles(env, key, &env->param, &env->flags))
+	&& (specific_param(env, &env->param, key)))
+		return (0);
 	if (ESC == key)
 		exit_x(env);
 	if (R == key || ENTER == key)
@@ -40,8 +40,8 @@ int		deal_keyboard(int key, t_env *restrict env)
 		env->init_func[env->param.fr_id](&env->param);
 		env->param.color_shift = (t_col_shift){ 0, 0, 0, 0 };
 		env->param.threads = env->param.cores;
-		env->param.hor = (env->param.fr_id == FR_FERN) ? 0.04f : 4;
-		env->param.ver = (env->param.fr_id == FR_FERN) ? 0.85f : 1;
+		env->param.hor = (env->param.fr_id == FR_FERN) ? 0.04 : 4;
+		env->param.ver = (env->param.fr_id == FR_FERN) ? 0.85 : 1;
 		redraw_fract_or_img(env, env->param, env->flags, 0);
 	}
 	else
@@ -54,9 +54,9 @@ int		deal_mouse(int key, int x, int y, t_env *restrict env)
 	if (!env)
 		return (1);
 	if (MOUSE_SCROLL_UP == key)
-		zoom(env, PLUS, (t_fl_pt){ x, y });
+		zoom(env, PLUS, (t_db_pt){ x, y });
 	else if (MOUSE_SCROLL_DOWN == key)
-		zoom(env, MINUS, (t_fl_pt){ x, y });
+		zoom(env, MINUS, (t_db_pt){ x, y });
 	else if (MOUSE_RBT == key)
 	{
 		ft_switch(&env->flags.lock_julia);
@@ -68,7 +68,7 @@ int		deal_mouse(int key, int x, int y, t_env *restrict env)
 int		deal_mouse_move(int x, int y, t_env *restrict env)
 {
 	const bool			is_julia = (FR_JULIA == env->param.fr_id);
-	const t_fl_pt		center = env->param.center;
+	const t_db_pt		center = env->param.center;
 	const t_flags		flags = env->flags;
 	t_param				*param;
 	t_si_pt				mult;

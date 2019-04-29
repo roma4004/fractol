@@ -91,8 +91,14 @@
 # define MSG_SHI_BLU		"shift blue     :"
 
 # include <stdlib.h>
-# include <stdbool.h>
+
+# pragma GCC diagnostic ignored "-Wstrict-prototypes"
+# pragma GCC diagnostic ignored "-Wpadded"
 # include "mlx.h"
+# pragma GCC diagnostic warning "-Wpadded"
+# pragma GCC diagnostic warning "-Wstrict-prototypes"
+
+
 # include "libft.h"
 
 typedef struct	s_int32t_point
@@ -106,12 +112,6 @@ typedef struct	s_uint32t_point
 	uint32_t	x;
 	uint32_t	y;
 }				t_ui_pt;
-
-typedef struct	s_float_point
-{
-	float		x;
-	float		y;
-}				t_fl_pt;
 
 typedef struct	s_double_point
 {
@@ -135,14 +135,15 @@ typedef struct	s_fern_fractal
 {
 	double		r;
 	double		i;
+	char		stub[4];
 }				t_fern;
 
 typedef struct	s_fractal_triming_side
 {
-	float		left;
-	float		up;
-	float		right;
-	float		down;
+	double		left;
+	double		up;
+	double		right;
+	double		down;
 }				t_trim;
 
 typedef struct	s_fractal_color_shift
@@ -155,6 +156,18 @@ typedef struct	s_fractal_color_shift
 
 typedef struct	s_fractal_parameters
 {
+	t_db_pt			center;
+	t_db_pt			offset;
+	t_trim			trim;
+	t_col_shift		color_shift;
+	double			spec_step;
+	double			offset_step;
+	double			hor;
+	double			ver;
+	double			color_step;
+	double			actial_zoom;
+	double			r_move_seed;
+	double			i_move_seed;
 	unsigned int	fr_id;
 	unsigned int	cores;
 	unsigned int	threads;
@@ -164,42 +177,31 @@ typedef struct	s_fractal_parameters
 	int				bits_per_pixel;
 	int				size_line;
 	int				endian;
-	t_col_shift		color_shift;
-	float			hor;
-	float			ver;
-	float			spec_step;
-	float			offset_step;
-	t_fl_pt			center;
-	t_trim			trim;
-	double			color_step;
-	double			actial_zoom;
-	double			r_move_seed;
-	double			i_move_seed;
-	t_db_pt			offset;
+	char			stub[4];
 }				t_param;
 
 typedef struct	s_fractal_state_flags
 {
-	bool	n1;
-	bool	n2;
-	bool	n3;
-	bool	n4;
-	bool	n5;
-	bool	n6;
-	bool	n7;
-	bool	n8;
-	bool	n9;
-	bool	n0;
-	bool	q;
-	bool	w;
-	bool	e;
-	bool	range;
-	bool	carioid;
-	bool	alt_col;
-	bool	hints;
-	bool	values;
-	bool	menu;
-	bool	lock_julia;
+	_Bool	n1;
+	_Bool	n2;
+	_Bool	n3;
+	_Bool	n4;
+	_Bool	n5;
+	_Bool	n6;
+	_Bool	n7;
+	_Bool	n8;
+	_Bool	n9;
+	_Bool	n0;
+	_Bool	q;
+	_Bool	w;
+	_Bool	e;
+	_Bool	range;
+	_Bool	carioid;
+	_Bool	alt_col;
+	_Bool	hints;
+	_Bool	values;
+	_Bool	menu;
+	_Bool	lock_julia;
 }				t_flags;
 
 typedef struct	s_color_channels_argb
@@ -210,6 +212,9 @@ typedef struct	s_color_channels_argb
 	unsigned int	b;
 }				t_color;
 
+typedef unsigned int __attribute__
+((__aligned__(1),__may_alias__))	t_uint32_unalign;
+
 typedef struct	s_environment
 {
 	t_param			param;
@@ -217,17 +222,17 @@ typedef struct	s_environment
 	void			*mlx_ptr;
 	void			*win_ptr;
 	void			*img_ptr;
-	unsigned int	*surface;
+	unsigned int	*surf;
 	char			*fract_names[AMOUNT_FRACTALS];
 	unsigned int	(*get_px_func[AMOUNT_FRACTALS])
-						(struct s_environment *restrict, t_param, int, int);
+					(struct s_environment *restrict, t_param, size_t, size_t);
 	void			(*init_func[AMOUNT_FRACTALS])(t_param *);
 }				t_env;
 
 typedef struct	s_pthread_data
 {
-	t_env	*env;
-	int		offset;
+	t_env		*env;
+	size_t		offset;
 }				t_pth_dt;
 
 enum			e_color_offset
@@ -288,31 +293,33 @@ unsigned int	get_color(bool alt_col, double col_step,
 
 unsigned int	redraw_fract_or_img(t_env *restrict env, t_param param,
 									t_flags flags, int img_only);
-unsigned int	draw_barnsley(t_env *restrict env, t_param p, int x, int y);
+unsigned int	draw_barnsley(t_env *restrict env, t_param p,
+								size_t x, size_t y);
 void			parallel_draw(t_env *restrict env, unsigned int threads);
 
 /*
 ** fractals.c
 */
 
-unsigned int	get_mandelbrot(t_env *restrict env, t_param p, int x, int y);
-unsigned int	get_julia(t_env *restrict env, t_param p, int x, int y);
-unsigned int	get_batman(t_env *restrict env, t_param p, int x, int y);
+unsigned int	get_mandelbrot(t_env *restrict env, t_param p,
+								size_t x, size_t y);
+unsigned int	get_julia(t_env *restrict env, t_param p, size_t x, size_t y);
+unsigned int	get_batman(t_env *restrict env, t_param p, size_t x, size_t y);
 unsigned int	get_mandelbrot_cuboid(t_env *restrict env,
-										t_param p, int x, int y);
+										t_param p, size_t x, size_t y);
 
 /*
 ** keys.c
 */
 
-int				map_offset(t_env *restrict env, int key,
+unsigned int	map_offset(t_env *restrict env, int key,
 							t_param param, t_db_pt *restrict offset);
-int				specific_param(t_env *restrict env, t_param *restrict param,
+unsigned int	specific_param(t_env *restrict env, t_param *restrict param,
 								int key);
-int				fr_depth(t_env *restrict env, t_param *restrict param,
+unsigned int	fr_depth(t_env *restrict env, t_param *restrict param,
 							bool range, int key);
-int				zoom(t_env *restrict env, int key, t_fl_pt pt);
-int				toggles(t_env *restrict env, int key,
+unsigned int	zoom(t_env *restrict env, int key, t_db_pt pt);
+unsigned int	toggles(t_env *restrict env, int key,
 						t_param *restrict p, t_flags *restrict f);
 
 /*

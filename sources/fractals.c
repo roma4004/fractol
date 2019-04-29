@@ -13,7 +13,8 @@
 #include <math.h>
 #include "main.h"
 
-unsigned int	get_mandelbrot(t_env *restrict env, t_param p, int x, int y)
+unsigned int	get_mandelbrot(t_env *restrict env, t_param p,
+								size_t x, size_t y)
 {
 	const unsigned int	depth = p.depth;
 	const t_flags		f = env->flags;
@@ -40,7 +41,7 @@ unsigned int	get_mandelbrot(t_env *restrict env, t_param p, int x, int y)
 	return (get_color(f.alt_col, p.color_step, depth, i));
 }
 
-unsigned int	get_julia(t_env *restrict env, t_param p, int x, int y)
+unsigned int	get_julia(t_env *restrict env, t_param p, size_t x, size_t y)
 {
 	const unsigned int	depth = p.depth;
 	const t_flags		f = env->flags;
@@ -65,7 +66,7 @@ unsigned int	get_julia(t_env *restrict env, t_param p, int x, int y)
 	return (get_color(f.alt_col, p.color_step, depth, i));
 }
 
-unsigned int	get_batman(t_env *restrict env, t_param p, int x, int y)
+unsigned int	get_batman(t_env *restrict env, t_param p, size_t x, size_t y)
 {
 	const unsigned int	depth = p.depth;
 	const t_flags		f = env->flags;
@@ -93,7 +94,7 @@ unsigned int	get_batman(t_env *restrict env, t_param p, int x, int y)
 }
 
 unsigned int	get_mandelbrot_cuboid(t_env *restrict env, t_param p,
-										int x, int y)
+										size_t x, size_t y)
 {
 	const unsigned int	depth = p.depth;
 	const t_flags		f = env->flags;

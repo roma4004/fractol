@@ -84,7 +84,7 @@ unsigned int	redraw_fract_or_img(t_env *restrict env, t_param param,
 		{
 			pt.x = UINT32_MAX;
 			while (W_WIDTH > ++(pt.x))
-				env->surface[pt.y * W_WIDTH + pt.x] = 0;
+				env->surf[pt.y * W_WIDTH + pt.x] = 0;
 		}
 		return (draw_barnsley(env, param, 0, 0));
 	}

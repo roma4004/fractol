@@ -34,7 +34,7 @@ static unsigned int		shift_apply(t_env *restrict env, int is_increase,
 	{
 		x = UINT64_MAX;
 		while (W_WIDTH > ++x)
-			change_hue(&env->surface[y * W_WIDTH + x], is_increase, chanel);
+			change_hue(&env->surf[y * W_WIDTH + x], is_increase, chanel);
 	}
 	return (redraw_fract_or_img(env, env->param, env->flags, 1));
 }

@@ -14,38 +14,36 @@
 #include "main.h"
 
 static void		set_px(unsigned int *restrict surface, unsigned int color,
-						int x, int y)
+						size_t x, size_t y)
 {
-	if (0 <= x && W_WIDTH > x
-	&& 0 <= y && W_HEIGHT > y)
+	if (W_WIDTH > x && W_HEIGHT > y)
 		surface[y * W_WIDTH + x] = color;
 }
 
-unsigned int	draw_barnsley(t_env *restrict env, t_param p, int x, int y)
+unsigned int	draw_barnsley(t_env *restrict env, t_param p, size_t x, size_t y)
 {
 	t_fern		fern;
 	t_fern		tmp;
-	long long	px_cnt;
 	float		random_num;
 
 	fern = (t_fern){ .r = x, .i = y };
-	px_cnt = p.depth;
-	while (--px_cnt && (random_num = (float)rand() / RAND_MAX))
+	while (--(p.depth))
 	{
+		random_num = rand() / RAND_MAX;
 		tmp = fern;
 		if (0.01f >= random_num)
-			fern = (t_fern){ .r = 0, .i = 0.16f * tmp.i };
+			fern = (t_fern){ .r = 0, .i = 0.16 * tmp.i };
 		else if (0.06f >= random_num)
-			fern = (t_fern){ .r = -0.15f * tmp.r + 0.28f * tmp.i,
-							.i = 0.26f * tmp.r + 0.24f * tmp.i + 0.44f };
+			fern = (t_fern){ .r = -0.15 * tmp.r + 0.28 * tmp.i,
+							.i = 0.26 * tmp.r + 0.24 * tmp.i + 0.44 };
 		else if (0.14f >= random_num)
-			fern = (t_fern){ .r = 0.2f * tmp.r + -0.26f * tmp.i,
-							.i = 0.23f * tmp.r + 0.22f * tmp.i + 1.6f };
+			fern = (t_fern){ .r = 0.2 * tmp.r + -0.26 * tmp.i,
+							.i = 0.23 * tmp.r + 0.22 * tmp.i + 1.6 };
 		else
 			fern = (t_fern){ .r = 0.85 * tmp.r + p.hor * tmp.i,
 							.i = -0.04 * tmp.r + p.ver * tmp.i + 1.6 };
-		set_px(env->surface, 0x7700, (int)(fern.r * p.actial_zoom - p.offset.x),
-				(int)(W_HEIGHT - fern.i * p.actial_zoom - p.offset.y));
+		set_px(env->surf, 0x7700, (size_t)(fern.r * p.actial_zoom - p.offset.x),
+					(size_t)(W_HEIGHT - fern.i * p.actial_zoom - p.offset.y));
 	}
 	return (redraw_fract_or_img(env, p, env->flags, 1));
 }
@@ -56,7 +54,7 @@ static void		*draw_threads(void *restrict thread_data)
 	t_param		p;
 	size_t		x;
 	size_t		y;
-	int			offset;
+	size_t		offset;
 
 	if (!thread_data)
 		return (NULL);
@@ -70,7 +68,7 @@ static void		*draw_threads(void *restrict thread_data)
 		while (W_WIDTH > x)
 		{
 			x += offset;
-			set_px(env->surface, env->get_px_func[p.fr_id](env, p, x, y), x, y);
+			set_px(env->surf, env->get_px_func[p.fr_id](env, p, x, y), x, y);
 			x -= offset;
 			x += p.threads;
 		}

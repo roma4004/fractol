@@ -12,34 +12,34 @@
 
 #include "main.h"
 
-int			map_offset(t_env *restrict env, int key,
+unsigned int	map_offset(t_env *restrict env, int key,
 						t_param param, t_db_pt *restrict offset)
 {
 	if (!env)
 		return (0);
-	if ((ARROW_LEFT == key && (offset->x += param.offset_step))
-	|| (ARROW_UP == key && (offset->y += param.offset_step))
-	|| (ARROW_DOWN == key && (offset->y -= param.offset_step))
-	|| (ARROW_RIGHT == key && (offset->x -= param.offset_step)))
+	if ((ARROW_LEFT == key && (_Bool)(offset->x += param.offset_step))
+	|| (ARROW_UP == key && (_Bool)(offset->y += param.offset_step))
+	|| (ARROW_DOWN == key && (_Bool)(offset->y -= param.offset_step))
+	|| (ARROW_RIGHT == key && (_Bool)(offset->x -= param.offset_step)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));
 	return (0);
 }
 
-int			specific_param(t_env *restrict env, t_param *restrict param,
-							int key)
+unsigned int	specific_param(t_env *restrict env, t_param *restrict param,
+								int key)
 {
 	if (!env || !param)
 		return (0);
-	if ((PAGE_UP == key && (param->ver += param->spec_step))
-	|| (PAGE_DOWN == key && (param->ver -= param->spec_step))
-	|| (HOME == key && (param->hor -= param->spec_step))
-	|| (END == key && (param->hor += param->spec_step)))
+	if ((PAGE_UP == key && (_Bool)(param->ver += param->spec_step))
+	|| (PAGE_DOWN == key && (_Bool)(param->ver -= param->spec_step))
+	|| (HOME == key && (_Bool)(param->hor -= param->spec_step))
+	|| (END == key && (_Bool)(param->hor += param->spec_step)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));
 	return (0);
 }
 
-int			fr_depth(t_env *restrict env, t_param *restrict param,
-						bool range, int key)
+unsigned int			fr_depth(t_env *restrict env, t_param *restrict param,
+								bool range, int key)
 {
 	int		offset;
 
@@ -60,19 +60,19 @@ int			fr_depth(t_env *restrict env, t_param *restrict param,
 	return (0);
 }
 
-int			zoom(t_env *restrict env, int key, t_fl_pt pt)
+unsigned int			zoom(t_env *restrict env, int key, t_db_pt pt)
 {
 	t_param		*param;
 
 	param = &env->param;
 	if ((PLUS == key
 		&& param->display_zoom < 200
-		&& (param->actial_zoom *= 1.5)
-		&& (param->offset_step *= 0.5))
+		&& (_Bool)(param->actial_zoom *= 1.5)
+		&& (_Bool)(param->offset_step *= 0.5))
 	|| (MINUS == key
 		&& param->display_zoom > -10
-		&& (param->actial_zoom *= 0.5)
-		&& (param->offset_step *= 1.5)))
+		&& (_Bool)(param->actial_zoom *= 0.5)
+		&& (_Bool)(param->offset_step *= 1.5)))
 	{
 		(PLUS == key) ? param->display_zoom++ : param->display_zoom--;
 		param->offset.x += (pt.x - param->center.x) * param->center.x
@@ -84,8 +84,8 @@ int			zoom(t_env *restrict env, int key, t_fl_pt pt)
 	return (0);
 }
 
-int			toggles(t_env *restrict env, int key,
-					t_param *restrict p, t_flags *restrict f)
+unsigned int			toggles(t_env *restrict env, int key,
+								t_param *restrict p, t_flags *restrict f)
 {
 	if (((NUM_1 == key || ONE == key) && ft_switch(&f->n1))
 	|| ((NUM_2 == key || TWO == key) && ft_switch(&f->n2))
@@ -101,7 +101,8 @@ int			toggles(t_env *restrict env, int key,
 	|| (W == key && ft_switch(&f->w))
 	|| (E == key && ft_switch(&f->e))
 	|| (T == key && ft_switch(&f->range)
-		&& (p->color_step = (f->range ? 0xFFFFFF : 0xFFFFFFFF) / p->depth))
+		&& (_Bool)(p->color_step =
+					(f->range ? 0xFFFFFF : 0xFFFFFFFF) / p->depth))
 	|| (Y == key && ft_switch(&f->carioid))
 	|| (G == key && ft_switch(&f->alt_col)))
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2019/05/11 21:50:35 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/05/11 21:51:47 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,12 @@ unsigned int			draw_barnsley(t_env *restrict env, t_param p,
 
 static void				*draw_threads(void *restrict thread_data)
 {
-	t_env				*env;
-	t_param				p;
-	register size_t		x;
-	register size_t		y;
-	register size_t		offset;
+	register const size_t		offset = ((t_pth_dt *)thread_data)->offset;
+	const t_env					*env = ((t_pth_dt *)thread_data)->env;
+	const t_param				p = env->param;
+	register size_t				x;
+	register size_t				y;
 
-	if (!thread_data)
-		return (NULL);
-	offset = ((t_pth_dt *)thread_data)->offset;
-	env = ((t_pth_dt *)thread_data)->env;
-	p = env->param;
 	y = W_HEIGHT;
 	while (y--)
 	{

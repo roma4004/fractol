@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 16:43:00 by dromanic          #+#    #+#             */
-/*   Updated: 2019/04/21 20:40:11 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/05/11 18:45:02 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 unsigned int	get_mandelbrot(t_env *restrict env, t_param p,
 								size_t x, size_t y)
 {
-	const unsigned int	depth = p.depth;
-	const t_flags		f = env->flags;
-	unsigned int		i;
-	t_cnb				z;
+	register const unsigned int		depth = p.depth;
+	const t_flags					f = env->flags;
+	register unsigned int			i;
+	t_cnb							z;
 
 	z.rc = (x - p.center.x) / p.actial_zoom + p.offset.x;
 	(f.n6) ? z.rc *= -1 : 0;
@@ -43,10 +43,10 @@ unsigned int	get_mandelbrot(t_env *restrict env, t_param p,
 
 unsigned int	get_julia(t_env *restrict env, t_param p, size_t x, size_t y)
 {
-	const unsigned int	depth = p.depth;
-	const t_flags		f = env->flags;
-	unsigned int		i;
-	t_cnb				z;
+	register const unsigned int		depth = p.depth;
+	const t_flags					f = env->flags;
+	register unsigned int			i;
+	t_cnb							z;
 
 	z.rc = (x - p.center.x) / p.actial_zoom + p.offset.x;
 	(f.n6) ? z.rc *= -1 : 0;
@@ -68,10 +68,10 @@ unsigned int	get_julia(t_env *restrict env, t_param p, size_t x, size_t y)
 
 unsigned int	get_batman(t_env *restrict env, t_param p, size_t x, size_t y)
 {
-	const unsigned int	depth = p.depth;
-	const t_flags		f = env->flags;
-	unsigned int		i;
-	t_cnb				z;
+	register const unsigned int		depth = p.depth;
+	const t_flags					f = env->flags;
+	register unsigned int			i;
+	t_cnb							z;
 
 	z.rc = (y - p.center.y) / p.actial_zoom + p.offset.y;
 	(f.n6) ? z.rc *= -1 : 0;
@@ -96,10 +96,10 @@ unsigned int	get_batman(t_env *restrict env, t_param p, size_t x, size_t y)
 unsigned int	get_mandelbrot_cuboid(t_env *restrict env, t_param p,
 										size_t x, size_t y)
 {
-	const unsigned int	depth = p.depth;
-	const t_flags		f = env->flags;
-	unsigned int		i;
-	t_cnb				z;
+	register const unsigned int		depth = p.depth;
+	const t_flags					f = env->flags;
+	register unsigned int			i;
+	t_cnb							z;
 
 	z.rc = (x - p.center.x) / p.actial_zoom + p.offset.x;
 	(f.n6) ? z.rc *= -1 : 0;

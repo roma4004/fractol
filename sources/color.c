@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2019/04/21 20:51:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/05/11 21:59:50 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,8 @@ unsigned int			change_color(t_env *restrict env,
 	int				is_increase;
 	unsigned char	chanel;
 
-	if (!env)
+	if (!env || (chanel = 0) || (is_increase = 0))
 		return (0);
-	is_increase = 0;
 	if ((A == key || Z == key)
 	&& (chanel = ALPHA))
 		col_shift->alpha +=
@@ -64,7 +63,8 @@ unsigned int			change_color(t_env *restrict env,
 	&& !(chanel = BLUE))
 		col_shift->blue +=
 			(is_increase = (F == key) ? 1 : -1);
-	if (is_increase != 0 && shift_apply(env, is_increase, chanel))
+	if (is_increase != 0
+	&& shift_apply(env, is_increase, chanel))
 		return (1);
 	return (0);
 }

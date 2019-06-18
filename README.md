@@ -1,3 +1,29 @@
+*note: 
+
+**to clone:** (please use comand including key --recurse-submodules)
+
+```git clone --recurse-submodules https://github.com/roma4004/fractol.git```
+
+**to run**:
+
+ ```./fractol Mandelbrot```
+
+
+to run other fractals read usage and see examples below:
+
+```
+Usage: ./fractol [ 1 | M | Mandelbrot
+                 | 2 | J | Julia
+                 | 3 | F | Fern
+                 | 4 | C | Cuboid
+                 | 5 | B | Batman ]
+examples:
+    to show Mandelbrot set use the index number "./fractol 1"
+    or first letter of fractal "./fractol M"
+    or full name as argument "./fractol Mandelbrot"
+```
+
+
 # fractol. Goal is to create a small fractal exploration program.
 ![img](https://github.com/roma4004/fractol/blob/master/images/Screen%20Shot%202018-09-05%20at%207.32.47%20PM.png)
 

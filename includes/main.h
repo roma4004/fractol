@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2019/04/21 22:41:39 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/06/18 20:29:51 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,14 +225,15 @@ typedef struct	s_environment
 	unsigned int	*surf;
 	char			*fract_names[AMOUNT_FRACTALS];
 	unsigned int	(*get_px_func[AMOUNT_FRACTALS])
-					(struct s_environment *restrict, t_param, size_t, size_t);
+					(struct s_environment const *restrict,
+							t_param, size_t, size_t);
 	void			(*init_func[AMOUNT_FRACTALS])(t_param *);
 }				t_env;
 
 typedef struct	s_pthread_data
 {
-	t_env		*env;
-	size_t		offset;
+	t_env const		*env;
+	size_t			offset;
 }				t_pth_dt;
 
 enum			e_color_offset
@@ -283,7 +284,7 @@ enum			e_fractal_type
 
 unsigned int	change_color(t_env *restrict env,
 								t_col_shift *restrict col_shift, int key);
-void			argb_shift(t_env *restrict env, t_col_shift shift);
+void			argb_shift(t_env const *restrict env, t_col_shift shift);
 unsigned int	get_color(bool alt_col, double col_step,
 							unsigned int depth, unsigned int i);
 
@@ -291,21 +292,23 @@ unsigned int	get_color(bool alt_col, double col_step,
 ** draw.c
 */
 
-unsigned int	redraw_fract_or_img(t_env *restrict env, t_param param,
+unsigned int	redraw_fract_or_img(t_env const *restrict env, t_param param,
 									t_flags flags, int img_only);
-unsigned int	draw_barnsley(t_env *restrict env, t_param p,
+unsigned int	draw_barnsley(t_env const *restrict env, t_param p,
 								size_t x, size_t y);
-void			parallel_draw(t_env *restrict env, unsigned int threads);
+void			parallel_draw(t_env const *restrict env, unsigned int threads);
 
 /*
 ** fractals.c
 */
 
-unsigned int	get_mandelbrot(t_env *restrict env, t_param p,
+unsigned int	get_mandelbrot(t_env const *restrict env, t_param p,
 								size_t x, size_t y);
-unsigned int	get_julia(t_env *restrict env, t_param p, size_t x, size_t y);
-unsigned int	get_batman(t_env *restrict env, t_param p, size_t x, size_t y);
-unsigned int	get_mandelbrot_cuboid(t_env *restrict env,
+unsigned int	get_julia(t_env const *restrict env,
+							t_param p, size_t x, size_t y);
+unsigned int	get_batman(t_env const *restrict env,
+							t_param p, size_t x, size_t y);
+unsigned int	get_mandelbrot_cuboid(t_env const *restrict env,
 										t_param p, size_t x, size_t y);
 
 /*
@@ -342,9 +345,10 @@ void			init_julia(t_param *restrict param);
 ** interface.c
 */
 
-void			show_menu(t_env *restrict env, t_flags flags, int x, int y);
-void			show_combo(t_env *restrict env, bool menu, int x, int y);
-void			show_values(t_env *restrict env, t_param p, int x, int y);
+void			show_menu(t_env const *restrict env, t_flags flags,
+							int x, int y);
+void			show_combo(t_env const *restrict env, bool menu, int x, int y);
+void			show_values(t_env const *restrict env, t_param p, int x, int y);
 
 /*
 ** hooks.c

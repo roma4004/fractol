@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2019/04/21 22:38:43 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/06/18 20:27:37 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int		set_fract(t_env *restrict env, t_param *restrict param,
 	return (0);
 }
 
-unsigned int	redraw_fract_or_img(t_env *restrict env, t_param param,
+unsigned int	redraw_fract_or_img(t_env const *restrict env, t_param param,
 									t_flags flags, int img_only)
 {
 	t_ui_pt		pt;

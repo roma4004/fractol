@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-static char	*text(t_env *restrict env, t_si_pt pt,
+static char	*text(t_env const *restrict env, t_si_pt pt,
 					char *restrict str, int is_active)
 {
 	if (!env || !str)
@@ -22,7 +22,7 @@ static char	*text(t_env *restrict env, t_si_pt pt,
 	return (str);
 }
 
-void		show_values(t_env *restrict env, t_param p, int x, int y)
+void		show_values(t_env const *restrict env, t_param p, int x, int y)
 {
 	x += (!env->flags.menu ? 550 : 0) + (!env->flags.hints ? 450 : 0);
 	text(env, (t_si_pt){ x, y }, MSG_VAL_SEC, 0);
@@ -46,7 +46,7 @@ void		show_values(t_env *restrict env, t_param p, int x, int y)
 	free(text(env, (t_si_pt){ x + 170, y }, ft_itoa(p.color_shift.blue), 0));
 }
 
-void		show_combo(t_env *restrict env, bool menu, int x, int y)
+void		show_combo(t_env const *restrict env, bool menu, int x, int y)
 {
 	x += ((!menu) ? 550 : 0);
 	text(env, (t_si_pt){ x, y }, MSG_HINTS, 0);
@@ -64,29 +64,29 @@ void		show_combo(t_env *restrict env, bool menu, int x, int y)
 	text(env, (t_si_pt){ x, y + 20 }, MSG_MIR_VER, 0);
 }
 
-static void	show_menu2(t_env *restrict e, t_flags f, int x, int y)
+static void	show_menu2(t_env const *restrict env, t_flags f, int x, int y)
 {
-	text(e, (t_si_pt){ x, y += 20 }, MSG_CARIOID, 0);
-	text(e, (t_si_pt){ x + 150, y }, MSG_CARIOID_Y, f.carioid);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_CARIOID_COL, 0);
-	text(e, (t_si_pt){ x + 150, y }, MSG_CARIOID_W, f.w);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_STYLE, 0);
-	text(e, (t_si_pt){ x + 150, y }, MSG_STYLE_T, f.range);
-	text(e, (t_si_pt){ x + 180, y }, MSG_STYLE_G, f.alt_col);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_MOUSE_DET, 0);
-	text(e, (t_si_pt){ x + 210, y }, MSG_MOUSE_DET_R, f.lock_julia);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_THREAD_NUM, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_SHIFT_ARGB, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_RADIUS, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_TRIM, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_CURVE_X, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_CURVE_Y, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_MENU_SW, 0);
-	text(e, (t_si_pt){ x, y += 20 }, MSG_COMBO_SW, 0);
-	text(e, (t_si_pt){ x, y + 20 }, MSG_VALUE_SW, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_CARIOID, 0);
+	text(env, (t_si_pt){ x + 150, y }, MSG_CARIOID_Y, f.carioid);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_CARIOID_COL, 0);
+	text(env, (t_si_pt){ x + 150, y }, MSG_CARIOID_W, f.w);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_STYLE, 0);
+	text(env, (t_si_pt){ x + 150, y }, MSG_STYLE_T, f.range);
+	text(env, (t_si_pt){ x + 180, y }, MSG_STYLE_G, f.alt_col);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_MOUSE_DET, 0);
+	text(env, (t_si_pt){ x + 210, y }, MSG_MOUSE_DET_R, f.lock_julia);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_THREAD_NUM, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_SHIFT_ARGB, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_RADIUS, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_TRIM, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_CURVE_X, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_CURVE_Y, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_MENU_SW, 0);
+	text(env, (t_si_pt){ x, y += 20 }, MSG_COMBO_SW, 0);
+	text(env, (t_si_pt){ x, y + 20 }, MSG_VALUE_SW, 0);
 }
 
-void		show_menu(t_env *restrict env, t_flags flags, int x, int y)
+void		show_menu(t_env const *restrict env, t_flags flags, int x, int y)
 {
 	text(env, (t_si_pt){ x, y }, MSG_MENU_SEC, 0);
 	text(env, (t_si_pt){ x, y += 20 }, MSG_ZOOM_M, 0);

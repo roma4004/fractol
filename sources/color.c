@@ -23,7 +23,7 @@ static void				change_hue(unsigned *restrict color, int is_increase,
 	*color += (1 == is_increase) ? increment : -increment;
 }
 
-static unsigned int		shift_apply(t_env *restrict env, int is_increase,
+static unsigned int		shift_apply(t_env const *restrict env, int is_increase,
 									unsigned char chanel)
 {
 	size_t		y;
@@ -69,7 +69,7 @@ unsigned int			change_color(t_env *restrict env,
 	return (0);
 }
 
-void					argb_shift(t_env *restrict env, t_col_shift shift)
+void					argb_shift(t_env const *restrict env, t_col_shift shift)
 {
 	int		i_cur;
 	int		i_max;

@@ -51,9 +51,9 @@ unsigned int			fr_depth(t_env *restrict env, t_param *restrict param,
 		return (redraw_fract_or_img(env, env->param, env->flags, 1));
 	if ((((NUM_MINUS == key || I == key) && (offset = -param->depth_step))
 		|| ((NUM_PLUS == key || O == key) && (offset = param->depth_step)))
-	&& offset && (param->depth + offset > 0))
+	&& offset && (param->depth + (unsigned int)offset > 0))
 	{
-		param->depth += offset;
+		param->depth += (unsigned int)offset;
 		param->color_step = (range ? 0xFFFFFF : 0xFFFFFFFF) / param->depth;
 		return (redraw_fract_or_img(env, env->param, env->flags, 0));
 	}

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2019/05/11 21:51:47 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/06/18 20:27:37 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static inline void		set_px(unsigned int *restrict surface,
 		surface[y * W_WIDTH + x] = color;
 }
 
-unsigned int			draw_barnsley(t_env *restrict env, t_param p,
+unsigned int			draw_barnsley(t_env const *restrict env, t_param p,
 										size_t x, size_t y)
 {
 	t_fern		fern;
@@ -68,7 +68,8 @@ static void				*draw_threads(void *restrict thread_data)
 	return (NULL);
 }
 
-void					parallel_draw(t_env *restrict env, unsigned int threads)
+void					parallel_draw(t_env const *restrict env,
+										unsigned int threads)
 {
 	register unsigned int	id;
 	t_pth_dt				*data;

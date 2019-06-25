@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2019/06/18 20:27:37 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/06/25 15:41:39 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ unsigned int			draw_barnsley(t_env const *restrict env, t_param p,
 	fern = (t_fern){ .r = x, .i = y };
 	while (--(p.depth))
 	{
-		random_num = rand() / RAND_MAX;
+		random_num = (float)(rand()) / RAND_MAX;
 		tmp = fern;
 		if (0.01f >= random_num)
 			fern = (t_fern){ .r = 0, .i = 0.16 * tmp.i };
@@ -60,7 +60,7 @@ static void				*draw_threads(void *restrict thread_data)
 	y = W_HEIGHT;
 	while (y--)
 	{
-		x = UINT64_MAX - p.threads + 1;
+		x = 1 + UINT64_MAX - p.threads;
 		while ((x += p.threads) < W_WIDTH)
 			set_px(env->surf, env->get_px_func[p.fr_id](env, p, x + offset, y),
 																x + offset, y);

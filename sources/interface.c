@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2019/04/21 21:50:47 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/06/25 19:10:41 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*text(t_env const *restrict env, t_si_pt pt,
 	if (!env || !str)
 		return (NULL);
 	mlx_string_put(env->mlx_ptr, env->win_ptr, pt.x, pt.y,
-		(is_active) ? ACTIVE_MENU_COLOR : DEFAULT_MENU_COLOR, str);
+		(is_active) ? COLOR_ACTIVE_MENU : COLOR_DEFAULT_MENU, str);
 	return (str);
 }
 

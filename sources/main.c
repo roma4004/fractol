@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2019/06/18 20:27:37 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/06/25 19:08:34 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,17 @@ unsigned int	redraw_fract_or_img(t_env const *restrict env, t_param param,
 {
 	t_ui_pt		pt;
 
+	if (!img_only)
+	{
+//		if (FR_FERN == param.fr_id && (pt.y = UINT32_MAX))
+//		{
+//			while (W_HEIGHT > ++(pt.y) && (pt.x = UINT32_MAX))
+//				while (W_WIDTH > ++(pt.x))
+//					env->surf[pt.y * W_WIDTH + pt.x] = 0;
+//			return (draw_barnsley(env, param, 0, 0));
+//		}
+		parallel_draw(env, param.threads);
+	}
 	mlx_clear_window(env->mlx_ptr, env->win_ptr);
 	mlx_put_image_to_window(env->mlx_ptr, env->win_ptr, env->img_ptr, 0, 0);
 	if (!flags.menu)
@@ -75,20 +86,6 @@ unsigned int	redraw_fract_or_img(t_env const *restrict env, t_param param,
 		show_combo(env, flags.menu, 20, 10);
 	if (!flags.values)
 		show_values(env, param, 20, 10);
-	if (img_only)
-		return (1);
-	if (param.fr_id == FR_FERN)
-	{
-		pt.y = UINT32_MAX;
-		while (W_HEIGHT > ++(pt.y))
-		{
-			pt.x = UINT32_MAX;
-			while (W_WIDTH > ++(pt.x))
-				env->surf[pt.y * W_WIDTH + pt.x] = 0;
-		}
-		return (draw_barnsley(env, param, 0, 0));
-	}
-	parallel_draw(env, param.threads);
 	return (1);
 }
 

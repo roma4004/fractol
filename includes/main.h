@@ -16,8 +16,8 @@
 # define W_WIDTH			1920
 # define W_HEIGHT			1080
 # define W_NAME				"Fractol by dromanic (@Dentair)"
-# define DEFAULT_MENU_COLOR	0x0f9100FF
-# define ACTIVE_MENU_COLOR	0x00ff00
+# define COLOR_DEFAULT_MENU	0x0f9100FF
+# define COLOR_ACTIVE_MENU	0x00ff00
 # define AMOUNT_FRACTALS	5
 # define MAX_THREADS		1000
 
